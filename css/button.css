@@ -11,11 +11,11 @@ body, html {
 }
 
 .container {
-  width: 400px;
+  width: 625px;
   height: 400px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 70%;
   transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
@@ -29,6 +29,7 @@ body, html {
 }
 
 .btn {
+  position: relative;
   width: 180px;
   height: 60px;
   cursor: pointer;
@@ -36,6 +37,24 @@ body, html {
   border: 1px solid #ed2b12;
   outline: none;
   transition: 1s ease-in-out;
+}
+
+.btn#2 {
+  display: none;
+  visibility: hidden;
+  left: 0;
+}
+
+.btn#3 {
+  display: none;
+  visibility: hidden;
+  left: 50%;
+}
+
+.btn#4 {
+  display: none;
+  visibility: hidden;
+  left: 100%;
 }
 
 svg {
@@ -47,10 +66,6 @@ svg {
   stroke-dasharray: 150 480;
   stroke-dashoffset: 150;
   transition: 1s ease-in-out;
-}
-
-svg.border {
-    margin-top: 5.1rem;
 }
 
 .btn:hover {
@@ -66,4 +81,8 @@ svg.border {
   color: white;
   font-size: 18px;
   font-weight: 100;
+}
+
+.btn:hover span {
+  color: black;
 }

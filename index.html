@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/button.css" />
         <link rel="stylesheet" type="text/css" href="css/logo.css" />
-        
+        <script src="js/buttons.js"></script>
         <script src="three.js/build/three.js"></script>
     </head>
     <body>
@@ -23,20 +23,41 @@
     <p><span class="st-things-k">K</span><span class="st-things-i">i</span><span class="st-things-l">l</span><span class="st-things-l">l</span><span class="st-things-l">s</span></p>
   </div>
   <div class="container">
-    <div class="center">
-      <button class="btn">
+    <!--<div class="center">-->
+      <button class="btn" id="1" onclick="hide_start_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
         </svg>
         <span>START</span>
       </button>
-    </div>
+      <button class="btn" id="2" style="display: none; visibility: hidden;" onclick="">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>INSTRUCTIONS</span>
+      </button>
+      <button class="btn" id="3" style="display: none; visibility: hidden;" onclick="">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>DIFFICULTY</span>
+      </button>
+      <button class="btn" id="4" style="display: none; visibility: hidden;" onclick="">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>OPTIONS</span>
+      </button>
+    <!--</div>-->
   </div>
 </div>
     </body>
 
-    <script type="module">
+    <!--<script type="module">
         import * as THREE from './three.js/build/three.module.js';
         let scene, camera, render;
 
@@ -62,6 +83,6 @@
             sound.play();
         });
 
-        window.AudioContext.resume();
-    </script>
+        //window.AudioContext.resume();
+    </script>-->
 </html>
