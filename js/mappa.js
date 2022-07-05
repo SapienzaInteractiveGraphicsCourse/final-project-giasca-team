@@ -22,7 +22,7 @@ loader.load('../models/map/scene.gltf', function(gltf){
     console.error( error );
 } );
 let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-light.position.set(20, 100, 10);
+/*light.position.set(20, 100, 10);
 light.target.position.set(0, 0, 0);
 light.castShadow = true;
 light.shadow.bias = -0.001;
@@ -35,11 +35,11 @@ light.shadow.camera.far = 500.0;
 light.shadow.camera.left = 100;
 light.shadow.camera.right = -100;
 light.shadow.camera.top = 100;
-light.shadow.camera.bottom = -100;
+light.shadow.camera.bottom = -100;*/
 scene.add(light);
 
-light = new THREE.AmbientLight(0x101010);
-scene.add(light);
+//let light = new THREE.AmbientLight(0x101010);
+//scene.add(light);
 camera.position.set(0,1,2);
 function animate() {
     requestAnimationFrame(animate);
