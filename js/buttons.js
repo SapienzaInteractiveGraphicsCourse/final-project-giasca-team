@@ -7,4 +7,7 @@ function hide_start_button(){
     document.getElementById(3).style.visibility="visible";
     document.getElementById(4).style.display=' inline';
     document.getElementById(4).style.visibility="visible";
+    document.getElementById(5).style.display=' inline';
+    document.getElementById(5).style.visibility="visible";
+
 }
