@@ -3,7 +3,7 @@ import { GLTFLoader } from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpz
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
-const fov = 75;
+const fov = 100;
 const aspect =  window.innerWidth / window.innerHeight;
 const near = 1.0;
 const far = 1000.0;
@@ -58,16 +58,18 @@ var obj;
 loader.load('../models/map/castle_byers/scene.gltf', function(gltf){
     obj = gltf.scene;
     scene.add(gltf.scene);
+    obj.position.z = -1;
+    obj.scale.set(0.02,0.02,0.02);
     //render.render(scene,camera);
     //animate();
 }, undefined, function ( error ) {
     console.error( error );
 } );
-var light = new THREE.HemisphereLight(0xffffff, 0x000000, 9);
-scene.add(light);
+//var light = new THREE.HemisphereLight(0xffffff, 0x000000, 9);
+//scene.add(light);
 
-/*let light = new THREE.AmbientLight(0x101010);
-scene.add(light);*/
+let light = new THREE.AmbientLight(0x154678);
+scene.add(light);
 camera.position.set(0,1,2);
 function animate() {
     requestAnimationFrame(animate);
