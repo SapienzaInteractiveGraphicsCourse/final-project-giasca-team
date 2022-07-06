@@ -9,7 +9,7 @@ const gui = new dat.GUI({
 
 //loading anche se per ora non la uso perche non so perche ma mi annulla le luci
 const textureLoader = new THREE.TextureLoader()
-//const normaltex= textureLoader.load('./texture/grassNormal.png')
+const normaltex= textureLoader.load('./texture/grassNormal.png')
 //scene
 const scene = new THREE.Scene();
 var back_color= new THREE.Color(0xf0ffff);
@@ -48,7 +48,7 @@ controls.maxPolarAngle = Math.PI / 2;
 //objects 
 //stage
 const geometry = new THREE.BoxGeometry(50,0.2,50);
-const material = new THREE.MeshPhongMaterial({ color: 0xf0ffff });
+const material = new THREE.MeshStandardMaterial();
 //material.normalMap=normaltex
 const stage = new THREE.Mesh(geometry, material)
 stage.position.y=-1
@@ -66,10 +66,10 @@ let palette = {
     color: [255,0,0]
 }
 //per capire dove sta la luce
-const spotLightHelper= new THREE.SpotLightHelper(spotlight,0.5)
+const spotLightHelper= new THREE.SpotLightHelper(spotlight,1000.5)
 scene.add(spotLightHelper)
 //directionallight
-const directionallight= new THREE.DirectionalLight(0x404040, .5 )
+const directionallight= new THREE.DirectionalLight(0x404040, 0.5 )
 directionallight.visible=false;
 scene.add(directionallight)
 
@@ -87,7 +87,7 @@ lightFolder.addColor(palette,'color').onChange(function(value){
 lightFolder.add(spotlight.position,'x').min(-10).max(10).step(0.05)
 lightFolder.add(spotlight.position,'y').min(-10).max(10).step(0.05)
 lightFolder.add(spotlight.position,'z').min(-10).max(10).step(0.05)
-lightFolder.add(spotlight,'intensity').min(0).max(100).step(0.01)
+lightFolder.add(spotlight,'intensity').min(0).max(1000000).step(0.01)
 gui.add(directionallight,'visible').onChange().name('turn on directional light')
 
 //camera folder
