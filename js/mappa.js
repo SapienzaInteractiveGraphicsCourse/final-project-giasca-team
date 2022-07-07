@@ -12,6 +12,7 @@ var renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight); //render resolution
 document.body.appendChild(renderer.domElement);
 
+//CREATION OF THE PLANE (GRASS)
 const textureLoader = new THREE.TextureLoader();
 /*const tilesBaseColor = textureLoader.load('../texture_grass2/Hedge_001_BaseColor.jpg');
 const tilesNormalMap = textureLoader.load('../texture_grass2/Hedge_001_Normal.jpg');
@@ -26,10 +27,8 @@ const tilesHeightMap = textureLoader.load('../texture_grass2/Ground037_1K_Displa
 const tilesRoughness = textureLoader.load('../texture_grass2/Ground037_1K_HRoughness.jpg');
 const tilesAmbientOcclusionMap = textureLoader.load('../texture_grass2/Ground037_1K_AmbientOcclusion.jpg');
 
-
-//CREATION OF THE PLANE (GRASS)
 var geometry = new THREE.BoxGeometry(8,0.1,7);
-var material = new THREE.MeshBasicMaterial(
+var material = new THREE.MeshStandardMaterial(
     {
         //BUMP MAPPING
         map: tilesBaseColor,
@@ -53,13 +52,14 @@ scene.add(plane);
 
 renderer.render(scene,camera); 
 
-const loader = new GLTFLoader();
-var obj;
-loader.load('../models/map/castle_byers/scene.gltf', function(gltf){
-    obj = gltf.scene;
+// LOAD OF CASTLE BYERS
+const loader_castleB = new GLTFLoader();
+var obj_cb;
+loader_castleB.load('../models/map/castle_byers/scene.gltf', function(gltf){
+    obj_cb = gltf.scene;
     scene.add(gltf.scene);
-    obj.position.z = -1;
-    obj.scale.set(0.02,0.02,0.02);
+    obj_cb.position.z = -1;
+    obj_cb.scale.set(0.02,0.02,0.02);
     //render.render(scene,camera);
     //animate();
 }, undefined, function ( error ) {
@@ -68,7 +68,21 @@ loader.load('../models/map/castle_byers/scene.gltf', function(gltf){
 //var light = new THREE.HemisphereLight(0xffffff, 0x000000, 9);
 //scene.add(light);
 
-let light = new THREE.AmbientLight(0x154678);
+//LOAD OF FEMALE POLICE
+const loader_female_police = new GLTFLoader();
+var obj_fp;
+loader_female_police.load('../models/map/female_police/scene.gltf', function(gltf){
+    obj_fp = gltf.scene;
+    scene.add(gltf.scene);
+    obj_fp.position.z = -5;
+    obj_fp.scale.set(1,1,1);
+    //render.render(scene,camera);
+    //animate();
+}, undefined, function ( error ) {
+    console.error( error );
+} );
+
+let light = new THREE.AmbientLight(0xffffff);
 scene.add(light);
 camera.position.set(0,1,2);
 function animate() {
