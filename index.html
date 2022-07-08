@@ -9,6 +9,37 @@
         <script src="three.js/build/three.js"></script>
     </head>
     <body>
+        <script type="module">
+            import * as THREE from './three.js/build/three.module.js';
+            let scene, camera, render;
+    
+            scene = new THREE.Scene();
+            //scene.background = new THREE.Color(0xffffff);
+            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            var renderer = new THREE.WebGLRenderer({antialias:true});
+            renderer.setSize(window.innerWidth,window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+    
+            /*const listener = new THREE.AudioListener();
+            camera.add( listener );
+    
+            // create a global audio source
+            const sound = new THREE.Audio( listener );
+            
+            function startSound(){
+              // load a sound and set it as the Audio object's buffer
+              const audioLoader = new THREE.AudioLoader();
+              audioLoader.load( 'Stranger_Things.ogg', function( buffer ) {
+                  sound.setBuffer( buffer );
+                  sound.setLoop( true );
+                  sound.setVolume( 0.5 );
+                  sound.play();
+              });
+            }*/
+            //var start_audio= new Audio('./Stranger_Things.mp3');
+            //start_audio.loop=true;
+            //document.body.appendChild(start_audio);
+        </script>
         g<div class="st">
 
   <div class="st-top">
@@ -23,7 +54,7 @@
     <p><span class="st-things-k">K</span><span class="st-things-i">i</span><span class="st-things-l">l</span><span class="st-things-l">l</span><span class="st-things-l">s</span></p>
   </div>
   <div class="container">
-      <button class="btn" id="1" onclick="hide_start_button(); startSound(); ">
+      <button class="btn" id="1" onclick="start_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
@@ -55,35 +86,4 @@
     <button class="button" id="5" style="display: none; visibility: hidden;" width="100" height="100">PLAY</button>
 </div>
     </body>
-
-    <script type="module">
-        import * as THREE from './three.js/build/three.module.js';
-        let scene, camera, render;
-
-        scene = new THREE.Scene();
-        //scene.background = new THREE.Color(0xffffff);
-        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        var renderer = new THREE.WebGLRenderer({antialias:true});
-        renderer.setSize(window.innerWidth,window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        const listener = new THREE.AudioListener();
-        camera.add( listener );
-
-        // create a global audio source
-        const sound = new THREE.Audio( listener );
-        
-        function startSound(){
-          // load a sound and set it as the Audio object's buffer
-          const audioLoader = new THREE.AudioLoader();
-          audioLoader.load( 'Stranger_Things.ogg', function( buffer ) {
-              sound.setBuffer( buffer );
-              sound.setLoop( true );
-              sound.setVolume( 0.5 );
-              sound.play();
-          });
-        }
-
-        //window.AudioContext.resume();
-    </script>
 </html>
