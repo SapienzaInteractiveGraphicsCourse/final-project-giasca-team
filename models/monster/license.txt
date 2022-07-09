@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vecna - Fully Rigged
+* source:	https://sketchfab.com/3d-models/vecna-fully-rigged-2ed1e61a360f4ac285614611ea698f72
+* author:	videobuith (https://sketchfab.com/videobuith)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vecna - Fully Rigged" (https://sketchfab.com/3d-models/vecna-fully-rigged-2ed1e61a360f4ac285614611ea698f72) by videobuith (https://sketchfab.com/videobuith) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

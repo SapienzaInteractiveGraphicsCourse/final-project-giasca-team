@@ -26,15 +26,18 @@ var RESOURCES_LOADED = false;
 
 var models = {
     road: {
-        obj: '../models/map/pavement_in_the_park/scene.gltf',
+        obj: '../models/shingle/scene.gltf',
+        scale: 0.01,
         mesh: null
     },
     castle_B: {
-        obj: '../models/map/castle_byers/scene.gltf',
+        obj: '../models/castle_byers/scene.gltf',
+        scale: 0.01,
         mesh: null
     },
-    policeman: {
-        obj: '../models/map/female_police/scene.gltf',
+    monster: {
+        obj: '../models/monster/scene.gltf',
+        scale: 0.01,
         mesh: null
     }
 };
@@ -108,18 +111,10 @@ function init() {
                     c.castShadow = true;
                 });
 
+                mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
+
                 //mesh.scale.setScalar(scale);
                 models[key].mesh = mesh;
-                //resolve(mesh);
-                //gltf.preload();
-                //scene.add(gltf.scene);
-                //obj_r.position.z = -5;
-                //obj_r.position.y = -3;
-                //obj_r.rotation.x = 10;
-                //obj_r.rotation.y = 0.0;
-                //obj_r.scale.set(0.02,0.02,0.02);
-                //render.render(scene,camera);
-                //animate();
             }, undefined, function ( error ) {
             console.error( error );
             } );
@@ -142,20 +137,23 @@ function init() {
 
 // Runs when all resources are loaded
 function onResourcesLoaded(){
-    meshes["road"] = models.road.mesh.clone();
-    meshes["policeman"] = models.policeman.mesh.clone();
-    meshes["castle_B"] = models.castle_B.mesh.clone();
+    //meshes["road"] = models.road.mesh.clone();
+    meshes["monster"] = models.monster.mesh.clone();
+    //meshes["castle_B"] = models.castle_B.mesh.clone();
 
-    meshes["road"].position.set(-5, 0, 4);
-	scene.add(meshes["road"]);
+    //meshes["road"].position.set(-8, -13, 4);
+    //meshes["road"].rotation.set(-0.1,0,0);
+	//scene.add(meshes["road"]);
 
-    meshes["castle_B"].position.set(-8, 0, 1);
-    meshes["castle_B"].position.scale(0.01, 0.01, 0.01);
+    //meshes["castle_B"].position.set(-8, 0, 1);
+    //meshes["castle_B"].scale.set(0.01, 0.01, 0.01);
 
-    scene.add(meshes["castle_B"]);
+    //scene.add(meshes["castle_B"]);
 
-    meshes["policenan"].position.set(-5, 0, 1);
-    scene.add(meshes["policenan"]);
+    meshes["monster"].position.set(-5, 0, 1);
+    //meshes["monster"].scale.set(0.01, 0.001, 0.01);
+   // meshes["monster"].rotation.set(0, 10, 0);
+    scene.add(meshes["monster"]);
 }
 
 function animate(){
@@ -221,53 +219,3 @@ window.addEventListener('keyup', keyUp);
 window.onload = init;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// LOAD OF CASTLE BYERS
-/*const loader_castleB = new GLTFLoader();
-var obj_cb;
-loader_castleB.load('../models/map/castle_byers/scene.gltf', function(gltf){
-    obj_cb = gltf.scene;
-    scene.add(gltf.scene);
-    obj_cb.position.z = -1;
-    obj_cb.scale.set(0.02,0.02,0.02);
-    //render.render(scene,camera);
-    //animate();
-}, undefined, function ( error ) {
-    console.error( error );
-} );
-//var light = new THREE.HemisphereLight(0xffffff, 0x000000, 9);
-//scene.add(light);
-
-//LOAD OF FEMALE POLICE
-const loader_female_police = new GLTFLoader();
-var obj_fp;
-loader_female_police.load('../models/map/female_police/scene.gltf', function(gltf){
-    obj_fp = gltf.scene;
-    scene.add(gltf.scene);
-    obj_fp.position.z = -5;
-    obj_fp.scale.set(1,1,1);
-    //render.render(scene,camera);
-    //animate();
-}, undefined, function ( error ) {
-    console.error( error );
-} );*/
-
-/*let light = new THREE.AmbientLight(0xffffff);
-scene.add(light);
-camera.position.set(0,1,2);
-function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene,camera);
-}
-animate();*/
