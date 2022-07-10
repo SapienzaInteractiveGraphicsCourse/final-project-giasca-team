@@ -7,8 +7,32 @@
         <link rel="stylesheet" type="text/css" href="css/logo.css" />
         <script src="js/buttons.js"></script>
         <script src="three.js/build/three.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     </head>
     <body>
+      <div id="instruction-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Instruction Box</h2>
+          <p style="color: white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </div>
+      <div id="difficulty-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Difficulty Box</h2>
+          <p style="color: white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </div>
+      <div id="options-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Options Box</h2>
+          <p style="color: white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </div>
+
         <script type="module">
             import * as THREE from './three.js/build/three.module.js';
             let scene, camera, render;
@@ -61,21 +85,21 @@
         </svg>
         <span>START</span>
       </button>
-      <button class="btn" id="2" style="display: none; visibility: hidden;" onclick="">
+      <button class="btn" id="2" style="display: none; visibility: hidden;" onclick="instruction_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
         </svg>
         <span>INSTRUCTIONS</span>
       </button>
-      <button class="btn" id="3" style="display: none; visibility: hidden;" onclick="">
+      <button class="btn" id="3" style="display: none; visibility: hidden;" onclick="difficulty_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
         </svg>
         <span>DIFFICULTY</span>
       </button>
-      <button class="btn" id="4" style="display: none; visibility: hidden;" onclick="">
+      <button class="btn" id="4" style="display: none; visibility: hidden;" onclick="options_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
           <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
@@ -85,5 +109,8 @@
   </div>
     <button class="button" id="5" style="display: none; visibility: hidden;" width="100" height="100">PLAY</button>
 </div>
+
+
+
     </body>
 </html>
