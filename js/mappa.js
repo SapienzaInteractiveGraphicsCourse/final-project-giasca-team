@@ -97,29 +97,44 @@ function init() {
     light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
 
-    for( var _key in models ){
+    var loaderGLTF = new GLTFLoader(loadingManager);
+    //var obj_r;
+    loaderGLTF.load("../models/monster/scene.gltf", function(gltf){
+        mesh = gltf.scene;
+
+        /*mesh.traverse(c => {
+            c.castShadow = true;
+        });*/
+
+        //mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
+
+        mesh.scale.setScalar(0.2);
+        mesh.rotation.set(0, 10, 0);
+        //models[key].mesh = mesh;
+        scene.add(mesh);
+    });
+
+
+    /*for( var _key in models ){
 		(function(key){ 
             var loaderGLTF = new GLTFLoader(loadingManager);
             //var obj_r;
             loaderGLTF.load(models[key].obj, function(gltf){
-                //gltf.scene;
-                //var mesh = gltf.scene.children.find((child) => child.name === child_name);
-                //if (mesh == null)
                 mesh = gltf.scene;
 
                 mesh.traverse(c => {
                     c.castShadow = true;
                 });
 
-                mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
+                //mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
 
-                //mesh.scale.setScalar(scale);
+                mesh.scale.setScalar(0.2);
                 models[key].mesh = mesh;
             }, undefined, function ( error ) {
             console.error( error );
             } );
 		})(_key);
-	}
+	}*/
 
     camera.position.set(0, player.height, -5);
 	camera.lookAt(new THREE.Vector3(0,player.height,0));
@@ -138,7 +153,7 @@ function init() {
 // Runs when all resources are loaded
 function onResourcesLoaded(){
     //meshes["road"] = models.road.mesh.clone();
-    meshes["monster"] = models.monster.mesh.clone();
+    //meshes["monster"] = models.monster.mesh.clone();
     //meshes["castle_B"] = models.castle_B.mesh.clone();
 
     //meshes["road"].position.set(-8, -13, 4);
@@ -150,10 +165,10 @@ function onResourcesLoaded(){
 
     //scene.add(meshes["castle_B"]);
 
-    meshes["monster"].position.set(-5, 0, 1);
+    //meshes["monster"].position.set(-5, 0, 1);
     //meshes["monster"].scale.set(0.01, 0.001, 0.01);
    // meshes["monster"].rotation.set(0, 10, 0);
-    scene.add(meshes["monster"]);
+    //scene.add(meshes["monster"]);
 }
 
 function animate(){
