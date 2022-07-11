@@ -25,13 +25,8 @@ var loadingManager = null;
 var RESOURCES_LOADED = false;
 
 var models = {
-    road: {
-        obj: '../models/shingle/scene.gltf',
-        scale: 0.01,
-        mesh: null
-    },
-    castle_B: {
-        obj: '../models/castle_byers/scene.gltf',
+    female_police: {
+        obj: '../models/female_police/scene.gltf',
         scale: 0.01,
         mesh: null
     },
@@ -59,7 +54,6 @@ function init() {
     loadingManager.onLoad = function(){
 		console.log("loaded all resources");
 		RESOURCES_LOADED = true;
-		onResourcesLoaded();
 	}; //onLoad is when all resources are loaded
 
     //CREATION OF THE PLANE (GRASS)
@@ -97,44 +91,10 @@ function init() {
     light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
 
-    var loaderGLTF = new GLTFLoader(loadingManager);
-    //var obj_r;
-    loaderGLTF.load("../models/monster/scene.gltf", function(gltf){
-        mesh = gltf.scene;
+    _loadModel('../models/female_police/scene.gltf',1.3,-5,0,1);
 
-        /*mesh.traverse(c => {
-            c.castShadow = true;
-        });*/
+    _loadModel('../models/monster/scene.gltf',0.15,-5,0,4);
 
-        //mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
-
-        mesh.scale.setScalar(0.2);
-        mesh.rotation.set(0, 10, 0);
-        //models[key].mesh = mesh;
-        scene.add(mesh);
-    });
-
-
-    /*for( var _key in models ){
-		(function(key){ 
-            var loaderGLTF = new GLTFLoader(loadingManager);
-            //var obj_r;
-            loaderGLTF.load(models[key].obj, function(gltf){
-                mesh = gltf.scene;
-
-                mesh.traverse(c => {
-                    c.castShadow = true;
-                });
-
-                //mesh.scale.set(models[key].scale, models[key].scale, models[key].scale);
-
-                mesh.scale.setScalar(0.2);
-                models[key].mesh = mesh;
-            }, undefined, function ( error ) {
-            console.error( error );
-            } );
-		})(_key);
-	}*/
 
     camera.position.set(0, player.height, -5);
 	camera.lookAt(new THREE.Vector3(0,player.height,0));
@@ -149,26 +109,16 @@ function init() {
 
 }
 
-
-// Runs when all resources are loaded
-function onResourcesLoaded(){
-    //meshes["road"] = models.road.mesh.clone();
-    //meshes["monster"] = models.monster.mesh.clone();
-    //meshes["castle_B"] = models.castle_B.mesh.clone();
-
-    //meshes["road"].position.set(-8, -13, 4);
-    //meshes["road"].rotation.set(-0.1,0,0);
-	//scene.add(meshes["road"]);
-
-    //meshes["castle_B"].position.set(-8, 0, 1);
-    //meshes["castle_B"].scale.set(0.01, 0.01, 0.01);
-
-    //scene.add(meshes["castle_B"]);
-
-    //meshes["monster"].position.set(-5, 0, 1);
-    //meshes["monster"].scale.set(0.01, 0.001, 0.01);
-   // meshes["monster"].rotation.set(0, 10, 0);
-    //scene.add(meshes["monster"]);
+function _loadModel(path,scaleValue,position_x,position_y,position_z) {
+    var loaderGLTF = new GLTFLoader(loadingManager);
+    loaderGLTF.load(path, function(gltf){
+        mesh = gltf.scene;
+        mesh.position.set(position_x,position_y,position_z);
+        mesh.scale.setScalar(scaleValue);
+        mesh.rotation.set(0, 10, 0);
+        //models[monster].mesh = mesh;
+        scene.add(mesh);
+    });
 }
 
 function animate(){
