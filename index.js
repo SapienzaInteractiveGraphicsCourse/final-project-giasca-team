@@ -2,7 +2,9 @@ import * as THREE from "https://threejsfundamentals.org/threejs/resources/threej
 import * as dat from './gui/dat.gui.module.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js'; //chissa perche non andava caricando il path locale dalla cartella controls
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
-//import { Perlin} from './perlin noise/perlin.js'
+
+//camera
+
 //nella mappa presente capanna, alberi, creare una collinetta, casa che si puo entrare, qualche lampione con la spotlight, macchina rotta, staccionata
 //GUI
 const gui = new dat.GUI({
@@ -17,39 +19,70 @@ const tilesNormalMap = textureLoader.load('./textures/grass/Ground037_1K_NormalD
 const tilesHeightMap = textureLoader.load('./textures/grass/Ground037_1K_Displacement.jpg');
 const tilesRoughness = textureLoader.load('./textures/grass/Ground037_1K_Roughness.jpg');
 const tilesAmbientOcclusionMap = textureLoader.load('./textures/grass/Ground037_1K_AmbientOcclusion.jpg');
-//for the background
-const sky=textureLoader.load('./textures/day_night/night.jfif');
+
 //SCENE
 const scene = new THREE.Scene();
-var back_color= new THREE.Color(0xf0ffff);
-scene.background = sky;
-//scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-//scene.background = textureLoader.load('./textures/day_night/day.jpg');
+
+scene.background = new THREE.CubeTextureLoader()
+	.setPath( 'textures/day_night/cubemap/' )
+	.load( [
+		'px.png',
+		'nx.png',
+		'py.png',
+		'ny.png',
+		'pz.png',
+		'nz.png'
+	] );
+scene.fog= new THREE.FogExp2(0xDFE9F3,0.05)
 
 //camera
+var goal,follow
+
+var dir = new THREE.Vector3;
+var a = new THREE.Vector3;
+var b = new THREE.Vector3;
+var distancefrom = 1;
+
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight,
  0.1, 1000 );
-camera.position.x=0;
-camera.position.z=10;
-camera.position.y=15;
-scene.add(camera);
+
+camera.position.set(-5,3,0)
+camera.lookAt(scene.position)
+
+
+const prova= new THREE.BoxGeometry(1,1,1)
+const ma = new THREE.MeshNormalMaterial()
+const vediamo = new THREE.Mesh(prova,ma)
+
+goal = new THREE.Object3D;
+follow = new THREE.Object3D;
+goal.position.z = -distancefrom;
+goal.add( camera );
+scene.add(vediamo)
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 //controls
-let controls = new OrbitControls( camera, renderer.domElement );
+var fake_camera=camera.clone()
+let controls = new OrbitControls( fake_camera, renderer.domElement );
 //controls.listenToKeyEvents( window ); // optional
 
 //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
 
 controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-controls.dampingFactor = 0.05;
+controls.dampingFactor = 0.5;
 controls.screenSpacePanning = false;
 controls.minDistance = 0;
 controls.maxDistance = 50;
 controls.maxPolarAngle = Math.PI / 2;
+//controls.target=(vediamo.position)
+controls.mouseButtons = {
+	LEFT: THREE.MOUSE.ROTATE,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	RIGHT: THREE.MOUSE.PAN
+}
 
 //OBJECTS 
 //stage
@@ -67,38 +100,11 @@ const material = new THREE.MeshStandardMaterial({
 
 const stage = new THREE.Mesh(geometry, material)
 stage.position.y=-1
-//stage.rotation.x=Math.PI/180*90
 
-
-/*const perlin = new Perlin();
-var peak = 60;
-var smoothing = 300;
-var vertices = stage.geometry.attributes.position.array;
-for (var i = 0; i <= vertices.length; i += 3) 
-    vertices[i+2] = peak * 
-        vertices[i]/smoothing, 
-    
-
-stage.geometry.attributes.position.needsUpdate = true;
-stage.geometry.computeVertexNormals();*/
-/*const count = geometry.attributes.position.count
-for (let i=0; i<count; i++){
-    const x = stage.geometry.attributes.position.getX(i);
-    const xsin = Math.sin(x);
-    stage.geometry.attributes.position.setZ(i,xsin)
-    stage.geometry.attributes.position.setX(i,xsin)
-    stage.geometry.attributes.position.setY(i,xsin)
-    
-}
-
-//stage.geometry.attributes.position.needsUpdate = true*/
 stage.geometry.attributes.uv2=stage.geometry.attributes.uv
 scene.add(stage)
 
-/*const prova= new THREE.BoxGeometry(10,10,10)
-const ma = new THREE.MeshStandardMaterial()
-const vediamo = new THREE.Mesh(prova,ma)
-scene.add(vediamo)*/
+
 //MODELS
 const loader1 = new GLTFLoader();
 const loaderf1 = new GLTFLoader();
@@ -114,10 +120,12 @@ const loadert4 = new GLTFLoader();
 const loaderlamp1 = new GLTFLoader();
 const loaderlamp2 = new GLTFLoader();
 const loaderlamp3 = new GLTFLoader();
+const loaderlamp4 = new GLTFLoader();
 const loaderbench1 = new GLTFLoader();
 const loaderbench2 = new GLTFLoader();
 const loaderbench3 = new GLTFLoader();
-var house,fence,forest,trunk,lamp,bench;
+const loadercar = new GLTFLoader();
+var house,fence,forest,trunk,lamp,bench,car;
 loader1.load('./models/wood house/scene.gltf', function(gltf){
     house = gltf.scene;
     house.scale.set(0.01,0.01,0.01);
@@ -168,7 +176,7 @@ loaderf5.load('./models/wood fence/scene.gltf', function(gltf){
 })
 loadert1.load('./models/tree forest/scene.gltf', function(gltf){
     forest= gltf.scene;
-    forest.scale.set(0.7,0.7,0.7)
+    //forest.scale.set(0.7,0.7,0.7)
     forest.position.set(15,-1.2,-17)
     forest.rotation.y=Math.PI/180* -45
     stage.attach(forest);
@@ -176,7 +184,7 @@ loadert1.load('./models/tree forest/scene.gltf', function(gltf){
 })
 loadert2.load('./models/tree forest/scene.gltf', function(gltf){
     forest= gltf.scene;
-    forest.scale.set(0.7,0.7,0.7)
+    //forest.scale.set(0.7,0.7,0.7)
     forest.position.set(15,-1.2,-15)
     forest.rotation.y=Math.PI/180* -45
     stage.attach(forest);    
@@ -184,7 +192,7 @@ loadert2.load('./models/tree forest/scene.gltf', function(gltf){
 })
 loadert3.load('./models/tree forest/scene.gltf', function(gltf){
     forest= gltf.scene;
-    forest.scale.set(0.7,0.7,0.7)
+    //forest.scale.set(0.7,0.7,0.7)
     forest.position.set(15,-1.2,-13)
     forest.rotation.y=Math.PI/180* -45
     stage.attach(forest);
@@ -193,7 +201,7 @@ loadert3.load('./models/tree forest/scene.gltf', function(gltf){
 })
 loadert4.load('./models/tree forest/scene.gltf', function(gltf){
     forest= gltf.scene;
-    forest.scale.set(0.7,0.7,0.7)
+    //forest.scale.set(0.7,0.7,0.7)
     forest.position.set(15,-1.2,-11)
     forest.rotation.y=Math.PI/180* -45
     stage.attach(forest);
@@ -230,6 +238,13 @@ loaderlamp3.load('./models/street lamp/scene.gltf', function(gltf){
     stage.attach(lamp);
     scene.add(lamp);
 })
+loaderlamp4.load('./models/street lamp/scene.gltf', function(gltf){
+    lamp= gltf.scene;
+    lamp.scale.set(0.05,0.05,0.05)
+    lamp.position.set(-26,4.5,25)
+    stage.attach(lamp);
+    scene.add(lamp);
+})
 loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
     bench= gltf.scene;
     bench.scale.set(2,2,2);
@@ -241,7 +256,7 @@ loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
 loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
     bench= gltf.scene;
     bench.scale.set(1.5,1.5,1.5);
-    bench.position.set(-14,-1,-20)
+    bench.position.set(-14,-2,-20)
     bench.rotation.y=Math.PI/180*-90;
     stage.attach(bench);
     scene.add(bench);
@@ -254,37 +269,52 @@ loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
     stage.attach(bench);
     scene.add(bench);
 })
+loadercar.load('./models/car/scene.gltf', function(gltf){
+    car= gltf.scene;
+    car.scale.set(0.5,0.5,0.5);
+    car.position.set(-25,0,19)
+    car.rotation.y=Math.PI/180*45;
+    stage.attach(car);
+    scene.add(car);
+})
 //lights
 const ambientlight = new THREE.AmbientLight(0x404040);
 scene.add(ambientlight);
 //lamp spotlight
 const lamplight1 = new THREE.SpotLight(0x654321,4.5,0,0.85)
 lamplight1.position.set(13.5,4.5,10)
-lamplight1.target.position.set(13.5,-1,10)
+lamplight1.target.position.set(13.5,1,10)
 lamplight1.visible=false
 scene.add(lamplight1)
 scene.add(lamplight1.target)
 
 const lamplight2 = new THREE.SpotLight(0x654321,4.5,0,0.85)
 lamplight2.position.set(-18.5,4.5,-21)
-lamplight2.target.position.set(-18.5,-1,-21)
+lamplight2.target.position.set(-18.5,1,-21)
 lamplight2.visible=false
 scene.add(lamplight2)
 scene.add(lamplight2.target)
 
 const lamplight3 = new THREE.SpotLight(0x654321,4.5,0,0.85)
-lamplight3.position.set(16,4.5,-17)
-lamplight3.target.position.set(16,-1,-17)
+lamplight3.position.set(16,6,-17)
+lamplight3.target.position.set(16,4,-17)
 lamplight3.visible=false
 scene.add(lamplight3)
 scene.add(lamplight3.target)
+
+const lamplight4 = new THREE.SpotLight(0x654321,4.5,0,0.85)
+lamplight4.position.set(-26,4.5,25)
+lamplight4.target.position.set(-26,-1,25)
+lamplight4.visible=false
+scene.add(lamplight4)
+scene.add(lamplight4.target)
 //spotlight
 var pos = {
     x_1:0,
     y_1:10,
     z_1:0,
 }
-const spotlight= new THREE.SpotLight(0xff2222,1.5,0,0.3)
+const spotlight= new THREE.SpotLight(0xff2222,0,0,0.3) //il secondo param è intensita
 spotlight.shadowMapVisible = true;
 spotlight.position.x=pos.x_1
 spotlight.position.y=pos.y_1
@@ -323,35 +353,36 @@ directionallight2.target.position.set(10,-5,10)
 scene.add(directionallight2)
 scene.add(directionallight2.target)
 
-
-
-
 //gui folders
 //light folder
-const lightFolder = gui.addFolder('Spot Light')
+const LightsF = gui.addFolder('Lights')
+const lightFolder = LightsF.addFolder('Spot Light')
+
 lightFolder.addColor(palette,'color').onChange(function(value){
     spotlight.color.r =value[0]/255;
     spotlight.color.g =value[1]/255;
     spotlight.color.b =value[2]/255;
 })
 
-lightFolder.add(pos,"x_1").min(-30).max(30).step(0.05).onChange(function(value){
+lightFolder.add(pos,"x_1",-30,30,0.05).onChange(function(value){
     spotlight.position.x=value;
     spotlight.target.position.x=value;
 }).name('x')
-lightFolder.add(pos,'y_1').min(0).max(20).step(0.05).onChange(function(value){
+lightFolder.add(pos,'y_1',0,20,0.05).onChange(function(value){
     spotlight.position.y=value;
 }).name('y')
-lightFolder.add(pos,'z_1').min(-30).max(30).step(0.05).onChange(function(value){
+lightFolder.add(pos,'z_1',-30,30,0.05).onChange(function(value){
     spotlight.position.z=value;
     spotlight.target.position.z=value;
 }).name('z')
 lightFolder.add(spotlight,'intensity').min(0).max(15).step(0.01)
-gui.add(lamplight1,'visible').name('turn on the stree lamps').onChange(function(value){
+
+LightsF.add(lamplight1,'visible').name('turn on the stree lamps').onChange(function(value){
     lamplight2.visible=value;
-    lamplight3.visible=value
+    lamplight3.visible=value;
+    lamplight4.visible=value;
 })
-gui.add(is_vis,'visi').name('turn on directional light').onChange(function(value){
+LightsF.add(is_vis,'visi').name('turn on directional light').onChange(function(value){
     directionallight.visible=value;
     directionallight2.visible=value;
 })
@@ -365,9 +396,69 @@ cameraFolder.add(camera.position,'x',-60,60)
 cameraFolder.add(camera.position,'y',-50,100)
 cameraFolder.add(camera.position,'z',-60,60)
 
+gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
 
+
+//movimento cubo
+var speed=0.0
+var velocity=0.0
+var keys
+keys = {
+    a: false,
+    s: false,
+    d: false,
+    w: false
+  };
+  document.body.addEventListener( 'keydown', function(e) {
+    
+    var key = e.code.replace('Key', '').toLowerCase();
+    if ( keys[ key ] !== undefined )
+      keys[ key ] = true;
+    
+  });
+  document.body.addEventListener( 'keyup', function(e) {
+    
+    var key = e.code.replace('Key', '').toLowerCase();
+    if ( keys[ key ] !== undefined )
+      keys[ key ] = false;
+    
+  });
 
 function animate(){
+    //animazione cubo
+    speed = 0.0;
+  
+    if ( keys.w )
+        speed = 0.1;
+    else if ( keys.s )
+        speed = -0.1;
+
+    velocity += ( speed - velocity ) ;
+    vediamo.translateZ( velocity );
+
+    if ( keys.a )
+        vediamo.rotateY(0.05);
+    else if ( keys.d )
+        vediamo.rotateY(-0.05);
+//fino a qua
+
+// 3rd person camera
+
+    camera.copy(fake_camera)
+    a.lerp(vediamo.position, 0.4);
+    b.copy(goal.position);
+
+    dir.copy( a ).sub( b ).normalize();
+    const dis = a.distanceTo( b ) - distancefrom;
+    goal.position.addScaledVector( dir, dis );
+  //temp.setFromMatrixPosition(goal.matrixWorld);
+  
+  //camera.position.lerp(temp, 0.2);
+    camera.lookAt( vediamo.position );
+  
+  
+
+  //fino a qua
     requestAnimationFrame(animate)
     renderer.render(scene,camera)
 }
