@@ -1,4 +1,7 @@
+//var home_flag = false;
+
 function start_button(){
+    //home_flag=true;
     document.getElementById(1).style.display=' none';
     document.getElementById(1).style.visibility="hidden";
     document.getElementById(2).style.display=' inline';
@@ -14,6 +17,12 @@ function start_button(){
     start_audio.loop=true;
     start_audio.play();
 }
+
+/*window.addEventListener('onload', () => {
+    if(home_flag==true){
+        start_button();
+    }
+});*/
 
 const popupBox = document.querySelector(".popup-box");
 const closeBtn = document.querySelector(".close-btn");
