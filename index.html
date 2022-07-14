@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="css/button.css" />
+        <link rel="stylesheet" type="text/css" href="css/logo.css" />
+        <script src="js/buttons.js"></script>
+        <script src="three.js/build/three.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <body>
+      <div id="instruction-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Instructions</h2>
+          <p style="color: white;">The goal of this game is to kill as many monsters as you can. 
+            To move, use WASD commands. To change point of view use your mouse by clicking and scrolling in the opposite direction of what you want to see.
+            You can choose the environment conditions, music , lights, camera parameters by clicking the Options button. </p>
+        </div>
+      </div>
+      <div id="difficulty-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Choose Level of Difficulty</h2>
+          <button class="btn">EASY</button>
+          <button class="btn">NORMAL</button>
+          <button class="btn">HARD</button>
+        </div>
+      </div>
+      <div id="options-popup" class="popup-screen">
+        <div class="popup-box">
+          <button class="fas fa-times close-btn" onclick="close_button();"></button>
+          <h2 style="color: white;">Options</h2>
+          <p style="color: white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </div>
+
+        <script type="module">
+            import * as THREE from './three.js/build/three.module.js';
+            let scene, camera, render;
+    
+            scene = new THREE.Scene();
+            //scene.background = new THREE.Color(0xffffff);
+            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            var renderer = new THREE.WebGLRenderer({antialias:true});
+            renderer.setSize(window.innerWidth,window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+    
+            /*const listener = new THREE.AudioListener();
+            camera.add( listener );
+    
+            // create a global audio source
+            const sound = new THREE.Audio( listener );
+            
+            function startSound(){
+              // load a sound and set it as the Audio object's buffer
+              const audioLoader = new THREE.AudioLoader();
+              audioLoader.load( 'Stranger_Things.ogg', function( buffer ) {
+                  sound.setBuffer( buffer );
+                  sound.setLoop( true );
+                  sound.setVolume( 0.5 );
+                  sound.play();
+              });
+            }*/
+            //var start_audio= new Audio('./Stranger_Things.mp3');
+            //start_audio.loop=true;
+            //document.body.appendChild(start_audio);
+        </script>
+        g<div class="st">
+
+  <div class="st-top">
+    <div class="st-bound st-bound-full"></div>
+    <p><span class="st-drop st-stranger-s">S</span><span class="st-stranger-t">t</span><span class="st-stranger-r">r</span><span class="st-stranger-a">a</span><span class="st-stranger-n">n</span><span class="st-stranger-g">g</span><span class="st-stranger-e">e</span><span class="st-drop st-stranger-r-2">r</span>
+    </p>
+    <div class="st-bound st-bound-mini st-bound-left"></div>
+    <div class="st-bound st-bound-mini st-bound-right"></div>
+  </div>
+
+  <div class="st-bottom">
+    <p><span class="st-things-k">K</span><span class="st-things-i">i</span><span class="st-things-l">l</span><span class="st-things-l">l</span><span class="st-things-l">s</span></p>
+  </div>
+  <div class="container">
+      <button class="btn" id="1" onclick="start_button();">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>START</span>
+      </button>
+      <button class="btn" id="2" style="display: none; visibility: hidden;" onclick="instruction_button();">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>INSTRUCTIONS</span>
+      </button>
+      <button class="btn" id="3" style="display: none; visibility: hidden;" onclick="difficulty_button();">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>DIFFICULTY</span>
+      </button>
+      <button class="btn" id="4" style="display: none; visibility: hidden;" onclick="options_button();">
+        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+        </svg>
+        <span>OPTIONS</span>
+      </button>
+  </div>
+    <button class="button" id="5" style="display: none; visibility: hidden;" width="100" height="100" onclick="location.href='gioco.html'">PLAY</button>
+</div>
+
+
+
+    </body>
+</html>
