@@ -19,7 +19,8 @@ const tilesNormalMap = textureLoader.load('./textures/grass/Ground037_1K_NormalD
 const tilesHeightMap = textureLoader.load('./textures/grass/Ground037_1K_Displacement.jpg');
 const tilesRoughness = textureLoader.load('./textures/grass/Ground037_1K_Roughness.jpg');
 const tilesAmbientOcclusionMap = textureLoader.load('./textures/grass/Ground037_1K_AmbientOcclusion.jpg');
-
+//for moon
+const moonTexture = textureLoader.load('./textures/moon.jpg')
 //SCENE
 const scene = new THREE.Scene();
 
@@ -67,17 +68,13 @@ document.body.appendChild( renderer.domElement );
 //controls
 var fake_camera=camera.clone()
 let controls = new OrbitControls( fake_camera, renderer.domElement );
-//controls.listenToKeyEvents( window ); // optional
-
-//controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
 
 controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
 controls.dampingFactor = 0.5;
 controls.screenSpacePanning = false;
 controls.minDistance = 0;
-controls.maxDistance = 50;
+controls.maxDistance = 100;
 controls.maxPolarAngle = Math.PI / 2;
-//controls.target=(vediamo.position)
 controls.mouseButtons = {
 	LEFT: THREE.MOUSE.ROTATE,
 	MIDDLE: THREE.MOUSE.DOLLY,
@@ -85,6 +82,7 @@ controls.mouseButtons = {
 }
 
 //OBJECTS 
+var objects =[];
 //stage
 const geometry = new THREE.BoxBufferGeometry(60,0.001,60,200,200);
 //geometry.attributes.position.setZ(1,0.9)
@@ -103,7 +101,14 @@ stage.position.y=-1
 
 stage.geometry.attributes.uv2=stage.geometry.attributes.uv
 scene.add(stage)
+//moon
+const mgeometry = new THREE.SphereGeometry(5,20,20)
+const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
+const moon = new THREE.Mesh(mgeometry, mesh)
 
+moon.position.set(0,40,0)
+
+scene.add(moon)
 
 //MODELS
 const loader1 = new GLTFLoader();
@@ -125,88 +130,109 @@ const loaderbench1 = new GLTFLoader();
 const loaderbench2 = new GLTFLoader();
 const loaderbench3 = new GLTFLoader();
 const loadercar = new GLTFLoader();
-var house,fence,forest,trunk,lamp,bench,car;
+var house;
+var fence1, fence2, fence3, fence4, fence5;
+var forest1, forest2, forest3, forest4;
+var trunk;
+var lamp1, lamp2, lamp3, lamp4;
+var bench1, bench2, bench3;
+var car;
 loader1.load('./models/wood house/scene.gltf', function(gltf){
+    
     house = gltf.scene;
     house.scale.set(0.01,0.01,0.01);
     stage.attach(house);
     house.rotation.y =-45;
     house.position.set(20,2.6,20)
+    const hg= new THREE.BoxGeometry(5,5,5)
+    const hm =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
+    const h = new THREE.Mesh(hg,hm)
+    h.position.set(20,2.6,20)
+    h.rotation.y=-45
     scene.add(house);
+    scene.add(h)
+    objects.push(h)
 })
 loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
-    fence= gltf.scene;
-    fence.scale.set(0.002,0.002,0.008)
-    stage.attach(fence);
-    fence.position.set(-25,-0.7,-20) //prima y era -1.2
-    fence.rotation.y = Math.PI/180 
-    scene.add(fence);
+    fence1= gltf.scene;
+    fence1.scale.set(0.002,0.002,0.008)
+    stage.attach(fence1);
+    fence1.position.set(-25,-0.7,-20) //prima y era -1.2
+    fence1.rotation.y = Math.PI/180 
+    scene.add(fence1);
+    objects.push(fence1)
 })
 loaderf2.load('./models/wood fence/scene.gltf', function(gltf){
-    fence= gltf.scene;
-    fence.scale.set(0.002,0.002,0.008)
-    stage.attach(fence);
-    fence.position.set(-18,-0.7,-28)
-    fence.rotation.y=Math.PI/180 * 90;
-    scene.add(fence);
+    fence2= gltf.scene;
+    fence2.scale.set(0.002,0.002,0.008)
+    stage.attach(fence2);
+    fence2.position.set(-18,-0.7,-28)
+    fence2.rotation.y=Math.PI/180 * 90;
+    scene.add(fence2);
+    objects.push(fence2)
 })
 loaderf3.load('./models/wood fence/scene.gltf', function(gltf){
-    fence= gltf.scene;
-    fence.scale.set(0.002,0.002,0.008)
-    stage.attach(fence);
-    fence.position.set(-12,-0.7,-20)
-    fence.rotation.y=Math.PI/180;
-    scene.add(fence);
+    fence3= gltf.scene;
+    fence3.scale.set(0.002,0.002,0.008)
+    stage.attach(fence3);
+    fence3.position.set(-12,-0.7,-20)
+    fence3.rotation.y=Math.PI/180;
+    scene.add(fence3);
+    objects.push(fence3)
 })
 loaderf4.load('./models/wood fence/scene.gltf', function(gltf){
-    fence= gltf.scene;
-    fence.scale.set(0.002,0.002,0.002)
-    stage.attach(fence);
-    fence.position.set(-13.5,-0.7,-14.5)
-    fence.rotation.y=Math.PI/180 * 90;
-    scene.add(fence);
+    fence4= gltf.scene;
+    fence4.scale.set(0.002,0.002,0.002)
+    stage.attach(fence4);
+    fence4.position.set(-13.5,-0.7,-14.5)
+    fence4.rotation.y=Math.PI/180 * 90;
+    scene.add(fence4);
+    objects.push(fence4)
 })
 loaderf5.load('./models/wood fence/scene.gltf', function(gltf){
-    fence= gltf.scene;
-    fence.scale.set(0.002,0.002,0.002)
-    stage.attach(fence);
-    fence.position.set(-23.5,-0.7,-14.5)
-    fence.rotation.y=Math.PI/180 * 90;
-    scene.add(fence);
+    fence5= gltf.scene;
+    fence5.scale.set(0.002,0.002,0.002)
+    stage.attach(fence5);
+    fence5.position.set(-23.5,-0.7,-14.5)
+    fence5.rotation.y=Math.PI/180 * 90;
+    scene.add(fence5);
+    objects.push(fence5)
 })
 loadert1.load('./models/tree forest/scene.gltf', function(gltf){
-    forest= gltf.scene;
-    //forest.scale.set(0.7,0.7,0.7)
-    forest.position.set(15,-1.2,-17)
-    forest.rotation.y=Math.PI/180* -45
-    stage.attach(forest);
-    scene.add(forest);
+    forest1= gltf.scene;
+    //forest1.scale.set(0.7,0.7,0.7)
+    forest1.position.set(15,-1.2,-17)
+    forest1.rotation.y=Math.PI/180* -45
+    stage.attach(forest1);
+    scene.add(forest1);
+    objects.push(forest1)
 })
 loadert2.load('./models/tree forest/scene.gltf', function(gltf){
-    forest= gltf.scene;
+    forest2= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest.position.set(15,-1.2,-15)
-    forest.rotation.y=Math.PI/180* -45
-    stage.attach(forest);    
-    scene.add(forest);
+    forest2.position.set(15,-1.2,-15)
+    forest2.rotation.y=Math.PI/180* -45
+    stage.attach(forest2);    
+    scene.add(forest2);
+    objects.push(forest2)
 })
 loadert3.load('./models/tree forest/scene.gltf', function(gltf){
-    forest= gltf.scene;
+    forest3= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest.position.set(15,-1.2,-13)
-    forest.rotation.y=Math.PI/180* -45
-    stage.attach(forest);
-    
-    scene.add(forest);
+    forest3.position.set(15,-1.2,-13)
+    forest3.rotation.y=Math.PI/180* -45
+    stage.attach(forest3);
+    scene.add(forest3);
+    objects.push(forest3)
 })
 loadert4.load('./models/tree forest/scene.gltf', function(gltf){
-    forest= gltf.scene;
+    forest4= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest.position.set(15,-1.2,-11)
-    forest.rotation.y=Math.PI/180* -45
-    stage.attach(forest);
-    
-    scene.add(forest);
+    forest4.position.set(15,-1.2,-11)
+    forest4.rotation.y=Math.PI/180* -45
+    stage.attach(forest4);
+    scene.add(forest4);
+    objects.push(forest4)
 })
 loadertt.load('./models/tree trunk/scene.gltf', function(gltf){
     trunk= gltf.scene;
@@ -216,58 +242,66 @@ loadertt.load('./models/tree trunk/scene.gltf', function(gltf){
     trunk.rotation.y=Math.PI/180* 90
     stage.attach(trunk)
     scene.add(trunk);
+    objects.push(trunk)
 })
 loaderlamp1.load('./models/street lamp/scene.gltf', function(gltf){
-    lamp= gltf.scene;
-    lamp.scale.set(0.05,0.05,0.05)
-    lamp.position.set(13.5,4.5,10)
-    stage.attach(lamp)
-    scene.add(lamp);
+    lamp1= gltf.scene;
+    lamp1.scale.set(0.05,0.05,0.05)
+    lamp1.position.set(13.5,4.5,10)
+    stage.attach(lamp1)
+    scene.add(lamp1);
+    objects.push(lamp1)
 })
 loaderlamp2.load('./models/street lamp/scene.gltf', function(gltf){
-    lamp= gltf.scene;
-    lamp.scale.set(0.05,0.05,0.05)
-    lamp.position.set(-18.5,4.5,-21)
-    stage.attach(lamp);
-    scene.add(lamp);
+    lamp2= gltf.scene;
+    lamp2.scale.set(0.05,0.05,0.05)
+    lamp2.position.set(-18.5,4.5,-21)
+    stage.attach(lamp2);
+    scene.add(lamp2);
+    objects.push(lamp2)
 })
 loaderlamp3.load('./models/street lamp/scene.gltf', function(gltf){
-    lamp= gltf.scene;
-    lamp.scale.set(0.05,0.05,0.05)
-    lamp.position.set(16,4.5,-17)
-    stage.attach(lamp);
-    scene.add(lamp);
+    lamp3= gltf.scene;
+    lamp3.scale.set(0.05,0.05,0.05)
+    lamp3.position.set(16,4.5,-17)
+    stage.attach(lamp3);
+    scene.add(lamp3);
+    objects.push(lamp3)
 })
 loaderlamp4.load('./models/street lamp/scene.gltf', function(gltf){
-    lamp= gltf.scene;
-    lamp.scale.set(0.05,0.05,0.05)
-    lamp.position.set(-26,4.5,25)
-    stage.attach(lamp);
-    scene.add(lamp);
+    lamp4= gltf.scene;
+    lamp4.scale.set(0.05,0.05,0.05)
+    lamp4.position.set(-26,4.5,25)
+    stage.attach(lamp4);
+    scene.add(lamp4);
+    objects.push(lamp4)
 })
 loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
-    bench= gltf.scene;
-    bench.scale.set(2,2,2);
-    bench.position.set(-23,-1.5,-20)
-    bench.rotation.y=Math.PI/180*-90;
-    stage.attach(bench);
-    scene.add(bench);
+    bench1= gltf.scene;
+    bench1.scale.set(2,2,2);
+    bench1.position.set(-23,-1.5,-20)
+    bench1.rotation.y=Math.PI/180*-90;
+    stage.attach(bench1);
+    scene.add(bench1);
+    objects.push(bench1)
 })
 loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
-    bench= gltf.scene;
-    bench.scale.set(1.5,1.5,1.5);
-    bench.position.set(-14,-2,-20)
-    bench.rotation.y=Math.PI/180*-90;
-    stage.attach(bench);
-    scene.add(bench);
+    bench2= gltf.scene;
+    bench2.scale.set(1.5,1.5,1.5);
+    bench2.position.set(-14,-2,-20)
+    bench2.rotation.y=Math.PI/180*-90;
+    stage.attach(bench2);
+    scene.add(bench2);
+    objects.push(bench2)
 })
 loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
-    bench= gltf.scene;
-    bench.scale.set(2,2,2);
-    bench.position.set(-19,-1,-25)
+    bench3= gltf.scene;
+    bench3.scale.set(2,2,2);
+    bench3.position.set(-19,-1,-25)
    // bench.rotation.y=Math.PI/180*-90;
-    stage.attach(bench);
-    scene.add(bench);
+    stage.attach(bench3);
+    scene.add(bench3);
+    objects.push(bench3)
 })
 loadercar.load('./models/car/scene.gltf', function(gltf){
     car= gltf.scene;
@@ -276,6 +310,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
     car.rotation.y=Math.PI/180*45;
     stage.attach(car);
     scene.add(car);
+    objects.push(car)
 })
 //lights
 const ambientlight = new THREE.AmbientLight(0x404040);
@@ -311,10 +346,10 @@ scene.add(lamplight4.target)
 //spotlight
 var pos = {
     x_1:0,
-    y_1:10,
+    y_1:40,
     z_1:0,
 }
-const spotlight= new THREE.SpotLight(0xff2222,0,0,0.3) //il secondo param è intensita
+const spotlight= new THREE.SpotLight(0xff2222,3.5,0,0.3) //il secondo param è intensita
 spotlight.shadowMapVisible = true;
 spotlight.position.x=pos.x_1
 spotlight.position.y=pos.y_1
@@ -367,13 +402,16 @@ lightFolder.addColor(palette,'color').onChange(function(value){
 lightFolder.add(pos,"x_1",-30,30,0.05).onChange(function(value){
     spotlight.position.x=value;
     spotlight.target.position.x=value;
+    moon.position.x=value
 }).name('x')
-lightFolder.add(pos,'y_1',0,20,0.05).onChange(function(value){
+lightFolder.add(pos,'y_1',10,60,0.05).onChange(function(value){
     spotlight.position.y=value;
+    moon.position.y=value
 }).name('y')
 lightFolder.add(pos,'z_1',-30,30,0.05).onChange(function(value){
     spotlight.position.z=value;
     spotlight.target.position.z=value;
+    moon.position.z=value
 }).name('z')
 lightFolder.add(spotlight,'intensity').min(0).max(15).step(0.01)
 
@@ -388,13 +426,13 @@ LightsF.add(is_vis,'visi').name('turn on directional light').onChange(function(v
 })
 
 //camera folder
-const cameraFolder = gui.addFolder('camera')
+/*const cameraFolder = gui.addFolder('camera')
 cameraFolder.add(camera,'fov',0,200,2)
 cameraFolder.add(camera,'near',0,1,0.1)
 cameraFolder.add(camera,'far',1,2000,2)
 cameraFolder.add(camera.position,'x',-60,60)
 cameraFolder.add(camera.position,'y',-50,100)
-cameraFolder.add(camera.position,'z',-60,60)
+cameraFolder.add(camera.position,'z',-60,60)*/
 
 gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
 
@@ -409,20 +447,64 @@ keys = {
     d: false,
     w: false
   };
-  document.body.addEventListener( 'keydown', function(e) {
+document.body.addEventListener( 'keydown', function(e) {
     
     var key = e.code.replace('Key', '').toLowerCase();
     if ( keys[ key ] !== undefined )
       keys[ key ] = true;
     
   });
-  document.body.addEventListener( 'keyup', function(e) {
+document.body.addEventListener( 'keyup', function(e) {
     
     var key = e.code.replace('Key', '').toLowerCase();
     if ( keys[ key ] !== undefined )
       keys[ key ] = false;
     
-  });
+});
+
+function avoid_borders(){
+    if(vediamo.position.x>29){
+        vediamo.rotateY(3.15)
+    }
+    else if (vediamo.position.x<-29){
+        vediamo.rotateY(-3.15)
+    }
+    else if (vediamo.position.z<-29){
+        vediamo.translateZ(1)
+        console.log('nel negativo suca')
+    }
+    else if (vediamo.position.z>29){
+        vediamo.translateZ(-1)
+        console.log('nel positivo daje')
+    }
+}
+const g= new THREE.BoxGeometry(5,5,5)
+const m =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5, wireframe : false})
+const f = new THREE.Mesh(g,m)
+//f.visible=false
+f.position.set(0,0,7)
+objects.push(f)
+scene.add(f)
+
+function collision_avoidance(){
+    var originPoint=vediamo.position.clone()
+    for (var vertexIndex = 0; vertexIndex < vediamo.geometry.attributes.position.array.length; vertexIndex++)
+	{		
+		var localVertex = new THREE.Vector3().fromBufferAttribute(vediamo.geometry.attributes.position, vertexIndex).clone();
+		var globalVertex = localVertex.applyMatrix4( vediamo.matrix );
+		var directionVector = globalVertex.sub( vediamo.position );
+		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+		var collisionResults = ray.intersectObjects( objects );
+        
+		if ( collisionResults.length > 0 &&
+             collisionResults[0].distance < directionVector.length()+2){
+            console.log(directionVector.z)
+            //speed*=-1
+             vediamo.rotateY(velocity)
+            //vediamo.rotateY(Math.sin(vediamo.position.x)-Math.cos(vediamo.position.z))
+        }
+	}	
+}
 
 function animate(){
     //animazione cubo
@@ -451,11 +533,12 @@ function animate(){
     dir.copy( a ).sub( b ).normalize();
     const dis = a.distanceTo( b ) - distancefrom;
     goal.position.addScaledVector( dir, dis );
-  //temp.setFromMatrixPosition(goal.matrixWorld);
   
-  //camera.position.lerp(temp, 0.2);
+    //camera.position.lerp(temp, 0.2);
     camera.lookAt( vediamo.position );
-  
+    //no border fall
+    avoid_borders();
+    collision_avoidance();
   
 
   //fino a qua
