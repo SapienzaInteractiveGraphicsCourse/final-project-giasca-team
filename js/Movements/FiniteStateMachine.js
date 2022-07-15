@@ -1,4 +1,3 @@
-import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJBZqM/build/three.module.js';
 
 export class FiniteStateMachine{
     constructor(target) {
@@ -38,9 +37,9 @@ export class FiniteStateMachine{
         state.Enter(prevState);
     }
     
-    Update(/*timeElapsed,*/ input) {
+    Update(input) {
         if (this._currentState) {
-          this._currentState.Update(/*timeElapsed,*/ input);
+          this._currentState.Update(input);
         }
     }
 };

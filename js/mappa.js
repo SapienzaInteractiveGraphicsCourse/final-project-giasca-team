@@ -4,28 +4,36 @@ import { GLTFLoader } from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpz
 
 import { CharacterFSM } from './Movements/CharacterFSM.js';
 
+var scene, camera, renderer, mesh;
+var plane, ambientLight, light;
+var Character;
 
 class BasicCharacterController { //represents a single animated character in the world
-    constructor(params) {
-        this._Init(params);
+    constructor(target) {
+        this._Init(target);
     }
 
-    _Init(params) {
-        this._path = params.path;
+    _Init(target) {
+        this._target = target;
+        /*this._path = params.path;
         this._scaleValue = params.scaleValue;
         this._pos_x = params.pos_x;
         this._pos_y = params.pos_y;
-        this._pos_z = params.pos_z;
+        this._pos_z = params.pos_z;*/
 
         this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
         this._acceleration = new THREE.Vector3(1, 0.25, 50.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
     
+        this._stateMachine = new CharacterFSM(this._target);
+        this._stateMachine.SetState('idle');
         this._input = new BasicCharacterControllerInput();
-    
-        this._mesh= _LoadModels(this._path, this._scaleValue, this._pos_x, this._pos_y, this._pos_z);
-        this._stateMachine = new CharacterFSM(this._mesh);
     }
+
+    update(){
+        this._stateMachine.Update(this._input);
+    }
+
 
 
     
@@ -54,7 +62,7 @@ class BasicCharacterControllerInput { //resposible for keyboard and other contro
             case 87: //W
                 this._keys.forward=true;
                 break;
-                case 65: // a
+            case 65: // a
                 this._keys.left = true;
                 break;
             case 83: // s
@@ -96,15 +104,9 @@ class BasicCharacterControllerInput { //resposible for keyboard and other contro
     }
 };
 
-var scene, camera, renderer, mesh;
-var plane, ambientLight, light;
-
-var keyboard = {};
+//var keyboard = {};
 var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02 };
-var USE_WIREFRAME = false;
-
-
-var crate, crateTexture, crateNormalMap, crateBumpMap;
+//var USE_WIREFRAME = false;
 
 var loadingScreen = {
     scene : new THREE.Scene(),
@@ -129,6 +131,7 @@ var models = {
 
 function init() {
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
 	camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1.0, 1000.0 );
 
     const loading_screen = document.querySelector(".loading_container");
@@ -142,9 +145,9 @@ function init() {
         loading_screen.style.display = "none";
 	}; //onLoad is when all resources are loaded
 
-    loadingManager.onError = function(item) {
+    /*loadingManager.onError = function(item) {
         console.log('Got a problem in loading: ${item}');
-    }
+    }*/
 
     //CREATION OF THE PLANE (GRASS)
     const textureLoader = new THREE.TextureLoader();
@@ -190,19 +193,22 @@ function init() {
         //character_path = '../models/male_officer/scene.gltf';
     }
 
-    var character_params = {
-        path : character_path,
+    /*var character_params = {
+        /*path : '../models/female_officer/scene.gltf',
         scaleValue : 1.3,
         pos_x : -5,
         pos_y : 0,
         pos_z : 1
-    };
+        target: 
+    };*/
 
-    const Character = new BasicCharacterController(character_params);
+    //const Character = new BasicCharacterController(character_params);
 
-    /*_LoadModels('../models/female_officer/scene.gltf',1.3,-5,0,1);
+    _LoadModels('../models/female_officer/scene.gltf',1.3,-5,0.2,1);
 
-    _LoadModels('../models/monster/scene.gltf',0.15,-5,0,4);*/
+    //_LoadModels('../models/monster/scene.gltf',0.15,-5,0,4);
+
+    //_LoadModels('../models/female_officer/scene.gltf', this._scaleValue, this._pos_x, this._pos_y, this._pos_z);
 
 
     camera.position.set(0, player.height, -5);
@@ -218,23 +224,28 @@ function init() {
 
 }
 
+
 function _LoadModels(path,scaleValue,position_x,position_y,position_z) {
     var loaderGLTF = new GLTFLoader(loadingManager);
     loaderGLTF.load(path, function(gltf){
         mesh = gltf.scene;
 
-        mesh.traverse(c => {
+        /*mesh.traverse(c => {
             c.castShadow = true;
-        });
+        });*/
 
         mesh.position.set(position_x,position_y,position_z);
         mesh.scale.setScalar(scaleValue);
-        mesh.rotation.set(0, 10, 0);
+        mesh.rotation.set(0, 15, 0);
+        //provabanana = mesh.getObjectByName("LeftUpLeg_055");
         //models[monster].mesh = mesh;
         scene.add(mesh);
+        Character = new BasicCharacterController(mesh);
     });
-    return mesh;
 }
+
+var current_time;
+var updating_time;
 
 function animate(){
 
@@ -248,40 +259,13 @@ function animate(){
 
 	requestAnimationFrame(animate);
 	
-	//mesh.rotation.x += 0.01;
-	//mesh.rotation.y += 0.02;
-	//crate.rotation.y += 0.01;
-	// Uncomment for absurdity!
-	// meshes["pirateship"].rotation.z += 0.01;
-	
-	if(keyboard[87]){ // W key
-		camera.position.x -= Math.sin(camera.rotation.y) * player.speed;
-		camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
-	}
-	if(keyboard[83]){ // S key
-		camera.position.x += Math.sin(camera.rotation.y) * player.speed;
-		camera.position.z += -Math.cos(camera.rotation.y) * player.speed;
-	}
-	if(keyboard[65]){ // A key
-		camera.position.x += Math.sin(camera.rotation.y + Math.PI/2) * player.speed;
-		camera.position.z += -Math.cos(camera.rotation.y + Math.PI/2) * player.speed;
-	}
-	if(keyboard[68]){ // D key
-		camera.position.x += Math.sin(camera.rotation.y - Math.PI/2) * player.speed;
-		camera.position.z += -Math.cos(camera.rotation.y - Math.PI/2) * player.speed;
-	}
-	//rotate the camera on the Y (vertical) axis when left or right arrow keys are held
-	if(keyboard[37]){ // left arrow key 
-		camera.rotation.y -= player.turnSpeed;
-	}
-	if(keyboard[39]){ // right arrow key
-		camera.rotation.y += player.turnSpeed;
-	}
+    Character.update();
 	
 	renderer.render(scene, camera);
+
 }
 
-function keyDown(event){
+/*function keyDown(event){
 	keyboard[event.keyCode] = true;
 }
 
@@ -290,7 +274,7 @@ function keyUp(event){
 }
 
 window.addEventListener('keydown', keyDown);
-window.addEventListener('keyup', keyUp);
+window.addEventListener('keyup', keyUp);*/
 
 window.onload = init;
 
