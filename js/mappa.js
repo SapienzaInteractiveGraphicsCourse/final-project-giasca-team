@@ -3,10 +3,11 @@ import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJB
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJBZqM/examples/jsm/loaders/GLTFLoader.js';
 
 import { CharacterFSM } from './Movements/CharacterFSM.js';
+import { MonsterFSM } from './Movements/MonsterFSM.js';
 
 var scene, camera, renderer, mesh;
 var plane, ambientLight, light;
-var Character;
+var Character, Monster;
 
 class BasicCharacterController { //represents a single animated character in the world
     constructor(target) {
@@ -103,6 +104,27 @@ class BasicCharacterControllerInput { //resposible for keyboard and other contro
         }
     }
 };
+
+class BasicMonsterController { //represents a single animated character in the world
+    constructor(target) {
+        this._Init(target);
+    }
+
+    _Init(target) {
+        this._target = target;
+        
+    
+        this._stateMachine = new MonsterFSM(this._target);
+        this._stateMachine.SetState('idle');
+        this._input = new BasicCharacterControllerInput();
+    }
+
+    update(){
+        this._stateMachine.Update(0.005);
+    }
+
+};
+
 
 //var keyboard = {};
 var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02 };
@@ -204,9 +226,9 @@ function init() {
 
     //const Character = new BasicCharacterController(character_params);
 
-    _LoadModels('../models/female_officer/scene.gltf',1.3,-5,0.2,1);
+    _LoadModels('../models/female_officer/scene.gltf',1.3,-5,0.2,1, 0);
 
-    //_LoadModels('../models/monster/scene.gltf',0.15,-5,0,4);
+    _LoadModels('../models/monster/scene.gltf',0.15,-5,0,4);
 
     //_LoadModels('../models/female_officer/scene.gltf', this._scaleValue, this._pos_x, this._pos_y, this._pos_z);
 
@@ -225,7 +247,7 @@ function init() {
 }
 
 
-function _LoadModels(path,scaleValue,position_x,position_y,position_z) {
+function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
     var loaderGLTF = new GLTFLoader(loadingManager);
     loaderGLTF.load(path, function(gltf){
         mesh = gltf.scene;
@@ -240,7 +262,13 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z) {
         //provabanana = mesh.getObjectByName("LeftUpLeg_055");
         //models[monster].mesh = mesh;
         scene.add(mesh);
-        Character = new BasicCharacterController(mesh);
+        if(entity==0){
+            Character = new BasicCharacterController(mesh);
+        }
+        else{
+            Monster = new BasicMonsterController(mesh);
+        }
+        
     });
 }
 
@@ -260,7 +288,7 @@ function animate(){
 	requestAnimationFrame(animate);
 	
     Character.update();
-	
+	Monster.update();
 	renderer.render(scene, camera);
 
 }
