@@ -2,7 +2,6 @@ import * as THREE from "https://threejsfundamentals.org/threejs/resources/threej
 import * as dat from './gui/dat.gui.module.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js'; //chissa perche non andava caricando il path locale dalla cartella controls
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
-
 //camera
 //scoreboard, movimento luna, collision avoidance physjs
 
@@ -534,6 +533,48 @@ const f = new THREE.Mesh(g,m)
 f.position.set(0,0,7)
 objects.push(f)
 scene.add(f)*/
+var cnt_spwand=0
+//var cnt_spwans=0;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function spawn_point_dx(){
+    if(cnt_spwand==0){
+    for( var i = 0; i<3; i++){
+        await sleep(10000)
+        const g= new THREE.BoxGeometry(5,5,5)
+        const m =new THREE.MeshStandardMaterial()
+        const f = new THREE.Mesh(g,m)
+        f.position.set(0,0,20+5*i);
+        //il cubo è solo di prova, come il 5*i nella posizione,
+        //al posto del cubo metti mostro + animazione e lascia 20 a z per farlo partire da destra
+        //sleep l'ho messo a 10000ms= 10 secondi
+        scene.add(f)
+    }
+    //cnt_spwand++
+    
+}
+else{}
+
+    
+}
+async function spawn_point_sx(){
+    if(cnt_spwand==0){
+    for( var i = 0; i<3; i++){
+        await sleep(10000)
+        const g= new THREE.BoxGeometry(5,5,5)
+        const m =new THREE.MeshStandardMaterial()
+        const f = new THREE.Mesh(g,m)
+        f.position.set(0,0,-20+5*i);
+        //il cubo è solo di prova, come il 5*i nella posizione,
+        //al posto del cubo metti mostro + animazione e lascia -20 a z per farlo partire da sinistra
+        //sleep l'ho messo a 10000ms= 10 secondi
+        scene.add(f)
+    }
+} else{}
+    
+    
+}
 
 function collision_avoidance(){
     var originPoint=vediamo.position.clone()
@@ -590,6 +631,14 @@ function animate(){
     collision_avoidance();
     moon_animation();
     updateScoreBoard();
+
+    if(cnt_spwand==0){
+        spawn_point_dx();
+        spawn_point_sx()
+        cnt_spwand++
+    }
+    else{}
+    
 
   //fino a qua
     requestAnimationFrame(animate)
