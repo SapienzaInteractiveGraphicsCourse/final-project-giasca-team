@@ -4,8 +4,13 @@ import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/t
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
 
 //camera
+//scoreboard, movimento luna, collision avoidance physjs
 
-//nella mappa presente capanna, alberi, creare una collinetta, casa che si puo entrare, qualche lampione con la spotlight, macchina rotta, staccionata
+//Scoreboard
+var scoreboard = document.getElementById('scoreBoard')
+function updateScoreBoard(){
+    scoreboard.innerHTML ='suca zombie uccisi:   20' + '           '+' colpi ricevuti:'
+}
 //GUI
 const gui = new dat.GUI({
     width:400,
@@ -34,7 +39,7 @@ scene.background = new THREE.CubeTextureLoader()
 		'pz.png',
 		'nz.png'
 	] );
-scene.fog= new THREE.FogExp2(0xDFE9F3,0.05)
+scene.fog= new THREE.FogExp2(0xDFE9F3,0.05) //prima era 0.05
 
 //camera
 var goal,follow
@@ -47,7 +52,7 @@ var distancefrom = 1;
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight,
  0.1, 1000 );
 
-camera.position.set(-5,3,0)
+camera.position.set(-5,5,0)//prima y era 3
 camera.lookAt(scene.position)
 
 
@@ -84,7 +89,7 @@ controls.mouseButtons = {
 //OBJECTS 
 var objects =[];
 //stage
-const geometry = new THREE.BoxBufferGeometry(60,0.001,60,200,200);
+const geometry = new THREE.BoxBufferGeometry(80,0.001,80,200,200);
 //geometry.attributes.position.setZ(1,0.9)
 const material = new THREE.MeshStandardMaterial({
         //BUMP MAPPING
@@ -106,7 +111,7 @@ const mgeometry = new THREE.SphereGeometry(5,20,20)
 const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
 const moon = new THREE.Mesh(mgeometry, mesh)
 
-moon.position.set(0,40,0)
+moon.position.set(-25,40,25)
 
 scene.add(moon)
 
@@ -143,203 +148,243 @@ loader1.load('./models/wood house/scene.gltf', function(gltf){
     house.scale.set(0.01,0.01,0.01);
     stage.attach(house);
     house.rotation.y =-45;
-    house.position.set(20,2.6,20)
-    const hg= new THREE.BoxGeometry(5,5,5)
-    const hm =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
+    house.position.set(30,2.6,30)
+    const hg= new THREE.BoxGeometry(10,10,9)
+    const hm =new THREE.MeshStandardMaterial({ wireframe:true})
     const h = new THREE.Mesh(hg,hm)
-    h.position.set(20,2.6,20)
+    h.position.set(29,0,27)
     h.rotation.y=-45
     scene.add(house);
     scene.add(h)
     objects.push(h)
+    h.visible=false
 })
 loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
     fence1= gltf.scene;
     fence1.scale.set(0.002,0.002,0.008)
     stage.attach(fence1);
-    fence1.position.set(-25,-0.7,-20) //prima y era -1.2
+    fence1.position.set(-35,-0.7,-30) //prima y era -1.2
     fence1.rotation.y = Math.PI/180 
     scene.add(fence1);
-    objects.push(fence1)
+    
+    const f1g= new THREE.BoxGeometry(4,10,15)
+    const f1m =new THREE.MeshStandardMaterial({ wireframe:true})
+    const f1 = new THREE.Mesh(f1g,f1m)
+    f1.position.set(-33.5,0,-30)
+    f1.rotation.y= Math.PI/180
+    scene.add(f1)
+    objects.push(f1)
+    f1.visible=false
 })
 loaderf2.load('./models/wood fence/scene.gltf', function(gltf){
     fence2= gltf.scene;
     fence2.scale.set(0.002,0.002,0.008)
     stage.attach(fence2);
-    fence2.position.set(-18,-0.7,-28)
+    fence2.position.set(-28,-0.7,-38)
     fence2.rotation.y=Math.PI/180 * 90;
     scene.add(fence2);
-    objects.push(fence2)
+    const f2g= new THREE.BoxGeometry(9,10,15)
+    const f2m =new THREE.MeshStandardMaterial({ wireframe:true})
+    const f2 = new THREE.Mesh(f2g,f2m)
+    f2.position.set(-28,0,-35)
+    f2.rotation.y= Math.PI/180*90
+    scene.add(f2)
+    objects.push(f2)
+    f2.visible=false
 })
 loaderf3.load('./models/wood fence/scene.gltf', function(gltf){
     fence3= gltf.scene;
     fence3.scale.set(0.002,0.002,0.008)
     stage.attach(fence3);
-    fence3.position.set(-12,-0.7,-20)
+    fence3.position.set(-22,-0.7,-30)
     fence3.rotation.y=Math.PI/180;
     scene.add(fence3);
-    objects.push(fence3)
+    const f3g= new THREE.BoxGeometry(4,10,15)
+    const f3m =new THREE.MeshStandardMaterial({ wireframe:true})
+    const f3 = new THREE.Mesh(f3g,f3m)
+    f3.position.set(-23,0,-30)
+    f3.rotation.y= Math.PI/180
+    scene.add(f3)
+    objects.push(f3)
+    f3.visible=false
 })
 loaderf4.load('./models/wood fence/scene.gltf', function(gltf){
     fence4= gltf.scene;
     fence4.scale.set(0.002,0.002,0.002)
     stage.attach(fence4);
-    fence4.position.set(-13.5,-0.7,-14.5)
+    fence4.position.set(-23.5,-0.7,-24.5)
     fence4.rotation.y=Math.PI/180 * 90;
     scene.add(fence4);
-    objects.push(fence4)
 })
 loaderf5.load('./models/wood fence/scene.gltf', function(gltf){
     fence5= gltf.scene;
     fence5.scale.set(0.002,0.002,0.002)
     stage.attach(fence5);
-    fence5.position.set(-23.5,-0.7,-14.5)
+    fence5.position.set(-33.5,-0.7,-24.5)
     fence5.rotation.y=Math.PI/180 * 90;
     scene.add(fence5);
-    objects.push(fence5)
 })
 loadert1.load('./models/tree forest/scene.gltf', function(gltf){
     forest1= gltf.scene;
     //forest1.scale.set(0.7,0.7,0.7)
-    forest1.position.set(15,-1.2,-17)
+    forest1.position.set(25,-1.2,-27)
     forest1.rotation.y=Math.PI/180* -45
     stage.attach(forest1);
     scene.add(forest1);
-    objects.push(forest1)
+    const t1g= new THREE.BoxGeometry(10,10,22)
+    const t1m =new THREE.MeshStandardMaterial({ wireframe:true})
+    const t1 = new THREE.Mesh(t1g,t1m)
+    t1.position.set(24.5,0,-27)
+    t1.rotation.y= Math.PI/180*50
+    scene.add(t1)
+    objects.push(t1)
+    t1.visible=false
 })
 loadert2.load('./models/tree forest/scene.gltf', function(gltf){
     forest2= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest2.position.set(15,-1.2,-15)
+    forest2.position.set(25,-1.2,-25)
     forest2.rotation.y=Math.PI/180* -45
     stage.attach(forest2);    
     scene.add(forest2);
-    objects.push(forest2)
 })
 loadert3.load('./models/tree forest/scene.gltf', function(gltf){
     forest3= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest3.position.set(15,-1.2,-13)
+    forest3.position.set(25,-1.2,-23)
     forest3.rotation.y=Math.PI/180* -45
     stage.attach(forest3);
     scene.add(forest3);
-    objects.push(forest3)
 })
 loadert4.load('./models/tree forest/scene.gltf', function(gltf){
     forest4= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
-    forest4.position.set(15,-1.2,-11)
+    forest4.position.set(25,-1.2,-21)
     forest4.rotation.y=Math.PI/180* -45
     stage.attach(forest4);
     scene.add(forest4);
-    objects.push(forest4)
 })
 loadertt.load('./models/tree trunk/scene.gltf', function(gltf){
     trunk= gltf.scene;
     trunk.scale.set(2,2,2)
-    trunk.position.set(6,-1,0)
+    trunk.position.set(16,-1,0)
     trunk.rotation.z=Math.PI/180* 90
     trunk.rotation.y=Math.PI/180* 90
     stage.attach(trunk)
     scene.add(trunk);
-    objects.push(trunk)
+    const ttg= new THREE.BoxGeometry(2,10,7)
+    const ttm =new THREE.MeshStandardMaterial({ wireframe:true})
+    const tt = new THREE.Mesh(ttg,ttm)
+    tt.position.set(16,0,3)
+   // tt.rotation.y= Math.PI/180*90
+    scene.add(tt)
+    objects.push(tt)
+    tt.visible=false
 })
 loaderlamp1.load('./models/street lamp/scene.gltf', function(gltf){
     lamp1= gltf.scene;
     lamp1.scale.set(0.05,0.05,0.05)
-    lamp1.position.set(13.5,4.5,10)
+    lamp1.position.set(23.5,4.5,20)
+    const l1g= new THREE.BoxGeometry(4,10,5)
+    const l1m =new THREE.MeshStandardMaterial({ wireframe:true})
+    const l1 = new THREE.Mesh(l1g,l1m)
+    l1.position.set(23,0,22)
+    l1.rotation.y=-45
+    scene.add(l1)
     stage.attach(lamp1)
     scene.add(lamp1);
     objects.push(lamp1)
+    l1.visible=false
 })
 loaderlamp2.load('./models/street lamp/scene.gltf', function(gltf){
     lamp2= gltf.scene;
     lamp2.scale.set(0.05,0.05,0.05)
-    lamp2.position.set(-18.5,4.5,-21)
+    lamp2.position.set(-28.5,4.5,-31)
     stage.attach(lamp2);
     scene.add(lamp2);
-    objects.push(lamp2)
 })
 loaderlamp3.load('./models/street lamp/scene.gltf', function(gltf){
     lamp3= gltf.scene;
     lamp3.scale.set(0.05,0.05,0.05)
-    lamp3.position.set(16,4.5,-17)
+    lamp3.position.set(26,4.5,-27)
     stage.attach(lamp3);
     scene.add(lamp3);
-    objects.push(lamp3)
 })
 loaderlamp4.load('./models/street lamp/scene.gltf', function(gltf){
     lamp4= gltf.scene;
     lamp4.scale.set(0.05,0.05,0.05)
-    lamp4.position.set(-26,4.5,25)
+    lamp4.position.set(-36,4.5,35)
     stage.attach(lamp4);
     scene.add(lamp4);
-    objects.push(lamp4)
 })
 loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
     bench1= gltf.scene;
     bench1.scale.set(2,2,2);
-    bench1.position.set(-23,-1.5,-20)
+    bench1.position.set(-33,-1.5,-30)
     bench1.rotation.y=Math.PI/180*-90;
     stage.attach(bench1);
     scene.add(bench1);
-    objects.push(bench1)
 })
 loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
     bench2= gltf.scene;
     bench2.scale.set(1.5,1.5,1.5);
-    bench2.position.set(-14,-2,-20)
+    bench2.position.set(-24,-2,-30)
     bench2.rotation.y=Math.PI/180*-90;
     stage.attach(bench2);
     scene.add(bench2);
-    objects.push(bench2)
 })
 loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
     bench3= gltf.scene;
     bench3.scale.set(2,2,2);
-    bench3.position.set(-19,-1,-25)
+    bench3.position.set(-29,-1,-35)
    // bench.rotation.y=Math.PI/180*-90;
     stage.attach(bench3);
     scene.add(bench3);
-    objects.push(bench3)
 })
 loadercar.load('./models/car/scene.gltf', function(gltf){
     car= gltf.scene;
     car.scale.set(0.5,0.5,0.5);
-    car.position.set(-25,0,19)
+    car.position.set(-35,0,29)
     car.rotation.y=Math.PI/180*45;
     stage.attach(car);
     scene.add(car);
-    objects.push(car)
+    const cg= new THREE.BoxGeometry(4,10,12)
+    const cm =new THREE.MeshStandardMaterial({ wireframe:true})
+    const c = new THREE.Mesh(cg,cm)
+    c.position.set(-33.5,0,30)
+    c.rotation.y= Math.PI/180*30
+    scene.add(c)
+    objects.push(c)
+    c.visible=false
 })
 //lights
 const ambientlight = new THREE.AmbientLight(0x404040);
 scene.add(ambientlight);
 //lamp spotlight
-const lamplight1 = new THREE.SpotLight(0x654321,4.5,0,0.85)
-lamplight1.position.set(13.5,4.5,10)
-lamplight1.target.position.set(13.5,1,10)
+const lamplight1 = new THREE.SpotLight(0x654321,4.5,0,1)
+lamplight1.position.set(23.5,4.5,20)
+lamplight1.target.position.set(23.5,1,20)
 lamplight1.visible=false
 scene.add(lamplight1)
 scene.add(lamplight1.target)
 
-const lamplight2 = new THREE.SpotLight(0x654321,4.5,0,0.85)
-lamplight2.position.set(-18.5,4.5,-21)
-lamplight2.target.position.set(-18.5,1,-21)
+const lamplight2 = new THREE.SpotLight(0x654321,4.5,0,1)
+lamplight2.position.set(-28.5,4.5,-31)
+lamplight2.target.position.set(-28.5,1,-31)
 lamplight2.visible=false
 scene.add(lamplight2)
 scene.add(lamplight2.target)
 
-const lamplight3 = new THREE.SpotLight(0x654321,4.5,0,0.85)
-lamplight3.position.set(16,6,-17)
-lamplight3.target.position.set(16,4,-17)
+const lamplight3 = new THREE.SpotLight(0x654321,4.5,0,1)
+lamplight3.position.set(26,6,-27)
+lamplight3.target.position.set(26,4,-27)
 lamplight3.visible=false
 scene.add(lamplight3)
 scene.add(lamplight3.target)
 
-const lamplight4 = new THREE.SpotLight(0x654321,4.5,0,0.85)
-lamplight4.position.set(-26,4.5,25)
-lamplight4.target.position.set(-26,-1,25)
+const lamplight4 = new THREE.SpotLight(0x654321,4.5,0,1)
+lamplight4.position.set(-36,4.5,35)
+lamplight4.target.position.set(-36,-1,35)
 lamplight4.visible=false
 scene.add(lamplight4)
 scene.add(lamplight4.target)
@@ -356,12 +401,12 @@ spotlight.position.y=pos.y_1
 spotlight.position.z=pos.z_1
 spotlight.target.position.set(pos.x_1,-0.5,pos.z_1)
 
-spotlight.shadow.mapSize.width = 1024;
+/*spotlight.shadow.mapSize.width = 1024;
 spotlight.shadow.mapSize.height = 1024;
 
 spotlight.shadow.camera.near = 500;
 spotlight.shadow.camera.far = 4000;
-spotlight.shadow.camera.fov = 30;
+spotlight.shadow.camera.fov = 30;*/
 
 scene.add(stage,spotlight)
 scene.add(spotlight.target)
@@ -369,8 +414,8 @@ let palette = {
     color: [255,0,0]
 }
 //per capire dove sta la luce
-const spotLightHelper= new THREE.SpotLightHelper(spotlight,.5)
-scene.add(spotLightHelper)
+//const spotLightHelper= new THREE.SpotLightHelper(spotlight,.5)
+//scene.add(spotLightHelper)
 //directionallight
 var is_vis = {
     visi:false,
@@ -391,9 +436,10 @@ scene.add(directionallight2.target)
 //gui folders
 //light folder
 const LightsF = gui.addFolder('Lights')
-const lightFolder = LightsF.addFolder('Spot Light')
+LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
+//const lightFolder = LightsF.addFolder('Spot Light')
 
-lightFolder.addColor(palette,'color').onChange(function(value){
+/*lightFolder.addColor(palette,'color').onChange(function(value){
     spotlight.color.r =value[0]/255;
     spotlight.color.g =value[1]/255;
     spotlight.color.b =value[2]/255;
@@ -414,7 +460,7 @@ lightFolder.add(pos,'z_1',-30,30,0.05).onChange(function(value){
     moon.position.z=value
 }).name('z')
 lightFolder.add(spotlight,'intensity').min(0).max(15).step(0.01)
-
+*/
 LightsF.add(lamplight1,'visible').name('turn on the stree lamps').onChange(function(value){
     lamplight2.visible=value;
     lamplight3.visible=value;
@@ -424,15 +470,18 @@ LightsF.add(is_vis,'visi').name('turn on directional light').onChange(function(v
     directionallight.visible=value;
     directionallight2.visible=value;
 })
+var moon_velocity=0.5
+function moon_animation(){
+    moon.rotateY(0.02)
+    moon.translateZ(moon_velocity)
+    moon.translateX(moon_velocity)
+    //moon_velocity+=0.001
+    spotlight.position.copy(moon.position)
+    spotlight.target.position.x=moon.position.x
+    
+    spotlight.target.position.z=moon.position.z
 
-//camera folder
-/*const cameraFolder = gui.addFolder('camera')
-cameraFolder.add(camera,'fov',0,200,2)
-cameraFolder.add(camera,'near',0,1,0.1)
-cameraFolder.add(camera,'far',1,2000,2)
-cameraFolder.add(camera.position,'x',-60,60)
-cameraFolder.add(camera.position,'y',-50,100)
-cameraFolder.add(camera.position,'z',-60,60)*/
+}
 
 gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
 
@@ -463,28 +512,28 @@ document.body.addEventListener( 'keyup', function(e) {
 });
 
 function avoid_borders(){
-    if(vediamo.position.x>29){
+    if(vediamo.position.x>39){
         vediamo.rotateY(3.15)
     }
-    else if (vediamo.position.x<-29){
+    else if (vediamo.position.x<-39){
         vediamo.rotateY(-3.15)
     }
-    else if (vediamo.position.z<-29){
+    else if (vediamo.position.z<-39){
         vediamo.translateZ(1)
         console.log('nel negativo suca')
     }
-    else if (vediamo.position.z>29){
+    else if (vediamo.position.z>39){
         vediamo.translateZ(-1)
         console.log('nel positivo daje')
     }
 }
-const g= new THREE.BoxGeometry(5,5,5)
+/*const g= new THREE.BoxGeometry(5,5,5)
 const m =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5, wireframe : false})
 const f = new THREE.Mesh(g,m)
 //f.visible=false
 f.position.set(0,0,7)
 objects.push(f)
-scene.add(f)
+scene.add(f)*/
 
 function collision_avoidance(){
     var originPoint=vediamo.position.clone()
@@ -539,7 +588,8 @@ function animate(){
     //no border fall
     avoid_borders();
     collision_avoidance();
-  
+    moon_animation();
+    updateScoreBoard();
 
   //fino a qua
     requestAnimationFrame(animate)
