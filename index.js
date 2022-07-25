@@ -2,8 +2,8 @@ import * as THREE from "https://threejsfundamentals.org/threejs/resources/threej
 import * as dat from './gui/dat.gui.module.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js'; //chissa perche non andava caricando il path locale dalla cartella controls
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
+//import * as CANNON from './cannon.js'
 //camera
-//scoreboard, movimento luna, collision avoidance physjs
 
 //Scoreboard
 var scoreboard = document.getElementById('scoreBoard')
@@ -25,19 +25,42 @@ const tilesRoughness = textureLoader.load('./textures/grass/Ground037_1K_Roughne
 const tilesAmbientOcclusionMap = textureLoader.load('./textures/grass/Ground037_1K_AmbientOcclusion.jpg');
 //for moon
 const moonTexture = textureLoader.load('./textures/moon.jpg')
+//for sun
+// const sun_gif = document.getElementById("sun")
+// const sunTexture = new THREE.VideoTexture(sun_gif)
+const sunTexture = textureLoader.load('./textures/sun1.JPG')
 //SCENE
 const scene = new THREE.Scene();
 
-scene.background = new THREE.CubeTextureLoader()
-	.setPath( 'textures/day_night/cubemap/' )
-	.load( [
-		'px.png',
-		'nx.png',
-		'py.png',
-		'ny.png',
-		'pz.png',
-		'nz.png'
-	] );
+var day_night = {
+    is_day:false,
+}
+
+//if (day_night.is_day==true){
+    scene.background = new THREE.CubeTextureLoader()
+	    .setPath( 'textures/day_night/cubemap/' )
+	    .load( [
+		    'px.png',
+		    'nx.png',
+		    'py.png',
+		    'ny.png',
+		    'pz.png',
+		    'nz.png'
+	    ] );
+    
+//}
+// else{
+//     scene.background = new THREE.CubeTextureLoader()
+// 	    .setPath( 'textures/day_night/cubemap_day/' )
+// 	    .load( [
+// 		    'px.png',
+// 		    'nx.png',
+// 		    'py.png',
+// 		    'ny.png',
+// 		    'pz.png',
+// 		    'nz.png'
+// 	    ] );
+// }
 scene.fog= new THREE.FogExp2(0xDFE9F3,0.05) //prima era 0.05
 
 //camera
@@ -77,7 +100,7 @@ controls.enableDamping = true; // an animation loop is required when either damp
 controls.dampingFactor = 0.5;
 controls.screenSpacePanning = false;
 controls.minDistance = 0;
-controls.maxDistance = 100;
+controls.maxDistance = 150;
 controls.maxPolarAngle = Math.PI / 2;
 controls.mouseButtons = {
 	LEFT: THREE.MOUSE.ROTATE,
@@ -88,7 +111,7 @@ controls.mouseButtons = {
 //OBJECTS 
 var objects =[];
 //stage
-const geometry = new THREE.BoxBufferGeometry(80,0.001,80,200,200);
+const geometry = new THREE.BoxGeometry(80,0.001,80);
 //geometry.attributes.position.setZ(1,0.9)
 const material = new THREE.MeshStandardMaterial({
         //BUMP MAPPING
@@ -105,14 +128,27 @@ stage.position.y=-1
 
 stage.geometry.attributes.uv2=stage.geometry.attributes.uv
 scene.add(stage)
+//cannon world
+/*const world = new CANNON.world()
+//cannon stage
+const cannon_stage = new CANNON.body({
+    shape: new CANNON.Plane()
+})*/
 //moon
 const mgeometry = new THREE.SphereGeometry(5,20,20)
 const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
 const moon = new THREE.Mesh(mgeometry, mesh)
-
 moon.position.set(-25,40,25)
-
 scene.add(moon)
+
+//sun
+const scolor= new THREE.Color('#FDB813')
+const sgeometry = new THREE.IcosahedronGeometry(15,15);
+const smaterial = new THREE.MeshBasicMaterial({ map : sunTexture ,color : scolor })
+const sun = new THREE.Mesh(sgeometry,smaterial)
+sun.position.set(0,80,0)
+//sun.layers.set(1)
+//scene.add(sun)
 
 //MODELS
 const loader1 = new GLTFLoader();
@@ -357,7 +393,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
     c.visible=false
 })
 //lights
-const ambientlight = new THREE.AmbientLight(0x404040);
+var ambientlight = new THREE.AmbientLight(0x404040);
 scene.add(ambientlight);
 //lamp spotlight
 const lamplight1 = new THREE.SpotLight(0x654321,4.5,0,1)
@@ -432,10 +468,17 @@ directionallight2.target.position.set(10,-5,10)
 scene.add(directionallight2)
 scene.add(directionallight2.target)
 
+//hemisphere
+const hemilight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+hemilight.position.set(0,80,0)
+// const hemihelper = new THREE.HemisphereLightHelper(hemilight,10)
+// scene.add(hemihelper)
+
+
 //gui folders
 //light folder
 const LightsF = gui.addFolder('Lights')
-LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
+var item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
 //const lightFolder = LightsF.addFolder('Spot Light')
 
 /*lightFolder.addColor(palette,'color').onChange(function(value){
@@ -481,10 +524,54 @@ function moon_animation(){
     spotlight.target.position.z=moon.position.z
 
 }
+function sun_animation(){
+    sun.rotateY(0.02)
+}
 
-gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
+var day_or_night = { add:function(){
+    day_night.is_day=!day_night.is_day;
+    if(day_night.is_day==false){
+        scene.background = new THREE.CubeTextureLoader()
+	        .setPath( 'textures/day_night/cubemap/' )
+	        .load( [
+		        'px.png',
+		        'nx.png',
+		        'py.png',
+		        'ny.png',
+		        'pz.png',
+		        'nz.png'
+	        ] );
+        scene.fog= new THREE.FogExp2(0xDFE9F3,0.05)
+        item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
+        item_day_night =gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
+        scene.remove(sun);
+        scene.remove(hemilight)
+        scene.add(moon)
+        spotlight.visible=true
+        }
+    else{
+        scene.background = new THREE.CubeTextureLoader()
+	        .setPath( 'textures/day_night/cubemap_day/' )
+	        .load( [
+		        'px.png',
+		        'nx.png',
+		        'py.png',
+		        'ny.png',
+		        'pz.png',
+		        'nz.png'
+	        ] );
+        gui.remove(item_day_night)
+        LightsF.remove(item_moonlight)
+        scene.fog= new THREE.FogExp2(0xDFE9F3,0)
+        scene.remove(moon)
+        scene.add(sun)
+        scene.add(hemilight)
+        spotlight.visible=false;
+    }
+    }};
+gui.add(day_or_night,'add').name('change day/night')
 
-
+var item_day_night =gui.add(scene.fog,'density',0.001,0.5,0.005).name('fog density')
 //movimento cubo
 var speed=0.0
 var velocity=0.0
@@ -630,6 +717,7 @@ function animate(){
     avoid_borders();
     collision_avoidance();
     moon_animation();
+    sun_animation();
     updateScoreBoard();
 
     if(cnt_spwand==0){
