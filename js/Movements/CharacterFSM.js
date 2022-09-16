@@ -179,10 +179,10 @@ class WalkState extends State {
   Update(input) {
     var vel = 0.02;
       if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
-          if (input._keys.shift) {
+          /*if (input._keys.shift) {
               this._parent.SetState('run');
               return;
-          }
+          }*/
           /*if(input._keys.space){
               this._parent.SetState('jump');
               return;
