@@ -2,13 +2,17 @@ import * as THREE from "https://threejsfundamentals.org/threejs/resources/threej
 import * as dat from './gui/dat.gui.module.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js'; //chissa perche non andava caricando il path locale dalla cartella controls
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
-//import * as CANNON from './cannon.js'
+import * as CANNON from './cannon-es.js'
+import CannonDebugger from './cannon-es-debugger.js'
+import * as TWEEN from "https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.js"
+
 //camera
 
 //Scoreboard
 var scoreboard = document.getElementById('scoreBoard')
 function updateScoreBoard(){
-    scoreboard.innerHTML ='suca zombie uccisi:   20' + '           '+' colpi ricevuti:'
+   // 'suca zombie uccisi:   20'
+    scoreboard.innerHTML = collision_detection()+' colpi ricevuti:'+cnt_col  //+ check_borders()
 }
 //GUI
 const gui = new dat.GUI({
@@ -61,7 +65,18 @@ var day_night = {
 // 		    'nz.png'
 // 	    ] );
 // }
-scene.fog= new THREE.FogExp2(0xDFE9F3,0.05) //prima era 0.05
+scene.fog= new THREE.FogExp2(0xDFE9F3,0.0) //prima era 0.05
+
+//CANNON WORLD e Debuger
+const world = new CANNON.World({
+    gravity: new CANNON.Vec3(0, -9.82, 0)
+})
+
+const timestep = 1/60
+const cannonDebug = new CannonDebugger(scene,world, {
+    color: 0xffffff,
+    scale: 1.0,
+})
 
 //camera
 var goal,follow
@@ -81,12 +96,27 @@ camera.lookAt(scene.position)
 const prova= new THREE.BoxGeometry(1,1,1)
 const ma = new THREE.MeshNormalMaterial()
 const vediamo = new THREE.Mesh(prova,ma)
+vediamo.position.y=20
+scene.add(vediamo)
+
+//const vediamo_shape= new CANNON.Box( new CANNON.Vec3(1,1,1))
+const vediamo_body = new CANNON.Body({
+     mass: 800,
+     shape : new CANNON.Box( new CANNON.Vec3(.5,0.5,.5)),
+     //position : new CANNON.Vec3(0,20,0),
+     //type: CANNON.Body.Dynamic
+ })
+vediamo_body.position.y=vediamo.position.y
+world.addBody(vediamo_body)
+
+
+
 
 goal = new THREE.Object3D;
 follow = new THREE.Object3D;
 goal.position.z = -distancefrom;
 goal.add( camera );
-scene.add(vediamo)
+//scene.add(vediamo)
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -110,6 +140,7 @@ controls.mouseButtons = {
 
 //OBJECTS 
 var objects =[];
+var objects_body = []
 //stage
 const geometry = new THREE.BoxGeometry(80,0.001,80);
 //geometry.attributes.position.setZ(1,0.9)
@@ -126,14 +157,20 @@ const material = new THREE.MeshStandardMaterial({
 const stage = new THREE.Mesh(geometry, material)
 stage.position.y=-1
 
-stage.geometry.attributes.uv2=stage.geometry.attributes.uv
+//stage.geometry.attributes.uv2=stage.geometry.attributes.uv
 scene.add(stage)
-//cannon world
-/*const world = new CANNON.world()
-//cannon stage
-const cannon_stage = new CANNON.body({
-    shape: new CANNON.Plane()
-})*/
+///stage cannon
+const stageBody = new CANNON.Body({
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(40,0.001,40)),
+    position : new CANNON.Vec3(0,-0.4,0),
+    //type: CANNON.Body.Static
+})
+
+
+world.addBody(stageBody)
+
+//stage.attach(vediamo)//toglilo poi
 //moon
 const mgeometry = new THREE.SphereGeometry(5,20,20)
 const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
@@ -181,19 +218,29 @@ loader1.load('./models/wood house/scene.gltf', function(gltf){
     
     house = gltf.scene;
     house.scale.set(0.01,0.01,0.01);
-    stage.attach(house);
+    
     house.rotation.y =-45;
     house.position.set(30,2.6,30)
-    const hg= new THREE.BoxGeometry(10,10,9)
-    const hm =new THREE.MeshStandardMaterial({ wireframe:true})
-    const h = new THREE.Mesh(hg,hm)
-    h.position.set(29,0,27)
-    h.rotation.y=-45
     scene.add(house);
-    scene.add(h)
-    objects.push(h)
-    h.visible=false
+
 })
+const hg= new THREE.BoxGeometry(10,10,9)
+const hm =new THREE.MeshStandardMaterial({ wireframe:true})
+const h = new THREE.Mesh(hg,hm)
+h.position.set(29,0,27)
+h.rotation.y=-45
+//scene.add(house);
+scene.add(h)
+//objects.push(h)
+h.visible=false
+
+const hshape= new CANNON.Box( new CANNON.Vec3(6,5,5))
+const hbody = new CANNON.Body({ mass: 0 })
+hbody.addShape(hshape)
+hbody.position.set(28,0,27)
+hbody.quaternion.copy(h.quaternion)
+world.addBody(hbody)
+
 loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
     fence1= gltf.scene;
     fence1.scale.set(0.002,0.002,0.008)
@@ -201,16 +248,24 @@ loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
     fence1.position.set(-35,-0.7,-30) //prima y era -1.2
     fence1.rotation.y = Math.PI/180 
     scene.add(fence1);
-    
-    const f1g= new THREE.BoxGeometry(4,10,15)
-    const f1m =new THREE.MeshStandardMaterial({ wireframe:true})
-    const f1 = new THREE.Mesh(f1g,f1m)
-    f1.position.set(-33.5,0,-30)
-    f1.rotation.y= Math.PI/180
-    scene.add(f1)
-    objects.push(f1)
-    f1.visible=false
 })
+// const f1g= new THREE.BoxGeometry(4,10,15)
+// const f1m =new THREE.MeshStandardMaterial({ wireframe:true})
+// const f1 = new THREE.Mesh(f1g,f1m)
+// f1.position.set(-33.5,0,-30)
+// f1.rotation.y= Math.PI/180
+// scene.add(f1)
+// //objects.push(f1)
+// f1.visible=false
+
+const f1body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,8)),
+})
+f1body.position.set(-35,0,-32)
+f1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
+world.addBody(f1body)
+
 loaderf2.load('./models/wood fence/scene.gltf', function(gltf){
     fence2= gltf.scene;
     fence2.scale.set(0.002,0.002,0.008)
@@ -218,15 +273,27 @@ loaderf2.load('./models/wood fence/scene.gltf', function(gltf){
     fence2.position.set(-28,-0.7,-38)
     fence2.rotation.y=Math.PI/180 * 90;
     scene.add(fence2);
-    const f2g= new THREE.BoxGeometry(9,10,15)
-    const f2m =new THREE.MeshStandardMaterial({ wireframe:true})
-    const f2 = new THREE.Mesh(f2g,f2m)
-    f2.position.set(-28,0,-35)
-    f2.rotation.y= Math.PI/180*90
-    scene.add(f2)
-    objects.push(f2)
-    f2.visible=false
+
 })
+
+// const f2g= new THREE.BoxGeometry(9,10,15)
+// const f2m =new THREE.MeshStandardMaterial({ wireframe:true})
+// const f2 = new THREE.Mesh(f2g,f2m)
+// f2.position.set(-28,0,-29)
+// f2.rotation.y= Math.PI/180*90
+// scene.add(f2)
+// objects.push(f2)
+// f2.visible=false
+
+const f2body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,6)),
+})
+f2body.position.set(-29,0,-38)
+f2body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(f2body)
+
+
 loaderf3.load('./models/wood fence/scene.gltf', function(gltf){
     fence3= gltf.scene;
     fence3.scale.set(0.002,0.002,0.008)
@@ -234,15 +301,26 @@ loaderf3.load('./models/wood fence/scene.gltf', function(gltf){
     fence3.position.set(-22,-0.7,-30)
     fence3.rotation.y=Math.PI/180;
     scene.add(fence3);
-    const f3g= new THREE.BoxGeometry(4,10,15)
-    const f3m =new THREE.MeshStandardMaterial({ wireframe:true})
-    const f3 = new THREE.Mesh(f3g,f3m)
-    f3.position.set(-23,0,-30)
-    f3.rotation.y= Math.PI/180
-    scene.add(f3)
-    objects.push(f3)
-    f3.visible=false
+
 })
+
+// const f3g= new THREE.BoxGeometry(4,10,15)
+// const f3m =new THREE.MeshStandardMaterial({ wireframe:true})
+// const f3 = new THREE.Mesh(f3g,f3m)
+// f3.position.set(-23,0,-30)
+// f3.rotation.y= Math.PI/180
+// scene.add(f3)
+// objects.push(f3)
+// f3.visible=false
+
+const f3body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,8)),
+})
+f3body.position.set(-22,0,-32)
+f3body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
+world.addBody(f3body)
+
 loaderf4.load('./models/wood fence/scene.gltf', function(gltf){
     fence4= gltf.scene;
     fence4.scale.set(0.002,0.002,0.002)
@@ -251,6 +329,15 @@ loaderf4.load('./models/wood fence/scene.gltf', function(gltf){
     fence4.rotation.y=Math.PI/180 * 90;
     scene.add(fence4);
 })
+
+const f4body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,2)),
+})
+f4body.position.set(-23.5,-0.7,-24.5)
+f4body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(f4body)
+
 loaderf5.load('./models/wood fence/scene.gltf', function(gltf){
     fence5= gltf.scene;
     fence5.scale.set(0.002,0.002,0.002)
@@ -259,6 +346,15 @@ loaderf5.load('./models/wood fence/scene.gltf', function(gltf){
     fence5.rotation.y=Math.PI/180 * 90;
     scene.add(fence5);
 })
+
+const f5body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,2)),
+})
+f5body.position.set(-33.5,-0.7,-24.5)
+f5body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(f5body)
+
 loadert1.load('./models/tree forest/scene.gltf', function(gltf){
     forest1= gltf.scene;
     //forest1.scale.set(0.7,0.7,0.7)
@@ -266,15 +362,26 @@ loadert1.load('./models/tree forest/scene.gltf', function(gltf){
     forest1.rotation.y=Math.PI/180* -45
     stage.attach(forest1);
     scene.add(forest1);
-    const t1g= new THREE.BoxGeometry(10,10,22)
-    const t1m =new THREE.MeshStandardMaterial({ wireframe:true})
-    const t1 = new THREE.Mesh(t1g,t1m)
-    t1.position.set(24.5,0,-27)
-    t1.rotation.y= Math.PI/180*50
-    scene.add(t1)
-    objects.push(t1)
-    t1.visible=false
+
 })
+
+// const t1g= new THREE.BoxGeometry(10,10,22)
+// const t1m =new THREE.MeshStandardMaterial({ wireframe:true})
+// const t1 = new THREE.Mesh(t1g,t1m)
+// t1.position.set(24.5,0,-27)
+// t1.rotation.y= Math.PI/180*50
+// scene.add(t1)
+// objects.push(t1)
+// t1.visible=false
+
+const t1body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(5,5,10)),
+})
+t1body.position.set(24.5,0,-26)
+t1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*50)
+world.addBody(t1body)
+
 loadert2.load('./models/tree forest/scene.gltf', function(gltf){
     forest2= gltf.scene;
     //forest.scale.set(0.7,0.7,0.7)
@@ -307,30 +414,48 @@ loadertt.load('./models/tree trunk/scene.gltf', function(gltf){
     trunk.rotation.y=Math.PI/180* 90
     stage.attach(trunk)
     scene.add(trunk);
-    const ttg= new THREE.BoxGeometry(2,10,7)
-    const ttm =new THREE.MeshStandardMaterial({ wireframe:true})
-    const tt = new THREE.Mesh(ttg,ttm)
-    tt.position.set(16,0,3)
-   // tt.rotation.y= Math.PI/180*90
-    scene.add(tt)
-    objects.push(tt)
-    tt.visible=false
 })
+
+// const ttg= new THREE.BoxGeometry(2,10,7)
+// const ttm =new THREE.MeshStandardMaterial({ wireframe:true})
+// const tt = new THREE.Mesh(ttg,ttm)
+// tt.position.set(16,0,3)
+// // tt.rotation.y= Math.PI/180*90
+// scene.add(tt)
+// objects.push(tt)
+// tt.visible=false
+const ttbody = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(1.2,1.2,3)),
+})
+ttbody.position.set(16,0,2.7)
+//ttbody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(ttbody)
+
 loaderlamp1.load('./models/street lamp/scene.gltf', function(gltf){
     lamp1= gltf.scene;
     lamp1.scale.set(0.05,0.05,0.05)
     lamp1.position.set(23.5,4.5,20)
-    const l1g= new THREE.BoxGeometry(4,10,5)
-    const l1m =new THREE.MeshStandardMaterial({ wireframe:true})
-    const l1 = new THREE.Mesh(l1g,l1m)
-    l1.position.set(23,0,22)
-    l1.rotation.y=-45
-    scene.add(l1)
     stage.attach(lamp1)
     scene.add(lamp1);
-    objects.push(lamp1)
-    l1.visible=false
+
 })
+// const l1g= new THREE.BoxGeometry(4,10,5)
+// const l1m =new THREE.MeshStandardMaterial({ wireframe:true})
+// const l1 = new THREE.Mesh(l1g,l1m)
+// l1.position.set(23,0,22)
+// l1.rotation.y=-45
+// scene.add(l1)
+// objects.push(lamp1)
+// l1.visible=false
+const l1body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(2,5,2)),
+})
+l1body.position.set(23.5,4.5,20)
+l1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -45)
+world.addBody(l1body)
+
 loaderlamp2.load('./models/street lamp/scene.gltf', function(gltf){
     lamp2= gltf.scene;
     lamp2.scale.set(0.05,0.05,0.05)
@@ -338,6 +463,14 @@ loaderlamp2.load('./models/street lamp/scene.gltf', function(gltf){
     stage.attach(lamp2);
     scene.add(lamp2);
 })
+const l2body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(0.5,10,0.5)),
+})
+l2body.position.set(-28.7,1,-31)
+//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(l2body)
+
 loaderlamp3.load('./models/street lamp/scene.gltf', function(gltf){
     lamp3= gltf.scene;
     lamp3.scale.set(0.05,0.05,0.05)
@@ -349,7 +482,7 @@ loaderlamp4.load('./models/street lamp/scene.gltf', function(gltf){
     lamp4= gltf.scene;
     lamp4.scale.set(0.05,0.05,0.05)
     lamp4.position.set(-36,4.5,35)
-    stage.attach(lamp4);
+   stage.attach(lamp4);
     scene.add(lamp4);
 })
 loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
@@ -360,6 +493,14 @@ loaderbench1.load('./models/benches/bench 1/scene.gltf', function(gltf){
     stage.attach(bench1);
     scene.add(bench1);
 })
+const b1body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(0.5,1,1.5)),
+})
+b1body.position.set(-32.5,1,-30)
+//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(b1body)
+
 loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
     bench2= gltf.scene;
     bench2.scale.set(1.5,1.5,1.5);
@@ -368,6 +509,14 @@ loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
     stage.attach(bench2);
     scene.add(bench2);
 })
+const b2body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(0.8,1.5,1.8)),
+})
+b2body.position.set(-29,1,-34.8)
+b2body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(b2body)
+
 loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
     bench3= gltf.scene;
     bench3.scale.set(2,2,2);
@@ -376,6 +525,14 @@ loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
     stage.attach(bench3);
     scene.add(bench3);
 })
+const b3body = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(0.5,1,1.5)),
+})
+b3body.position.set(-24,1,-30)
+//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
+world.addBody(b3body)
+
 loadercar.load('./models/car/scene.gltf', function(gltf){
     car= gltf.scene;
     car.scale.set(0.5,0.5,0.5);
@@ -383,15 +540,17 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
     car.rotation.y=Math.PI/180*45;
     stage.attach(car);
     scene.add(car);
-    const cg= new THREE.BoxGeometry(4,10,12)
-    const cm =new THREE.MeshStandardMaterial({ wireframe:true})
-    const c = new THREE.Mesh(cg,cm)
-    c.position.set(-33.5,0,30)
-    c.rotation.y= Math.PI/180*30
-    scene.add(c)
-    objects.push(c)
-    c.visible=false
+
 })
+const cbody = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(2.5,5,7)),
+})
+cbody.position.set(-33,0,32)
+cbody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*30)
+world.addBody(cbody)
+
+
 //lights
 var ambientlight = new THREE.AmbientLight(0x404040);
 scene.add(ambientlight);
@@ -597,21 +756,13 @@ document.body.addEventListener( 'keyup', function(e) {
     
 });
 
-function avoid_borders(){
-    if(vediamo.position.x>39){
-        vediamo.rotateY(3.15)
-    }
-    else if (vediamo.position.x<-39){
-        vediamo.rotateY(-3.15)
-    }
-    else if (vediamo.position.z<-39){
-        vediamo.translateZ(1)
-        console.log('nel negativo suca')
-    }
-    else if (vediamo.position.z>39){
-        vediamo.translateZ(-1)
-        console.log('nel positivo daje')
-    }
+function check_borders(){
+    var str= ''
+    if(vediamo.position.x>39 || vediamo.position.x<-39 || vediamo.position.z<-39 || vediamo.position.z>39)
+        str = 'sei caduto ritardato'
+    
+    return(str)
+
 }
 /*const g= new THREE.BoxGeometry(5,5,5)
 const m =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5, wireframe : false})
@@ -628,15 +779,28 @@ function sleep(ms) {
 async function spawn_point_dx(){
     if(cnt_spwand==0){
     for( var i = 0; i<3; i++){
-        await sleep(10000)
+        //await sleep(10000)
         const g= new THREE.BoxGeometry(5,5,5)
         const m =new THREE.MeshStandardMaterial()
         const f = new THREE.Mesh(g,m)
-        f.position.set(0,0,20+5*i);
+        f.position.set(0,5,20+5*i);
         //il cubo è solo di prova, come il 5*i nella posizione,
         //al posto del cubo metti mostro + animazione e lascia 20 a z per farlo partire da destra
         //sleep l'ho messo a 10000ms= 10 secondi
         scene.add(f)
+        objects.push(f)
+
+        const massobody = new CANNON.Body({ 
+            mass: 80,
+            shape : new CANNON.Box( new CANNON.Vec3(2.45,2.45,2.45)),
+        })
+        massobody.position.set(0,5,20+5*i)
+        //massobody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
+        world.addBody(massobody)
+        objects_body.push(massobody)
+        //console.log(objects_body.length)
+        await sleep(10000)
+
     }
     //cnt_spwand++
     
@@ -648,22 +812,35 @@ else{}
 async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 0; i<3; i++){
-        await sleep(10000)
+        
         const g= new THREE.BoxGeometry(5,5,5)
         const m =new THREE.MeshStandardMaterial()
         const f = new THREE.Mesh(g,m)
-        f.position.set(0,0,-20+5*i);
+        f.position.set(0,5,-20+5*i);
         //il cubo è solo di prova, come il 5*i nella posizione,
         //al posto del cubo metti mostro + animazione e lascia -20 a z per farlo partire da sinistra
         //sleep l'ho messo a 10000ms= 10 secondi
         scene.add(f)
+        objects.push(f)
+
+        const massobody = new CANNON.Body({ 
+            mass: 80,
+            shape : new CANNON.Box( new CANNON.Vec3(2.45,2.45,2.45)),
+        })
+        massobody.position.set(0,5,-20+5*i)
+        //massobody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
+        world.addBody(massobody)
+        objects_body.push(massobody)
+        await sleep(10000)
     }
 } else{}
     
     
 }
 
-function collision_avoidance(){
+var cnt_col = 0 ;
+function collision_detection(){
+    var str_col = 'per ora tutto ok';
     var originPoint=vediamo.position.clone()
     for (var vertexIndex = 0; vertexIndex < vediamo.geometry.attributes.position.array.length; vertexIndex++)
 	{		
@@ -671,35 +848,73 @@ function collision_avoidance(){
 		var globalVertex = localVertex.applyMatrix4( vediamo.matrix );
 		var directionVector = globalVertex.sub( vediamo.position );
 		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObjects( objects );
+		var collisionResults = ray.intersectObjects( objects);
         
 		if ( collisionResults.length > 0 &&
-             collisionResults[0].distance < directionVector.length()+2){
-            console.log(directionVector.z)
-            //speed*=-1
-             vediamo.rotateY(velocity)
-            //vediamo.rotateY(Math.sin(vediamo.position.x)-Math.cos(vediamo.position.z))
+             collisionResults[0].distance < directionVector.length()){
+            str_col = 'toccatooooooooooooooooooooooooooooooo'
+            cnt_col +=1
         }
+        return(str_col)
 	}	
 }
 
+function follow_me(){
+    var dir_me = new THREE.Vector3
+    //var dis_me = new THREE.Vector3()
+    for(var i=0; i<objects.length; i++){
+        if(vediamo.position != objects[i].position){
+            // objects[i].lookAt(vediamo.position)
+            // //console.log(objec)
+            // dir_me.copy( vediamo.position ).sub( objects[i].position );
+            // console.log(dir_me)
+            // const dis_me = vediamo.position.distanceTo( objects[i].position );
+            // objects[i].position.addScaledVector( dir_me, dis_me );
+        }
+    }
+}
+
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight);
+}
+window.addEventListener('resize',onWindowResize)
+
 function animate(){
+    world.step(timestep)
+    cannonDebug.update()
+    //from CANNON to Threejs
+
     //animazione cubo
-    speed = 0.0;
+//     speed = 0.0;
   
     if ( keys.w )
-        speed = 0.1;
+        //speed = 0.1;
+        vediamo_body.position.x += 0.5;
     else if ( keys.s )
-        speed = -0.1;
+       // speed = -0.1;
+        vediamo_body.position.x += -0.5;
 
-    velocity += ( speed - velocity ) ;
-    vediamo.translateZ( velocity );
+    //velocity += ( speed - velocity ) ;
+    //vediamo.translateZ( velocity );
+   
+   // vediamo_body.position.x += velocity
 
     if ( keys.a )
-        vediamo.rotateY(0.05);
+       // vediamo.rotateY(0.05);
+       vediamo_body.position.z += -0.5
     else if ( keys.d )
-        vediamo.rotateY(-0.05);
+       // vediamo.rotateY(-0.05);
+       vediamo_body.position.z += + 0.5
 //fino a qua
+
+
+    vediamo.position.copy(vediamo_body.position)
+       // console.log('madonna lercia',vediamo_body.position)
+    vediamo.quaternion.copy(vediamo_body.quaternion)
+
 
 // 3rd person camera
 
@@ -713,12 +928,13 @@ function animate(){
   
     //camera.position.lerp(temp, 0.2);
     camera.lookAt( vediamo.position );
-    //no border fall
-    avoid_borders();
-    collision_avoidance();
+    //check if you fell
+    //check_borders();
+    //collision_avoidance();
     moon_animation();
     sun_animation();
     updateScoreBoard();
+    follow_me();
 
     if(cnt_spwand==0){
         spawn_point_dx();
@@ -726,10 +942,15 @@ function animate(){
         cnt_spwand++
     }
     else{}
+    for (var i = 0; i<objects_body.length; i++){
+        objects[i].position.copy(objects_body[i].position)
+        // console.log('madonna lercia',vediamo_body.position)
+        objects[i].quaternion.copy(objects_body[i].quaternion)
+    }
     
 
   //fino a qua
-    requestAnimationFrame(animate)
+    //requestAnimationFrame(animate)
     renderer.render(scene,camera)
 }
-animate()
+renderer.setAnimationLoop(animate)
