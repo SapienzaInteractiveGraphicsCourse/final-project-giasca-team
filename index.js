@@ -882,6 +882,8 @@ function onWindowResize() {
 }
 window.addEventListener('resize',onWindowResize)
 
+//var tween1 = new TWEEN.Tween()
+
 function animate(){
     world.step(timestep)
     cannonDebug.update()
@@ -934,7 +936,7 @@ function animate(){
     moon_animation();
     sun_animation();
     updateScoreBoard();
-    follow_me();
+    //follow_me();
 
     if(cnt_spwand==0){
         spawn_point_dx();
@@ -944,7 +946,6 @@ function animate(){
     else{}
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
-        // console.log('madonna lercia',vediamo_body.position)
         objects[i].quaternion.copy(objects_body[i].quaternion)
     }
     
