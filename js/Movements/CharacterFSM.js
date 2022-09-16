@@ -22,6 +22,8 @@ export class CharacterFSM extends FiniteStateMachine {
 
             Head: { name: "Head_06", mesh: null, initValue: null },
 
+            Body: {name: "Body", mesh: null, initValue: null}, 
+
             Shoulder_sx: { name: "LeftShoulder_08", mesh: null, initValue: { x:0, y:-PI_3, z:0 }},
             Upper_arm_sx: { name: "LeftArm_09", mesh: null, initValue: { x:PI_12, y:0, z:0 } },
             Lower_arm_sx: { name: "LeftForeArm_010", mesh: null, initValue:  null},
@@ -225,12 +227,12 @@ class WalkState extends State {
                   this._stateArms = 1;
               } else {
                   this._targetDict.Shoulder_sx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x >= lower_arm_sx-arm_angle) {
+                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x >= this._lower_arm_sx-arm_angle) {
                       this._targetDict.Lower_arm_sx.mesh.rotation.x -= vel;
                   }*/
 
                   this._targetDict.Shoulder_dx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x >= lower_arm_dx) {
+                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x >= this._lower_arm_dx) {
                       this._targetDict.Lower_arm_dx.mesh.rotation.x -= vel;
                   }*/
               }
@@ -240,12 +242,12 @@ class WalkState extends State {
                   this._stateArms = 0;
               } else {
                   this._targetDict.Shoulder_sx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x <= lower_arm_sx) {
+                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x <= this._lower_arm_sx) {
                       this._targetDict.Lower_arm_sx.mesh.rotation.x += vel;
                   }*/
 
                   this._targetDict.Shoulder_dx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x <= lower_arm_dx-arm_angle) {
+                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x <= this._lower_arm_dx-arm_angle) {
                       this._targetDict.Lower_arm_dx.mesh.rotation.x += vel;
                   }*/
 

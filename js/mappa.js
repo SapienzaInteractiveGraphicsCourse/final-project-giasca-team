@@ -54,6 +54,7 @@ class BasicCharacterControllerInput { //resposible for keyboard and other contro
             space: false,
             shift: false,
         };
+        //document.addEventListener( 'mousemove', (e) => this._onMouseMove(e), false );
         document.addEventListener('keydown', (e)=>this._onKeyDown(e), false);
         document.addEventListener('keyup', (e)=>this._onKeyUp(e), false); 
     }
