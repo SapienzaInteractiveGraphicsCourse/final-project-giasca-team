@@ -50,48 +50,63 @@ class BasicCharacterController { //represents a single animated character in the
 
         const acc = this._acceleration.clone();
         if (this._input._keys.forward) {
-            if (this._input._keys.shift) {
+            /*if (this._input._keys.shift) {
                 velocity.z += acc.z * 2.0;
-            }
-            else {
+            }*/
+            //else {
                 if (this._input._keys.left) {
                     _A.set(0, 1, 0);
-                    this._acceleration.y += 0.001;
+                    this._acceleration.y += 0.0001;
                     _Q.setFromAxisAngle(_A, this._acceleration.y);
                     _R.multiply(_Q);
                     //velocity.x += acc.x;
                 }
                 if (this._input._keys.right) {
                     _A.set(0, 1, 0);
-                    this._acceleration.y += 0.001;
+                    this._acceleration.y += 0.0001;
                     _Q.setFromAxisAngle(_A, -this._acceleration.y);
                     _R.multiply(_Q);
                     //velocity.x -= acc.x;
                 }
                 velocity.z += acc.z ;
-            }
+            //}
         }
         else if (this._input._keys.backward) {
-            if (this._input._keys.shift) {
+            /*if (this._input._keys.shift) {
                 velocity.z -= acc.z * 2.0;
-            }
-            else {
+            }*/
+            //else {
                 if (this._input._keys.left) {
                     _A.set(0, 1, 0);
-                    this._acceleration.y += 0.001;
+                    this._acceleration.y += 0.0001;
                     _Q.setFromAxisAngle(_A, this._acceleration.y);
                     _R.multiply(_Q);
                     //velocity.x += acc.x;
                 }
                 if (this._input._keys.right) {
                     _A.set(0, 1, 0);
-                    this._acceleration.y += 0.001;
+                    this._acceleration.y += 0.0001;
                     _Q.setFromAxisAngle(_A, -this._acceleration.y);
                     _R.multiply(_Q);
                     //velocity.x -= acc.x;
                 }
                 velocity.z -= acc.z;
-            }
+            //}
+        }
+
+        else if (this._input._keys.left) {
+            _A.set(0, 1, 0);
+            this._acceleration.y += 0.0001;
+            _Q.setFromAxisAngle(_A, this._acceleration.y);
+            _R.multiply(_Q);
+            //velocity.x += acc.x;
+        }
+        else if (this._input._keys.right) {
+            _A.set(0, 1, 0);
+            this._acceleration.y += 0.0001;
+            _Q.setFromAxisAngle(_A, -this._acceleration.y);
+            _R.multiply(_Q);
+            //velocity.x -= acc.x;
         }
 
         /*else if (this._input._keys.left) {

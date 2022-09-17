@@ -7,8 +7,9 @@ const PI_3 = Math.PI / 3;
 const PI_4 = Math.PI / 4;
 const PI_6 = Math.PI / 6;
 const PI_12 = Math.PI / 12;
+const PI_14 = Math.PI / 14;
 
-const arm_angle = PI_6;
+const arm_angle = PI_12;
 
 export class CharacterFSM extends FiniteStateMachine {
     constructor(target) {
@@ -16,7 +17,7 @@ export class CharacterFSM extends FiniteStateMachine {
 
         this._targetDict = {
             Upper_leg_sx: { name: "LeftUpLeg_055", mesh: null, initValue: null },
-            Lower_leg_sx: { name: "LeftLeg_056", mesh: null, initValue: null },
+            Lower_leg_sx: { name: "LeftLeg_056", mesh: null, initValue: null},
             Upper_leg_dx: { name: "RightUpLeg_060", mesh: null, initValue: null },
             Lower_leg_dx: { name: "RightLeg_061", mesh: null, initValue: null },
 
@@ -62,18 +63,38 @@ function ComeBack(vel, targetDict) {
       targetDict.Shoulder_sx.mesh.rotation.x += vel;
       targetDict.Shoulder_dx.mesh.rotation.x -= vel;
       targetDict.Upper_leg_sx.mesh.rotation.x -= vel;
+      //targetDict.Lower_leg_sx.mesh.rotation.x -= vel;
       targetDict.Upper_leg_dx.mesh.rotation.x += vel;
+      //targetDict.Lower_leg_dx.mesh.rotation.x += vel;
       ComeBack(vel, targetDict);
     }
     else {
       targetDict.Shoulder_sx.mesh.rotation.x -= vel;
       targetDict.Shoulder_dx.mesh.rotation.x += vel;
       targetDict.Upper_leg_sx.mesh.rotation.x += vel;
+      //targetDict.Lower_leg_sx.mesh.rotation.x += vel;
       targetDict.Upper_leg_dx.mesh.rotation.x -= vel;
+      //targetDict.Lower_leg_dx.mesh.rotation.x -= vel;
       ComeBack(vel, targetDict);
     }
   }
 }
+
+/*function ComeBackLowerLegs(vel, targetDict) {
+  if ( targetDict.Lower_leg_dx.mesh.rotation.x == targetDict.Lower_leg_dx.initValue.x ) return;
+  else {
+    if ( targetDict.Lower_leg_dx.mesh.rotation.x < targetDict.Lower_leg_dx.initValue.x ) {
+      targetDict.Lower_leg_dx.mesh.rotation.x += vel;
+      targetDict.Lower_leg_sx.mesh.rotation.x -= vel;
+      ComeBackLowerLegs(vel,targetDict);
+    }
+    else {
+      targetDict.Lower_leg_dx.mesh.rotation.x -= vel;
+      targetDict.Lower_leg_sx.mesh.rotation.x += vel;
+      ComeBackLowerLegs(vel,targetDict);
+    }
+  }
+}*/
 
 class IdleState extends State {
     constructor(parent) {
@@ -83,17 +104,18 @@ class IdleState extends State {
     get Name() {
       return 'idle';
     }
-    Enter(prevState) {
+    /*Enter(prevState) {
     }
 
     
 
     Exit() {
-    }
+    }*/
   
     Update(input) {
       if (input._keys.forward || input._keys.backward) {
-        this._parent.SetState('walk');
+        if ( input._keys.shift ) this._parent.SetState('run');
+        else this._parent.SetState('walk');
       } /*else if (input._keys.space) {
         this._parent.SetState('jump');
       }*/
@@ -103,6 +125,12 @@ class IdleState extends State {
       if ( this._targetDict.Shoulder_sx.mesh.rotation.x != this._targetDict.Shoulder_sx.initValue.x ) {
         ComeBack(vel, this._targetDict);
       }
+      /*if ( this._targetDict.Lower_leg_dx.mesh.rotation.x != this._targetDict.Lower_leg_dx.initValue.x ) {
+        ComeBackLowerLegs(vel,this._targetDict);
+      }*/
+
+      this._targetDict.Lower_leg_dx.mesh.rotation.x = this._targetDict.Lower_leg_dx.initValue.x ;
+      this._targetDict.Lower_leg_sx.mesh.rotation.x = this._targetDict.Lower_leg_sx.initValue.x ;
     }
 };
 
@@ -174,11 +202,20 @@ class WalkState extends State {
       this._upper_leg_sx = this._targetDict.Upper_leg_sx.initValue.x;
       this._upper_leg_dx = this._targetDict.Upper_leg_dx.initValue.x;
 
+      this._lower_leg_dx = this._targetDict.Lower_leg_dx.initValue.x;
+      this._lower_leg_sx = this._targetDict.Lower_leg_sx.initValue.x;
+      
+
   }
 
   Update(input) {
-    var vel = 0.02;
-      if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
+    var vel_Upper = 0.02;
+    var vel_Lower = 0.1;
+      if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right) {
+        if ( input._keys.shift ) {
+          this._parent.SetState('run');
+          return;
+        }
           /*if (input._keys.shift) {
               this._parent.SetState('run');
               return;
@@ -187,85 +224,117 @@ class WalkState extends State {
               this._parent.SetState('jump');
               return;
           }*/
-      } else {
-          this._parent.SetState('idle');
-          return;
+        else {
+          if(this._stateLegs==0) {
+                if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_12) {
+                    this._stateLegs = 1;
+                } else {
+                    this._targetDict.Upper_leg_sx.mesh.rotation.x += vel_Upper;
+                    if ( this._targetDict.Lower_leg_sx.mesh.rotation.x < this._upper_leg_sx ) {
+                      this._targetDict.Lower_leg_sx.mesh.rotation.x += vel_Lower;
+                    }
+                    /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x <= 0) {
+                        this._targetDict.Lower_leg_sx.mesh.rotation.x += vel;
+                    }*/
+
+                    this._targetDict.Upper_leg_dx.mesh.rotation.x -= vel_Upper;
+                    if ( this._targetDict.Lower_leg_dx.mesh.rotation.x >= this._upper_leg_dx - PI_4 ) {
+                      this._targetDict.Lower_leg_dx.mesh.rotation.x -= vel_Lower;
+                    }
+                      /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x >= -PI_6) {
+                          this._targetDict.Lower_leg_dx.mesh.rotation.x -= vel;
+                      }*/
+                }
+          }
+          else if(this._stateLegs==1){
+                  if (this._targetDict.Upper_leg_sx.mesh.rotation.x <= this._upper_leg_sx-PI_12) {
+                      this._stateLegs = 0;
+                  } else {
+                      this._targetDict.Upper_leg_sx.mesh.rotation.x -= vel_Upper;
+                      if ( this._targetDict.Lower_leg_sx.mesh.rotation.x >= this._upper_leg_sx - PI_4 ) {
+                        this._targetDict.Lower_leg_sx.mesh.rotation.x -= vel_Lower;
+                      }
+                      /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x >= -PI_6) {
+                          this._targetDict.Lower_leg_sx.mesh.rotation.x -= vel;
+                      }*/
+
+                      this._targetDict.Upper_leg_dx.mesh.rotation.x += vel_Upper;
+                      if ( this._targetDict.Lower_leg_dx.mesh.rotation.x < this._upper_leg_dx ) {
+                        this._targetDict.Lower_leg_dx.mesh.rotation.x += vel_Lower;
+                      }
+                      /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x <= 0) {
+                          this._targetDict.Lower_leg_dx.mesh.rotation.x += vel;
+                      }*/
+                  }
+                }
+
+          if(this._stateArms==0) {
+                  if (this._targetDict.Shoulder_sx.mesh.rotation.x >= this._shoulder_sx+arm_angle) {
+                      this._stateArms = 1;
+                  } else {
+                      this._targetDict.Shoulder_sx.mesh.rotation.x += vel_Upper;
+                      /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x >= this._lower_arm_sx-arm_angle) {
+                          this._targetDict.Lower_arm_sx.mesh.rotation.x -= vel;
+                      }*/
+
+                      this._targetDict.Shoulder_dx.mesh.rotation.x -= vel_Upper;
+                      /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x >= this._lower_arm_dx) {
+                          this._targetDict.Lower_arm_dx.mesh.rotation.x -= vel;
+                      }*/
+                  }
+          }
+          else if(this._stateArms==1){
+                  if (this._targetDict.Shoulder_sx.mesh.rotation.x <= this._shoulder_sx-arm_angle) {
+                      this._stateArms = 0;
+                  } else {
+                      this._targetDict.Shoulder_sx.mesh.rotation.x -= vel_Upper;
+                      /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x <= this._lower_arm_sx) {
+                          this._targetDict.Lower_arm_sx.mesh.rotation.x += vel;
+                      }*/
+
+                      this._targetDict.Shoulder_dx.mesh.rotation.x += vel_Upper;
+                      /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x <= this._lower_arm_dx-arm_angle) {
+                          this._targetDict.Lower_arm_dx.mesh.rotation.x += vel;
+                      }*/
+
+                  }
+          }
+        }
       }
-      if(this._stateLegs==0) {
-              if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_6) {
-                  this._stateLegs = 1;
-              } else {
-                  this._targetDict.Upper_leg_sx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x <= 0) {
-                      this._targetDict.Lower_leg_sx.mesh.rotation.x += vel;
-                  }*/
-
-                  this._targetDict.Upper_leg_dx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x >= -PI_6) {
-                      this._targetDict.Lower_leg_dx.mesh.rotation.x -= vel;
-                  }*/
-              }
+      else {
+        this._parent.SetState('idle');
+        return;
       }
-      else if(this._stateLegs==1){
-              if (this._targetDict.Upper_leg_sx.mesh.rotation.x <= this._upper_leg_sx-PI_6) {
-                  this._stateLegs = 0;
-              } else {
-                  this._targetDict.Upper_leg_sx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x >= -PI_6) {
-                      this._targetDict.Lower_leg_sx.mesh.rotation.x -= vel;
-                  }*/
-
-                  this._targetDict.Upper_leg_dx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x <= 0) {
-                      this._targetDict.Lower_leg_dx.mesh.rotation.x += vel;
-                  }*/
-              }
-      }
-
-      if(this._stateArms==0) {
-              if (this._targetDict.Shoulder_sx.mesh.rotation.x >= this._shoulder_sx+arm_angle) {
-                  this._stateArms = 1;
-              } else {
-                  this._targetDict.Shoulder_sx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x >= this._lower_arm_sx-arm_angle) {
-                      this._targetDict.Lower_arm_sx.mesh.rotation.x -= vel;
-                  }*/
-
-                  this._targetDict.Shoulder_dx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x >= this._lower_arm_dx) {
-                      this._targetDict.Lower_arm_dx.mesh.rotation.x -= vel;
-                  }*/
-              }
-      }
-      else if(this._stateArms==1){
-              if (this._targetDict.Shoulder_sx.mesh.rotation.x <= this._shoulder_sx-arm_angle) {
-                  this._stateArms = 0;
-              } else {
-                  this._targetDict.Shoulder_sx.mesh.rotation.x -= vel;
-                  /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x <= this._lower_arm_sx) {
-                      this._targetDict.Lower_arm_sx.mesh.rotation.x += vel;
-                  }*/
-
-                  this._targetDict.Shoulder_dx.mesh.rotation.x += vel;
-                  /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x <= this._lower_arm_dx-arm_angle) {
-                      this._targetDict.Lower_arm_dx.mesh.rotation.x += vel;
-                  }*/
-
-              }
-      }
-  }
+    }
 }
 
 class RunState extends State {
-    constructor(parent) {
-      super(parent);
-    }
+  constructor(params) {
+    super(params);
+
+    this._stateLegs = 1;
+    this._stateArms = 0;
+
+
+
+    this._shoulder_sx = this._targetDict.Shoulder_sx.initValue.x;
+    this._shoulder_dx = this._targetDict.Shoulder_dx.initValue.x;
+
+    this._lower_arm_sx = this._targetDict.Lower_arm_sx.initValue.x;
+    this._lower_arm_dx = this._targetDict.Lower_arm_dx.initValue.x;
+
+    this._upper_leg_sx = this._targetDict.Upper_leg_sx.initValue.x;
+    this._upper_leg_dx = this._targetDict.Upper_leg_dx.initValue.x;
+
+    this._lower_leg_dx = this._targetDict.Lower_leg_dx.initValue.x;
+    this._lower_leg_sx = this._targetDict.Lower_leg_sx.initValue.x;
+  }
   
     get Name() {
       return 'run';
     }
   
-    Enter(prevState) {
+    /*Enter(prevState) {
       const curAction = this._parent._proxy._animations['run'].action;
       if (prevState) {
         const prevAction = this._parent._proxy._animations[prevState.Name].action;
@@ -289,17 +358,94 @@ class RunState extends State {
     }
   
     Exit() {
-    }
+    }*/
   
-    Update(timeElapsed, input) {
+    Update(input) {
+      var vel_Upper = 0.05;
+      var vel_Lower = 0.15;
       if (input._keys.forward || input._keys.backward) {
         if (!input._keys.shift) {
           this._parent.SetState('walk');
         }
+        else {
+          if(this._stateLegs==0) {
+            if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_12) {
+                this._stateLegs = 1;
+            } else {
+                this._targetDict.Upper_leg_sx.mesh.rotation.x += vel_Upper;
+                if ( this._targetDict.Lower_leg_sx.mesh.rotation.x < this._upper_leg_sx ) {
+                  this._targetDict.Lower_leg_sx.mesh.rotation.x += vel_Lower;
+                }
+                /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x <= 0) {
+                    this._targetDict.Lower_leg_sx.mesh.rotation.x += vel;
+                }*/
+
+                this._targetDict.Upper_leg_dx.mesh.rotation.x -= vel_Upper;
+                if ( this._targetDict.Lower_leg_dx.mesh.rotation.x >= this._upper_leg_dx - PI_4 ) {
+                  this._targetDict.Lower_leg_dx.mesh.rotation.x -= vel_Lower;
+                 }
+                  /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x >= -PI_6) {
+                      this._targetDict.Lower_leg_dx.mesh.rotation.x -= vel;
+                  }*/
+            }
+        }
+        else if(this._stateLegs==1){
+          if (this._targetDict.Upper_leg_sx.mesh.rotation.x <= this._upper_leg_sx-PI_12) {
+              this._stateLegs = 0;
+          } else {
+              this._targetDict.Upper_leg_sx.mesh.rotation.x -= vel_Upper;
+              if ( this._targetDict.Lower_leg_sx.mesh.rotation.x >= this._upper_leg_sx - PI_4 ) {
+                this._targetDict.Lower_leg_sx.mesh.rotation.x -= vel_Lower;
+              }
+              /*if (this._targetDict.Lower_leg_sx.mesh.rotation.x >= -PI_6) {
+                  this._targetDict.Lower_leg_sx.mesh.rotation.x -= vel;
+              }*/
+
+              this._targetDict.Upper_leg_dx.mesh.rotation.x += vel_Upper;
+              if ( this._targetDict.Lower_leg_dx.mesh.rotation.x < this._upper_leg_dx ) {
+                this._targetDict.Lower_leg_dx.mesh.rotation.x += vel_Lower;
+              }
+              /*if (this._targetDict.Lower_leg_dx.mesh.rotation.x <= 0) {
+                  this._targetDict.Lower_leg_dx.mesh.rotation.x += vel;
+              }*/
+            }
+          }
+          if(this._stateArms==0) {
+            if (this._targetDict.Shoulder_sx.mesh.rotation.x >= this._shoulder_sx+arm_angle) {
+                this._stateArms = 1;
+            } else {
+                this._targetDict.Shoulder_sx.mesh.rotation.x += vel_Upper;
+                /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x >= this._lower_arm_sx-arm_angle) {
+                    this._targetDict.Lower_arm_sx.mesh.rotation.x -= vel;
+                }*/
+
+                this._targetDict.Shoulder_dx.mesh.rotation.x -= vel_Upper;
+                /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x >= this._lower_arm_dx) {
+                    this._targetDict.Lower_arm_dx.mesh.rotation.x -= vel;
+                }*/
+            }
+          }
+          else if(this._stateArms==1){
+            if (this._targetDict.Shoulder_sx.mesh.rotation.x <= this._shoulder_sx-arm_angle) {
+                this._stateArms = 0;
+            } else {
+                this._targetDict.Shoulder_sx.mesh.rotation.x -= vel_Upper;
+                /*if (this._targetDict.Lower_arm_sx.mesh.rotation.x <= this._lower_arm_sx) {
+                    this._targetDict.Lower_arm_sx.mesh.rotation.x += vel;
+                }*/
+
+                this._targetDict.Shoulder_dx.mesh.rotation.x += vel_Upper;
+                /*if (this._targetDict.Lower_arm_dx.mesh.rotation.x <= this._lower_arm_dx-arm_angle) {
+                    this._targetDict.Lower_arm_dx.mesh.rotation.x += vel;
+                }*/
+              }
+            }
+        }
+      }
+      else {
+        this._parent.SetState('idle');
         return;
       }
-  
-      this._parent.SetState('idle');
     }
 };
 
