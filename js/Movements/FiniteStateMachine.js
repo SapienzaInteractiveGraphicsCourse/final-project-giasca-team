@@ -60,7 +60,13 @@ export class State {
       this._targetDict = params.targetDict;
       this._name = params.name;
     }
-  
+    lerp (start, end, amt){
+        return [
+            (1-amt)*start.x+amt*end.x,
+            (1-amt)*start.y+amt*end.y,
+            (1-amt)*start.z+amt*end.z,
+        ]
+    }    
     Enter() {}
     Exit() {}
     Update() {}
