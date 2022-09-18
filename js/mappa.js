@@ -50,9 +50,9 @@ class BasicCharacterController { //represents a single animated character in the
 
         const acc = this._acceleration.clone();
         if (this._input._keys.forward) {
-            /*if (this._input._keys.shift) {
-                velocity.z += acc.z * 2.0;
-            }*/
+            if (this._input._keys.shift) {
+                velocity.z += acc.z * 1.2;
+            }
             //else {
                 if (this._input._keys.left) {
                     _A.set(0, 1, 0);
@@ -72,9 +72,9 @@ class BasicCharacterController { //represents a single animated character in the
             //}
         }
         else if (this._input._keys.backward) {
-            /*if (this._input._keys.shift) {
-                velocity.z -= acc.z * 2.0;
-            }*/
+            if (this._input._keys.shift) {
+                velocity.z -= acc.z * 1.2;
+            }
             //else {
                 if (this._input._keys.left) {
                     _A.set(0, 1, 0);
