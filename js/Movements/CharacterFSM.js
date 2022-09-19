@@ -70,8 +70,26 @@ export class CharacterFSM extends FiniteStateMachine {
     }
 };
 
-function wait() {
-  return;
+function arm_up(targetDict) {
+  if (targetDict.Shoulder_dx.mesh.rotation.x >= PI_8 ) return;
+  else {
+    targetDict.Shoulder_dx.mesh.rotation.x -= 0.05;
+    arm_up(targetDict);
+  }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function delayedGreeting(targetDict) {
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x -= PI_8);
+  await sleep(500);
+  console.log(targetDict.Lower_arm_dx.mesh.rotation.z -= PI_14);
+  await sleep(500);
+  console.log(targetDict.Lower_arm_dx.mesh.rotation.z += PI_14);
+  await sleep(500);
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x = targetDict.Shoulder_dx.initValue.x);
 }
 
 class IdleState extends State {
@@ -103,14 +121,19 @@ class IdleState extends State {
         }
       }
       else if (input._keys.space) {
-        //var myInterval;
+        var myInterval;
         //myInterval = setInterval(arm_up,1000,this._targetDict);
         //clearInterval(myInterval);
-        while (this._targetDict.Shoulder_dx.mesh.rotation.x <= PI_2) {
-          this._targetDict.Shoulder_dx.mesh.rotation.x -= 0.05;
-        }
-        //setTimeout(wait,3000);
-        this._targetDict.Shoulder_dx.mesh.rotation.x = this._targetDict.Shoulder_dx.initValue.x;
+        //if (this._targetDict.Shoulder_dx.mesh.rotation.x <= PI_2) {
+        //arm_up(this._targetDict);
+        //this._targetDict.Shoulder_dx.mesh.rotation.x -= PI_8;
+        //sleep(200).then(() => { console.log(this._targetDict.Lower_arm_dx.mesh.rotation.z -= PI_14); });
+
+        delayedGreeting(this._targetDict);
+        //sleep(200).then(() => { console.log(this._targetDict.Lower_arm_dx.mesh.rotation.z += PI_14); });
+        //}
+        //this._targetDict.Shoulder_dx.mesh.rotation.x += PI_8;
+        return;
       }
 
       /*else if (input._keys.space) {
