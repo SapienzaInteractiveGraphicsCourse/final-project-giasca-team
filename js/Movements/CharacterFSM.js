@@ -9,6 +9,7 @@ const PI_6 = Math.PI / 6;
 const PI_8 = Math.PI / 8;
 const PI_12 = Math.PI / 12;
 const PI_14 = Math.PI / 14;
+const PI_16 = Math.PI / 16;
 
 const arm_angle_walk = PI_12;
 const arm_angle_run = PI_8;
@@ -55,11 +56,27 @@ export class CharacterFSM extends FiniteStateMachine {
             Upper_arm_dx: { name: "RightArm_033", mesh: null, initValue:  { x:PI_12, y:0, z:0 } },
             Lower_arm_dx: { name: "RightForeArm_034", mesh: null, initValue:null   },
             Hand_dx: { name: "RightHand_035", mesh: null, initValue: null },
+
             Thumb_dx: { name: "RightHandThumb1_036", mesh: null, initValue: null },
+            Thumb_dx_2: { name: "RightHandThumb2_037", mesh: null, initValue: null },
+            Thumb_dx_3: { name: "RightHandThumb3_038", mesh: null, initValue: null },
+            Thumb_dx_4: { name: "RightHandThumb4_039", mesh: null, initValue: null },
             Index_dx: { name: "RightHandIndex1_040", mesh: null, initValue: null },
+            Index_dx_2: { name: "RightHandIndex2_041", mesh: null, initValue: null },
+            Index_dx_3: { name: "RightHandIndex3_042", mesh: null, initValue: null },
+            Index_dx_4: { name: "RightHandIndex4_043", mesh: null, initValue: null },
             Middle_dx: { name: "RightHandMiddle1_044", mesh: null, initValue: null },
+            Middle_dx_2: { name: "RightHandMiddle2_045", mesh: null, initValue: null },
+            Middle_dx_3: { name: "RightHandMiddle3_046", mesh: null, initValue: null },
+            Middle_dx_4: { name: "RightHandMiddle4_047", mesh: null, initValue: null },
             Ring_dx: { name: "RightHandRing1_048", mesh: null, initValue: null },
+            Ring_dx_2: { name: "RightHandRing2_049", mesh: null, initValue: null },
+            Ring_dx_3: { name: "RightHandRing3_050", mesh: null, initValue: null },
+            Ring_dx_4: { name: "RightHandRing4_051", mesh: null, initValue: null },
             Pinky_dx: { name: "RightHandPinky1_052", mesh: null, initValue: null },
+            Pinky_dx_2: { name: "RightHandPinky2_053", mesh: null, initValue: null },
+            Pinky_dx_3: { name: "RightHandPinky3_00", mesh: null, initValue: null },
+            Pinky_dx_4: { name: "RightHandPinky4_054", mesh: null, initValue: null },
         };
         this._prepareDict();
 
@@ -83,13 +100,98 @@ function sleep(ms) {
 }
 
 async function delayedGreeting(targetDict) {
-  console.log(targetDict.Shoulder_dx.mesh.rotation.x -= PI_8);
-  await sleep(500);
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x += PI_16);
   console.log(targetDict.Lower_arm_dx.mesh.rotation.z -= PI_14);
-  await sleep(500);
+
+  console.log(targetDict.Thumb_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Thumb_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.x += PI_12);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.x += PI_12);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Thumb_dx_4.mesh.rotation.x += PI_12);
+
+  console.log(targetDict.Index_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Index_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx_2.mesh.rotation.x += PI_12);
+  console.log(targetDict.Index_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx_3.mesh.rotation.x += PI_12);
+  console.log(targetDict.Index_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx_4.mesh.rotation.x += PI_12);
+
+  console.log(targetDict.Middle_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Middle_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.x += PI_12);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.x += PI_12);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx_4.mesh.rotation.x += PI_12);
+
+  console.log(targetDict.Ring_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Ring_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.x += PI_12);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.x += PI_12);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx_4.mesh.rotation.x += PI_12);
+
+  console.log(targetDict.Pinky_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Pinky_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.x += PI_12);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.x += PI_12);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx_4.mesh.rotation.x += PI_12);
+
+  await sleep(150);
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x -= PI_8);
+  await sleep(150);
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x -= 0.3);
   console.log(targetDict.Lower_arm_dx.mesh.rotation.z += PI_14);
-  await sleep(500);
+  await sleep(150);
   console.log(targetDict.Shoulder_dx.mesh.rotation.x = targetDict.Shoulder_dx.initValue.x);
+
+  console.log(targetDict.Thumb_dx.mesh.rotation.x = targetDict.Thumb_dx.initValue.x);
+  console.log(targetDict.Thumb_dx.mesh.rotation.z = targetDict.Thumb_dx.initValue.z);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.x = targetDict.Thumb_dx_2.initValue.x);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.z = targetDict.Thumb_dx_2.initValue.z);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.x = targetDict.Thumb_dx_3.initValue.x);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.z = targetDict.Thumb_dx_3.initValue.z);
+  console.log(targetDict.Thumb_dx_4.mesh.rotation.x = targetDict.Thumb_dx_4.initValue.x);
+
+  console.log(targetDict.Index_dx.mesh.rotation.x = targetDict.Index_dx.initValue.x);
+  console.log(targetDict.Index_dx.mesh.rotation.z = targetDict.Index_dx.initValue.z);
+  console.log(targetDict.Index_dx_2.mesh.rotation.x = targetDict.Index_dx_2.initValue.x);
+  console.log(targetDict.Index_dx_2.mesh.rotation.z = targetDict.Index_dx_2.initValue.z);
+  console.log(targetDict.Index_dx_3.mesh.rotation.x = targetDict.Index_dx_3.initValue.x);
+  console.log(targetDict.Index_dx_3.mesh.rotation.z = targetDict.Index_dx_3.initValue.z);
+  console.log(targetDict.Index_dx_4.mesh.rotation.x = targetDict.Index_dx_4.initValue.x);
+
+  console.log(targetDict.Middle_dx.mesh.rotation.x = targetDict.Middle_dx.initValue.x);
+  console.log(targetDict.Middle_dx.mesh.rotation.z = targetDict.Middle_dx.initValue.z);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.x = targetDict.Middle_dx_2.initValue.x);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.z = targetDict.Middle_dx_2.initValue.z);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.x = targetDict.Middle_dx_3.initValue.x);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.z = targetDict.Middle_dx_3.initValue.z);
+  console.log(targetDict.Middle_dx_4.mesh.rotation.x = targetDict.Middle_dx_4.initValue.x);
+
+  console.log(targetDict.Ring_dx.mesh.rotation.x = targetDict.Ring_dx.initValue.x);
+  console.log(targetDict.Ring_dx.mesh.rotation.z = targetDict.Ring_dx.initValue.z);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.x = targetDict.Ring_dx_2.initValue.x);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.z = targetDict.Ring_dx_2.initValue.z);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.x = targetDict.Ring_dx_3.initValue.x);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.z = targetDict.Ring_dx_3.initValue.z);
+  console.log(targetDict.Ring_dx_4.mesh.rotation.x = targetDict.Ring_dx_4.initValue.x);
+
+  console.log(targetDict.Pinky_dx.mesh.rotation.x = targetDict.Pinky_dx.initValue.x );
+  console.log(targetDict.Pinky_dx.mesh.rotation.z = targetDict.Pinky_dx.initValue.z);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.x = targetDict.Pinky_dx_2.initValue.x);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.z = targetDict.Pinky_dx_2.initValue.z);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.x = targetDict.Pinky_dx_3.initValue.x);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.z = targetDict.Pinky_dx_3.initValue.z);
+  console.log(targetDict.Pinky_dx_4.mesh.rotation.x = targetDict.Pinky_dx_4.initValue.x);
+
+
 }
 
 class IdleState extends State {
@@ -120,21 +222,6 @@ class IdleState extends State {
           return;
         }
       }
-      else if (input._keys.space) {
-        var myInterval;
-        //myInterval = setInterval(arm_up,1000,this._targetDict);
-        //clearInterval(myInterval);
-        //if (this._targetDict.Shoulder_dx.mesh.rotation.x <= PI_2) {
-        //arm_up(this._targetDict);
-        //this._targetDict.Shoulder_dx.mesh.rotation.x -= PI_8;
-        //sleep(200).then(() => { console.log(this._targetDict.Lower_arm_dx.mesh.rotation.z -= PI_14); });
-
-        delayedGreeting(this._targetDict);
-        //sleep(200).then(() => { console.log(this._targetDict.Lower_arm_dx.mesh.rotation.z += PI_14); });
-        //}
-        //this._targetDict.Shoulder_dx.mesh.rotation.x += PI_8;
-        return;
-      }
 
       /*else if (input._keys.space) {
         this._parent.SetState('jump');
@@ -151,6 +238,11 @@ class IdleState extends State {
         } else {
             this._learping = false;
         }
+      }
+
+      if (input._keys.space) {
+        delayedGreeting(this._targetDict);
+        return;
       }
     }
 };
@@ -267,6 +359,10 @@ class WalkState extends State {
               return;
           }*/
         else {
+          if (input._keys.space) {
+            delayedGreeting(this._targetDict);
+            return;
+          }
           if(this._stateLegs==0) {
                 if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_12) {
                     this._stateLegs = 1;
