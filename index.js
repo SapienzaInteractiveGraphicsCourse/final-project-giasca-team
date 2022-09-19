@@ -4,7 +4,7 @@ import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/t
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from './cannon-es.js'
 import CannonDebugger from './cannon-es-debugger.js'
-import * as TWEEN from "https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.js"
+import * as TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js'
 
 //camera
 
@@ -12,7 +12,7 @@ import * as TWEEN from "https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/T
 var scoreboard = document.getElementById('scoreBoard')
 function updateScoreBoard(){
    // 'suca zombie uccisi:   20'
-    scoreboard.innerHTML = collision_detection()+' colpi ricevuti:'+cnt_col  //+ check_borders()
+    scoreboard.innerHTML = collision_detection()+' colpi ricevuti:'+cnt_col +check_borders() //+ check_borders()
 }
 //GUI
 const gui = new dat.GUI({
@@ -799,7 +799,7 @@ async function spawn_point_dx(){
         world.addBody(massobody)
         objects_body.push(massobody)
         //console.log(objects_body.length)
-        await sleep(10000)
+        await sleep(70000)
 
     }
     //cnt_spwand++
@@ -831,7 +831,7 @@ async function spawn_point_sx(){
         //massobody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
         world.addBody(massobody)
         objects_body.push(massobody)
-        await sleep(10000)
+        await sleep(90000)
     }
 } else{}
     
@@ -859,19 +859,22 @@ function collision_detection(){
 	}	
 }
 
-function follow_me(){
-    var dir_me = new THREE.Vector3
-    //var dis_me = new THREE.Vector3()
-    for(var i=0; i<objects.length; i++){
-        if(vediamo.position != objects[i].position){
-            // objects[i].lookAt(vediamo.position)
-            // //console.log(objec)
-            // dir_me.copy( vediamo.position ).sub( objects[i].position );
-            // console.log(dir_me)
-            // const dis_me = vediamo.position.distanceTo( objects[i].position );
-            // objects[i].position.addScaledVector( dir_me, dis_me );
-        }
-    }
+
+
+function insegui(o1,o2){
+    const tween1 = new TWEEN.Tween(o1.position).to(o2.position,20000).onUpdate((coords)=>{
+        o1.position.x = coords.x;
+        o1.position.y= coords.y;
+        o1.position.z= coords.z;
+        //o1.quaternion= coords.quaternion;
+    })
+    tween1.start()
+    // var i =0;
+    // while(i!=1000){
+    //     console.log('ok')
+    // }
+    // tween1.stop()
+   // console.log('parti o no?')
 }
 
 
@@ -887,6 +890,7 @@ window.addEventListener('resize',onWindowResize)
 function animate(){
     world.step(timestep)
     cannonDebug.update()
+    TWEEN.update()
     //from CANNON to Threejs
 
     //animazione cubo
@@ -945,9 +949,16 @@ function animate(){
     }
     else{}
     for (var i = 0; i<objects_body.length; i++){
+        
         objects[i].position.copy(objects_body[i].position)
         objects[i].quaternion.copy(objects_body[i].quaternion)
+        insegui(objects_body[i],vediamo_body)
     }
+
+    // for (var j = 0; i<objects_body.length; i++ ){
+    //     console.log('fanculo')
+    //     insegui(objects_body[j],vediamo_body)
+    // }
     
 
   //fino a qua
