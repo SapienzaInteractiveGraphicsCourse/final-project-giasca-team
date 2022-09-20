@@ -103,94 +103,106 @@ async function delayedGreeting(targetDict) {
   console.log(targetDict.Shoulder_dx.mesh.rotation.x += PI_16);
   console.log(targetDict.Lower_arm_dx.mesh.rotation.z -= PI_14);
 
-  console.log(targetDict.Thumb_dx.mesh.rotation.x += PI_12);
+  console.log(targetDict.Thumb_dx.mesh.rotation.x += PI_8);
+  console.log(targetDict.Thumb_dx.mesh.rotation.y -= PI_6);
   console.log(targetDict.Thumb_dx.mesh.rotation.z += PI_12);
   console.log(targetDict.Thumb_dx_2.mesh.rotation.x += PI_12);
-  console.log(targetDict.Thumb_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.y -= PI_12);
   console.log(targetDict.Thumb_dx_3.mesh.rotation.x += PI_12);
-  console.log(targetDict.Thumb_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.y -= PI_12);
   console.log(targetDict.Thumb_dx_4.mesh.rotation.x += PI_12);
+  console.log(targetDict.Thumb_dx_4.mesh.rotation.y -= PI_8);
 
   console.log(targetDict.Index_dx.mesh.rotation.x += PI_12);
-  console.log(targetDict.Index_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx.mesh.rotation.y -= PI_2);
   console.log(targetDict.Index_dx_2.mesh.rotation.x += PI_12);
-  console.log(targetDict.Index_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx_2.mesh.rotation.y -= PI_4);
   console.log(targetDict.Index_dx_3.mesh.rotation.x += PI_12);
-  console.log(targetDict.Index_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Index_dx_3.mesh.rotation.y -= PI_4);
   console.log(targetDict.Index_dx_4.mesh.rotation.x += PI_12);
+  console.log(targetDict.Index_dx_4.mesh.rotation.y -= PI_2);
+
 
   console.log(targetDict.Middle_dx.mesh.rotation.x += PI_12);
-  console.log(targetDict.Middle_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx.mesh.rotation.y -= PI_2);
   console.log(targetDict.Middle_dx_2.mesh.rotation.x += PI_12);
-  console.log(targetDict.Middle_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.y -= PI_4);
   console.log(targetDict.Middle_dx_3.mesh.rotation.x += PI_12);
-  console.log(targetDict.Middle_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.y -= PI_4);
   console.log(targetDict.Middle_dx_4.mesh.rotation.x += PI_12);
+  console.log(targetDict.Middle_dx_4.mesh.rotation.y -= PI_2);
 
   console.log(targetDict.Ring_dx.mesh.rotation.x += PI_12);
-  console.log(targetDict.Ring_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx.mesh.rotation.y -= PI_2);
   console.log(targetDict.Ring_dx_2.mesh.rotation.x += PI_12);
-  console.log(targetDict.Ring_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.y -= PI_4);
   console.log(targetDict.Ring_dx_3.mesh.rotation.x += PI_12);
-  console.log(targetDict.Ring_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.y -= PI_4);
   console.log(targetDict.Ring_dx_4.mesh.rotation.x += PI_12);
+  console.log(targetDict.Ring_dx_4.mesh.rotation.y -= PI_2);
 
   console.log(targetDict.Pinky_dx.mesh.rotation.x += PI_12);
-  console.log(targetDict.Pinky_dx.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx.mesh.rotation.y -= PI_2);
   console.log(targetDict.Pinky_dx_2.mesh.rotation.x += PI_12);
-  console.log(targetDict.Pinky_dx_2.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.y -= PI_4);
   console.log(targetDict.Pinky_dx_3.mesh.rotation.x += PI_12);
-  console.log(targetDict.Pinky_dx_3.mesh.rotation.z += PI_12);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.y -= PI_4);
   console.log(targetDict.Pinky_dx_4.mesh.rotation.x += PI_12);
+  console.log(targetDict.Pinky_dx_4.mesh.rotation.y -= PI_2);
 
   await sleep(150);
-  console.log(targetDict.Shoulder_dx.mesh.rotation.x -= PI_8);
+  console.log(targetDict.Shoulder_dx.mesh.rotation.x = targetDict.Shoulder_dx.initValue.x + PI_6);
   await sleep(150);
   console.log(targetDict.Shoulder_dx.mesh.rotation.x -= 0.3);
-  console.log(targetDict.Lower_arm_dx.mesh.rotation.z += PI_14);
+  console.log(targetDict.Lower_arm_dx.mesh.rotation.z = targetDict.Lower_arm_dx.initValue.z);
   await sleep(150);
   console.log(targetDict.Shoulder_dx.mesh.rotation.x = targetDict.Shoulder_dx.initValue.x);
 
   console.log(targetDict.Thumb_dx.mesh.rotation.x = targetDict.Thumb_dx.initValue.x);
+  console.log(targetDict.Thumb_dx.mesh.rotation.y = targetDict.Thumb_dx.initValue.y);
   console.log(targetDict.Thumb_dx.mesh.rotation.z = targetDict.Thumb_dx.initValue.z);
   console.log(targetDict.Thumb_dx_2.mesh.rotation.x = targetDict.Thumb_dx_2.initValue.x);
-  console.log(targetDict.Thumb_dx_2.mesh.rotation.z = targetDict.Thumb_dx_2.initValue.z);
+  console.log(targetDict.Thumb_dx_2.mesh.rotation.y = targetDict.Thumb_dx_2.initValue.y);
   console.log(targetDict.Thumb_dx_3.mesh.rotation.x = targetDict.Thumb_dx_3.initValue.x);
-  console.log(targetDict.Thumb_dx_3.mesh.rotation.z = targetDict.Thumb_dx_3.initValue.z);
+  console.log(targetDict.Thumb_dx_3.mesh.rotation.y = targetDict.Thumb_dx_3.initValue.y);
   console.log(targetDict.Thumb_dx_4.mesh.rotation.x = targetDict.Thumb_dx_4.initValue.x);
+  console.log(targetDict.Thumb_dx_4.mesh.rotation.y = targetDict.Thumb_dx_4.initValue.y);
 
   console.log(targetDict.Index_dx.mesh.rotation.x = targetDict.Index_dx.initValue.x);
-  console.log(targetDict.Index_dx.mesh.rotation.z = targetDict.Index_dx.initValue.z);
+  console.log(targetDict.Index_dx.mesh.rotation.y = targetDict.Index_dx.initValue.y);
   console.log(targetDict.Index_dx_2.mesh.rotation.x = targetDict.Index_dx_2.initValue.x);
-  console.log(targetDict.Index_dx_2.mesh.rotation.z = targetDict.Index_dx_2.initValue.z);
+  console.log(targetDict.Index_dx_2.mesh.rotation.y = targetDict.Index_dx_2.initValue.y);
   console.log(targetDict.Index_dx_3.mesh.rotation.x = targetDict.Index_dx_3.initValue.x);
-  console.log(targetDict.Index_dx_3.mesh.rotation.z = targetDict.Index_dx_3.initValue.z);
+  console.log(targetDict.Index_dx_3.mesh.rotation.y = targetDict.Index_dx_3.initValue.y);
   console.log(targetDict.Index_dx_4.mesh.rotation.x = targetDict.Index_dx_4.initValue.x);
+  console.log(targetDict.Index_dx_4.mesh.rotation.y = targetDict.Index_dx_4.initValue.y);
 
   console.log(targetDict.Middle_dx.mesh.rotation.x = targetDict.Middle_dx.initValue.x);
-  console.log(targetDict.Middle_dx.mesh.rotation.z = targetDict.Middle_dx.initValue.z);
+  console.log(targetDict.Middle_dx.mesh.rotation.y = targetDict.Middle_dx.initValue.y);
   console.log(targetDict.Middle_dx_2.mesh.rotation.x = targetDict.Middle_dx_2.initValue.x);
-  console.log(targetDict.Middle_dx_2.mesh.rotation.z = targetDict.Middle_dx_2.initValue.z);
+  console.log(targetDict.Middle_dx_2.mesh.rotation.y = targetDict.Middle_dx_2.initValue.y);
   console.log(targetDict.Middle_dx_3.mesh.rotation.x = targetDict.Middle_dx_3.initValue.x);
-  console.log(targetDict.Middle_dx_3.mesh.rotation.z = targetDict.Middle_dx_3.initValue.z);
+  console.log(targetDict.Middle_dx_3.mesh.rotation.y = targetDict.Middle_dx_3.initValue.y);
   console.log(targetDict.Middle_dx_4.mesh.rotation.x = targetDict.Middle_dx_4.initValue.x);
+  console.log(targetDict.Middle_dx_4.mesh.rotation.y = targetDict.Middle_dx_4.initValue.y);
 
   console.log(targetDict.Ring_dx.mesh.rotation.x = targetDict.Ring_dx.initValue.x);
-  console.log(targetDict.Ring_dx.mesh.rotation.z = targetDict.Ring_dx.initValue.z);
+  console.log(targetDict.Ring_dx.mesh.rotation.y = targetDict.Ring_dx.initValue.y);
   console.log(targetDict.Ring_dx_2.mesh.rotation.x = targetDict.Ring_dx_2.initValue.x);
-  console.log(targetDict.Ring_dx_2.mesh.rotation.z = targetDict.Ring_dx_2.initValue.z);
+  console.log(targetDict.Ring_dx_2.mesh.rotation.y = targetDict.Ring_dx_2.initValue.y);
   console.log(targetDict.Ring_dx_3.mesh.rotation.x = targetDict.Ring_dx_3.initValue.x);
-  console.log(targetDict.Ring_dx_3.mesh.rotation.z = targetDict.Ring_dx_3.initValue.z);
+  console.log(targetDict.Ring_dx_3.mesh.rotation.y = targetDict.Ring_dx_3.initValue.y);
   console.log(targetDict.Ring_dx_4.mesh.rotation.x = targetDict.Ring_dx_4.initValue.x);
+  console.log(targetDict.Ring_dx_4.mesh.rotation.y = targetDict.Ring_dx_4.initValue.y);
 
   console.log(targetDict.Pinky_dx.mesh.rotation.x = targetDict.Pinky_dx.initValue.x );
-  console.log(targetDict.Pinky_dx.mesh.rotation.z = targetDict.Pinky_dx.initValue.z);
+  console.log(targetDict.Pinky_dx.mesh.rotation.y = targetDict.Pinky_dx.initValue.y);
   console.log(targetDict.Pinky_dx_2.mesh.rotation.x = targetDict.Pinky_dx_2.initValue.x);
-  console.log(targetDict.Pinky_dx_2.mesh.rotation.z = targetDict.Pinky_dx_2.initValue.z);
+  console.log(targetDict.Pinky_dx_2.mesh.rotation.y = targetDict.Pinky_dx_2.initValue.y);
   console.log(targetDict.Pinky_dx_3.mesh.rotation.x = targetDict.Pinky_dx_3.initValue.x);
-  console.log(targetDict.Pinky_dx_3.mesh.rotation.z = targetDict.Pinky_dx_3.initValue.z);
+  console.log(targetDict.Pinky_dx_3.mesh.rotation.y = targetDict.Pinky_dx_3.initValue.y);
   console.log(targetDict.Pinky_dx_4.mesh.rotation.x = targetDict.Pinky_dx_4.initValue.x);
-
+  console.log(targetDict.Pinky_dx_4.mesh.rotation.y = targetDict.Pinky_dx_4.initValue.y);
 
 }
 
