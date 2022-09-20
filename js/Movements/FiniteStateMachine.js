@@ -21,6 +21,15 @@ export class FiniteStateMachine{
             else {
                 this._targetDict[i].initValue = { x: this._targetDict[i].mesh.rotation.x, y: this._targetDict[i].mesh.rotation.y, z: this._targetDict[i].mesh.rotation.z };
             }
+
+            if ( this._targetDict[i].setValue != null ) {
+                if(this._targetDict[i].setValue.z == 0 ) {
+                    this._targetDict[i].setValue.z = this._targetDict[i].initValue.z;
+                }
+                if (this._targetDict[i].setValue.y == 0) {
+                    this._targetDict[i].setValue.z = this._targetDict[i].initValue.y;   
+                }
+            }
         }
     }
     
