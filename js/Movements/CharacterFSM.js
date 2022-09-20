@@ -92,7 +92,7 @@ export class CharacterFSM extends FiniteStateMachine {
 };
 
 
-/*function Punch(state) {
+function Punch(state) {
   while ( state._targetDict.Shoulder_dx.mesh.rotation.x <= state._targetDict.Shoulder_dx.initValue.x + PI_16) {
     state._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;
     state._targetDict.Lower_arm_dx.mesh.rotation.z -= 0.05;
@@ -133,7 +133,7 @@ export class CharacterFSM extends FiniteStateMachine {
     }
 
   }, 500);
-}*/
+}
 
 class IdleState extends State {
     constructor(parent) {
@@ -153,37 +153,36 @@ class IdleState extends State {
     }
   
     Update(input) {
-      if (input._keys.forward || input._keys.backward) {
-        if ( input._keys.shift && input._keys.space ) {
-          this._parent.SetState('punch');
-          return;
-        }
-        else if ( input._keys.shift && !input._keys.space ) {
-          this._parent.SetState('run'); 
-          return;
-        }
-        else {
-          this._parent.SetState('walk'); 
-          return;
-        }
-      }
-
-      if (input._keys.space) {
+      if ( input._keys.space ) {
+        this._learping = false;
         this._parent.SetState('punch');
+        //Punch(this);
         return;
       }
-      
-      if (this._learping){
-        if(this._lerpStep <= 1){
-            for(var i in this._targetDict){
-                this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
-            }
-
-            this._lerpStep += this._lerpStepVal;
-
+      else {
+        if ( input._keys.forward || input._keys.backward ) {
+          if ( input._keys.shift ) {
+            this._parent.SetState('run');
             return;
-        } else {
-            this._learping = false;
+          }
+          else {
+            this._parent.SetState('walk');
+          }
+        }
+        else {
+          if (this._learping){
+            if(this._lerpStep <= 1){
+                for(var i in this._targetDict){
+                    this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
+                }
+
+                this._lerpStep += this._lerpStepVal;
+
+                return;
+            } else {
+                this._learping = false;
+            }
+          }
         }
       }
     }
@@ -204,72 +203,70 @@ class PunchState extends State {
   }
 
   Update(input) {
-    if (input._keys.forward || input._keys.backward) {
-      if ( (input._keys.shift && input._keys.space) || input._keys.space  ) {
+    if (input._keys.space) {
 
-        setTimeout(() => {  
+      /*setTimeout(() => {  
             
-          for(var i in this._targetDict){
-            this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
-          }
-          
-        }, 500);
-
-        while ( this._targetDict.Shoulder_dx.mesh.rotation.x <= this._targetDict.Shoulder_dx.initValue.x + PI_16) {
-          this._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;
-          this._targetDict.Lower_arm_dx.mesh.rotation.z -= 0.05;
+        for(var i in this._targetDict){
+          this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
         }
+          
+      }, 500);*/
+
+      while ( this._targetDict.Shoulder_dx.mesh.rotation.x <= this._targetDict.Shoulder_dx.initValue.x + PI_12) {
+        this._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;
+        this._targetDict.Lower_arm_dx.mesh.rotation.z -= 0.05;
+      }
+      
+      for(var i in this._targetDict){
+        if ( this._targetDict[i].index < 20 ) {
+          this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].setValue, this._lerpStep));
+        }
+      }
+        
+      setTimeout(() => {  
       
         for(var i in this._targetDict){
-          if ( this._targetDict[i].index < 20 ) {
+          if (this._targetDict[i].index == 36 || this._targetDict[i].index == 40 || this._targetDict[i].index == 25 || this._targetDict[i].index == 26  ) {
             this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].setValue, this._lerpStep));
+          }
+          else if ( this._targetDict[i].index == 38 ) {
+            this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
           }
         }
         
-        setTimeout(() => {  
-      
-          for(var i in this._targetDict){
-            if (this._targetDict[i].index == 36 || this._targetDict[i].index == 40 || this._targetDict[i].index == 25 || this._targetDict[i].index == 26  ) {
-              this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].setValue, this._lerpStep));
-            }
-            else if ( this._targetDict[i].index == 38 ) {
-              this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
-            }
-          }
         
         
-        
-          var snd = new Audio('../../female_officer_punch_sound.mp3');
-          snd.play();
-        
-        
-        }, 150);
+        var snd = new Audio('../../female_officer_punch_sound.mp3');
+        snd.play();
         
         
-        setTimeout(() => {  
+      }, 150);
+        
+        
+      setTimeout(() => {  
             
-          for(var i in this._targetDict){
-            this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
-          }
+        for(var i in this._targetDict){
+          this._targetDict[i].mesh.rotation.set( ...this.lerp(this._targetDict[i].mesh.rotation, this._targetDict[i].initValue, this._lerpStep));
+        }
           
-        }, 500);
-      }
-      else if ( input._keys.shift && !input._keys.space ) {
-        this._parent.SetState('run');
-        return;
-      }
-      else {
-        this._parent.SetState('walk'); 
-        return;
-      }
-    }
-    else {
-      this._parent.SetState('idle'); 
-      return;
+      }, 500);
+
+      //Punch(this);
     }
     /*else {
-      this._parent.SetState('idle'); 
-      return;
+      if ( input._keys.forward || input._keys.backward ) {
+        if ( input._keys.shift ) {
+          this._parent.SetState('run');
+          return;
+        }
+        else {
+          this._parent.SetState('walk');
+        }
+      }
+      else {
+        this._parent.SetState('idle');
+      }
     }*/
   }
 }
@@ -532,10 +529,6 @@ class RunState extends State {
                 }
             }
           }
-        }
-        else if ( input._keys.space ) {
-          this._parent.SetState('punch');
-          return;
         }
         else {
           this._parent.SetState('walk');
