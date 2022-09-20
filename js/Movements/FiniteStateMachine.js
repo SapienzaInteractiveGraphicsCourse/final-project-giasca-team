@@ -27,8 +27,14 @@ export class FiniteStateMachine{
                     this._targetDict[i].setValue.z = this._targetDict[i].initValue.z;
                 }
                 if (this._targetDict[i].setValue.y == 0) {
-                    this._targetDict[i].setValue.z = this._targetDict[i].initValue.y;   
+                    this._targetDict[i].setValue.y = this._targetDict[i].initValue.y;   
                 }
+                if(this._targetDict[i].setValue.x == 0) {
+                    this._targetDict[i].setValue.x = this._targetDict[i].initValue.x;
+                }
+            }
+            else {
+                this._targetDict[i].setValue = { x: this._targetDict[i].initValue.x, y: this._targetDict[i].initValue.y, z: this._targetDict[i].initValue.z };
             }
         }
     }
@@ -79,4 +85,5 @@ export class State {
     Enter() {}
     Exit() {}
     Update() {}
+    //Punch(state) {}
 };
