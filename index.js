@@ -565,7 +565,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 })
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
-_LoadModels('./models/female_officer/scene.gltf',1,0.5,20,0.5, 0);
+_LoadModels('./models/female_officer/scene.gltf',1.5,0.5,20,0.5, 0);
 
 //_LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,1);
 
@@ -581,9 +581,10 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
         scene.add(meshes);
         var body;
         if(entity==0){
-            body = new CANNON.Body({ mass: 5, shape: new CANNON.Sphere(1.5), });
+            body = new CANNON.Body({ mass: 5, shape: new CANNON.Sphere(0.9), });
+            body.linearDamping = 0.9;
             world.addBody(body);
-            //body.linearDamping = 0.9;
+            
             Character = new BasicCharacterController({target:meshes , body:body});
         }
         else{

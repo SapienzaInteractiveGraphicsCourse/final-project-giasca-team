@@ -19,8 +19,8 @@ export class BasicCharacterController { //represents a single animated character
 
         this._body = params.body;
 
-        this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
-        this._acceleration = new THREE.Vector3(0.1, 0.25, 0.02);
+        this._decceleration = new THREE.Vector3(-0.5, -0.005, -0.3);
+        this._acceleration = new THREE.Vector3(0.1, 0.001, 0.02);
         this._velocity = new THREE.Vector3(0, 0, 0);
     
         this._stateMachine = new CharacterFSM(this._target);
@@ -48,80 +48,42 @@ export class BasicCharacterController { //represents a single animated character
         const acc = this._acceleration.clone();
         if (this._input._keys.forward) {
             if (this._input._keys.shift) {
-                velocity.z += acc.z * 1.2;
-                this._body.position.z += 0.01;
+                velocity.z += acc.z * 2;
+                //this._body.position.z += 0.01;
             }
-            //else {
-                if (this._input._keys.left) {
-                    _A.set(0, 1, 0);
-                    this._acceleration.y += 0.0001;
-                    _Q.setFromAxisAngle(_A, this._acceleration.y);
-                    _R.multiply(_Q);
-                    //velocity.x += acc.x;
-                }
-                if (this._input._keys.right) {
-                    _A.set(0, 1, 0);
-                    this._acceleration.y += 0.0001;
-                    _Q.setFromAxisAngle(_A, -this._acceleration.y);
-                    _R.multiply(_Q);
-                    //velocity.x -= acc.x;
-                }
-                velocity.z += acc.z ;
-            //}
+            else {
+                velocity.z += acc.z*1.2 ;
+            }
         }
-        else if (this._input._keys.backward) {
+        if (this._input._keys.backward) {
             if (this._input._keys.shift) {
                 velocity.z -= acc.z * 1.2;
             }
-            //else {
-                if (this._input._keys.left) {
-                    _A.set(0, 1, 0);
-                    this._acceleration.y += 0.0001;
-                    _Q.setFromAxisAngle(_A, this._acceleration.y);
-                    _R.multiply(_Q);
-                    //velocity.x += acc.x;
-                }
-                if (this._input._keys.right) {
-                    _A.set(0, 1, 0);
-                    this._acceleration.y += 0.0001;
-                    _Q.setFromAxisAngle(_A, -this._acceleration.y);
-                    _R.multiply(_Q);
-                    //velocity.x -= acc.x;
-                }
+            else {
                 velocity.z -= acc.z;
-            //}
+            }
         }
 
-        else if (this._input._keys.left) {
+        if (this._input._keys.left) {
             _A.set(0, 1, 0);
-            this._acceleration.y += 0.0001;
-            _Q.setFromAxisAngle(_A, this._acceleration.y);
+            velocity.y += acc.y;
+            _Q.setFromAxisAngle(_A, velocity.y);
             _R.multiply(_Q);
             //velocity.x += acc.x;
         }
-        else if (this._input._keys.right) {
+        if (this._input._keys.right) {
             _A.set(0, 1, 0);
-            this._acceleration.y += 0.0001;
-            _Q.setFromAxisAngle(_A, -this._acceleration.y);
+            velocity.y += acc.y;
+            _Q.setFromAxisAngle(_A, -velocity.y);
             _R.multiply(_Q);
             //velocity.x -= acc.x;
         }
-
-        /*else if (this._input._keys.left) {
-            _A.set(0, 1, 0);
-            this._acceleration.y += 0.001;
-            _Q.setFromAxisAngle(_A, this._acceleration.y);
-            _R.multiply(_Q);
-            //velocity.x += acc.x;
-        }*/
-        /*else if (this._input._keys.right) {
-            _A.set(0, 1, 0);
-            this._acceleration.y += 0.001;
-            _Q.setFromAxisAngle(_A, -this._acceleration.y);
-            _R.multiply(_Q);
-            //velocity.x -= acc.x;
-        }*/
-        else {
+        if( !(this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) ){
+            this._body.velocity.x *= 0.92;
+            this._body.velocity.y *= 0.92;
+            this._body.velocity.z *= 0.92;
+        }
+        /*else {
             velocity.z = 0;
             velocity.x = 0;
             velocity.y = 0;
@@ -129,7 +91,7 @@ export class BasicCharacterController { //represents a single animated character
             this._acceleration.x = 0.1;
             this._acceleration.y = 0.25;
             this._acceleration.z = 0.02;
-        }
+        }*/
       
         controlObject.quaternion.copy(_R);
       
@@ -144,14 +106,30 @@ export class BasicCharacterController { //represents a single animated character
         sideways.multiplyScalar(velocity.x);
         forward.multiplyScalar(velocity.z);
       
-        controlObject.position.add(forward);
+        /*controlObject.position.add(forward);
         controlObject.position.add(sideways);
 
         this._target.position.copy(this._body.position);
-        //this._target.position.subVectors(temp,(0,-1,0));
+        this._target.position.subVectors(temp,(0,-1,0));
         this._target.quaternion.copy(this._body.quaternion);
-        this._target.position.y -= 2;
+        this._target.position.y -= 2;*/
 
+        this._body.velocity.x += sideways.x+forward.x;
+        this._body.velocity.z += sideways.z+forward.z;
+
+        /*var norm = Math.sqrt(Math.pow(this._body.velocity.x, 2) + Math.pow(this._body.velocity.z, 2));
+        if (this._input._keys.forward && this._input._keys.shift) {
+            if(norm > 120){
+                this._body.velocity.x = this._body.velocity.x/norm*120;
+                this._body.velocity.z = this._body.velocity.z/norm*120;
+            }
+        } else if(norm > 60){
+            this._body.velocity.x = this._body.velocity.x/norm*60;
+            this._body.velocity.z = this._body.velocity.z/norm*60;
+        }*/
+
+        controlObject.position.copy(this._body.position);
+        controlObject.position.y -= 0.8;
     }
   
 };
