@@ -475,13 +475,13 @@ function init() {
     light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
 
-    var is_female_officer = true;
+    var is_female_officer = false;
     var character_path;
     if(is_female_officer){
-        character_path = '../models/female_officer/scene.gltf';
+        _LoadModels('../models/female_officer/scene.gltf',1,-1,0.1,-1, 1);
     }
     else{
-        //character_path = '../models/male_officer/scene.gltf';
+        _LoadModels('../models/eleven/scene.gltf',1,-1,0.1,-1, 0);
     }
 
     /*var character_params = {
@@ -495,9 +495,7 @@ function init() {
 
     //const Character = new BasicCharacterController(character_params);
 
-    _LoadModels('../models/female_officer/scene.gltf',1,-1,0.1,-1, 0);
-
-    _LoadModels('../models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,1);
+    _LoadModels('../models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,4);
 
     //_LoadModels('../models/female_officer/scene.gltf', this._scaleValue, this._pos_x, this._pos_y, this._pos_z);
 
@@ -531,7 +529,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
         //provabanana = mesh.getObjectByName("LeftUpLeg_055");
         //models[monster].mesh = mesh;
         scene.add(mesh);
-        if(entity==0){
+        if(entity==0 || entity == 1){
             Character = new BasicCharacterController(mesh);
         }
         else{
@@ -557,7 +555,7 @@ function animate(){
 	requestAnimationFrame(animate);
 	
     Character.update();
-	Monster.update();
+	//Monster.update();
 	renderer.render(scene, camera);
 
 }
