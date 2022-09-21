@@ -151,7 +151,7 @@ class WalkState extends State {
   }
 
   Update(input) {
-    if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
+    //if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
       if(this._stateLegs==0) {
         if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_12) {
             this._stateLegs = 1;
@@ -259,10 +259,10 @@ class WalkState extends State {
             this._targetDict.Hips.mesh.rotation.y -= vel;
         }
       }              
-    } 
+    /*} 
     else {
       this._parent.SetState('idle');
       return;
-    }
+    }*/
   }
 }

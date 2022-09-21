@@ -14,7 +14,7 @@ export class BasicMonsterController { //represents a single animated monster in 
         this._velocity = new THREE.Vector3(0, 0, 0);
         
         this._stateMachine = new MonsterFSM(this._target);
-        this._stateMachine.SetState('idle');
+        this._stateMachine.SetState('walk');
         this._input = new BasicMonsterControllerInput();
     }
 
