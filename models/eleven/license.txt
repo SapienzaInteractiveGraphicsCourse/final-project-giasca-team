@@ -1,0 +1,11 @@
+Model Information:
+* title:	Eleven
+* source:	https://sketchfab.com/3d-models/eleven-d25bcd9dd8a34a8f97af23f16cad9621
+* author:	Adler3d (https://sketchfab.com/monalizav894)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Eleven" (https://sketchfab.com/3d-models/eleven-d25bcd9dd8a34a8f97af23f16cad9621) by Adler3d (https://sketchfab.com/monalizav894) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

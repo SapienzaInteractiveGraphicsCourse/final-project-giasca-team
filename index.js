@@ -8,7 +8,8 @@ import * as TWEEN from "https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/T
 
 import { BasicCharacterController } from './js/Controllers/BasicCharacterController.js';
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
-var meshes, Character, Monster;
+var meshes, Character;
+var Monster={};
 //loading
 var loadingScreen = {
     scene : new THREE.Scene(),
@@ -553,13 +554,20 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 })
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
-_LoadModels('./models/female_officer/scene.gltf',1.5,0.5,20,0.5, 0);
+var is_female_officer = false;
+    if(is_female_officer){
+        _LoadModels('./models/female_officer/scene.gltf', 1.5, 0.5, 20, 0.5, 0);
+    }
+    else{
+        _LoadModels('./models/eleven/scene.gltf', 1.5, 0.5, 20, 0.5, 0);
+    }
+
 
 //_LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,1);
 
 var character_body, punch_body;
 
-function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
+function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, index) {
     var loaderGLTF = new GLTFLoader(loadingManager);
     loaderGLTF.load(path, function(gltf){
         meshes = gltf.scene;
@@ -613,7 +621,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             world.addBody(monster_body)
             objects_body.push(monster_body)
             //console.log(objects_body.length)
-            Monster = new BasicMonsterController(meshes);
+            Monster[index] = new BasicMonsterController(meshes);
         }
         
     });
@@ -834,16 +842,8 @@ async function spawn_point_dx(){
     for( var i = 0; i<3; i++){
         if(i==0) await sleep(10000) //wait 10s before the first spawn
         await sleep(3000)
-        //await sleep(10000)s
-        /*const g= new THREE.BoxGeometry(1,1,1)
-        const m =new THREE.MeshStandardMaterial()
-        const f = new THREE.Mesh(g,m)
-        f.position.set(0,5,20+5*i);*/
-        //il cubo è solo di prova, come il 5*i nella posizione,
-        //al posto del cubo metti mostro + animazione e lascia 20 a z per farlo partire da destra
-        //sleep l'ho messo a 10000ms= 10 secondi
         
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,0,5,20+5*i,1);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,0,5,20+5*i,1,i);
         
     }
     //cnt_spwand++
@@ -852,7 +852,7 @@ async function spawn_point_dx(){
 
     
 }
-async function spawn_point_sx(){
+/*async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 0; i<3; i++){
         if(i==0) await sleep(10000) //wait 10s before first spawn
@@ -882,7 +882,7 @@ async function spawn_point_sx(){
 } else{}
     
     
-}
+}*/
 
 //collisions
 /*var conta_collisioni=0
@@ -986,7 +986,10 @@ function animate(){
     cannonDebug.update()
     //from CANNON to Threejs
     Character.update();
-	//Monster.update();
+    if(Monster!=null){
+        for(var i in Monster)
+	    Monster[i].update();
+    }
     
 // 3rd person camera
     camera.copy(fake_camera)
@@ -1009,7 +1012,7 @@ function animate(){
 
     if(cnt_spwand==0){
         spawn_point_dx();
-        spawn_point_sx()
+        //spawn_point_sx()
         cnt_spwand++
     }
     else{}
