@@ -17,7 +17,7 @@ export class MonsterFSM extends FiniteStateMachine {
             Hips: { name: "Hips_01", mesh: null, initValue: null },
             Neck: { name: "Neck_05", mesh: null, initValue: null },
             Head: { name: "Head_06", mesh: null, initValue: null },
-
+            
             Shoulder_sx: { name: "LeftShoulder_08", mesh: null, initValue: null}, //{ x:0, y:-PI_3, z:0 }
             Upper_arm_sx: { name: "LeftArm_09", mesh: null, initValue: { x:PI_3, y:0, z:0 } },
             Lower_arm_sx: { name: "LeftForeArm_010", mesh: null, initValue:  null},
@@ -37,15 +37,58 @@ export class MonsterFSM extends FiniteStateMachine {
             Foot_dx: { name: "RightFoot_062", mesh: null, initValue: null },
         };
         this._prepareDict();
-
-        //this._AddState('idle', IdleState);
+        
+        this._AddState('idle', IdleState);
         this._AddState('walk', WalkState);
     }
 };
 
 var vel = 0.01;
 
-/*class IdleState extends State {
+function Slap(state) {
+
+  while ( state._targetDict.Shoulder_dx.mesh.rotation.x < state._targetDict.Shoulder_dx.initValue.x+Math.PI/4) {
+    state._targetDict.Shoulder_dx.mesh.rotation.x += vel;
+    state._targetDict.Shoulder_dx.mesh.rotation.y -= vel*0.7;
+    state._targetDict.Hips.mesh.rotation.y -= vel*0.7;
+    state._targetDict.Upper_leg_sx.mesh.rotation.x -= vel*0.2;
+    state._targetDict.Upper_leg_sx.mesh.rotation.z += vel*0.1;
+  }
+  while ( state._targetDict.Upper_arm_dx.mesh.rotation.y < state._targetDict.Upper_arm_dx.initValue.y+(Math.PI/2)) {
+    state._targetDict.Upper_arm_dx.mesh.rotation.y += vel;
+  }
+
+  setTimeout(() => {  
+    while ( state._targetDict.Shoulder_dx.mesh.rotation.x >= state._targetDict.Shoulder_dx.initValue.x-Math.PI/4) {
+      state._targetDict.Shoulder_dx.mesh.rotation.x -= vel;
+      state._targetDict.Shoulder_dx.mesh.rotation.y -= vel*0.7;
+      state._targetDict.Upper_arm_dx.mesh.rotation.y += vel*0.8;
+      state._targetDict.Hips.mesh.rotation.y += vel*0.7;
+      state._targetDict.Upper_leg_dx.mesh.rotation.x -= vel*0.2;
+      state._targetDict.Upper_leg_dx.mesh.rotation.z -= vel*0.1;
+    }
+    state._targetDict.Upper_leg_sx.mesh.rotation.x = state._targetDict.Upper_leg_sx.initValue.x;
+    state._targetDict.Upper_leg_sx.mesh.rotation.z = state._targetDict.Upper_leg_sx.initValue.z;
+  }, 300);
+
+  setTimeout(() => {  
+    while ( state._targetDict.Shoulder_dx.mesh.rotation.z >= state._targetDict.Shoulder_dx.initValue.z-Math.PI/1.5) {
+      state._targetDict.Shoulder_dx.mesh.rotation.z -= vel;
+      state._targetDict.Lower_arm_dx.mesh.rotation.z -= vel;
+
+    }
+  }, 500);
+  
+  setTimeout(() => {  
+    
+    for(var i in state._targetDict){
+      state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].initValue, state._lerpStep));
+    }
+
+  }, 650);
+}
+
+class IdleState extends State {
     constructor(parent) {
       super(parent);
       this._learping = false;
@@ -64,40 +107,19 @@ var vel = 0.01;
     Enter(prevState) {
       this._lerpStep = this._lerpStepVal;
       this._learping = true;
+      this._stateSlap = 0;
     }
     Update(input) {
-      if (input._keys.forward || input._keys.backward) {
+      /* if (input._keys.forward || input._keys.backward) {
         this._parent.SetState('walk');
       }
       if(input._keys.enter){
-        while(this._stateSlap < 3){
-          switch (this._stateSlap) {
-            case 0:
-                if (this._targetDict.Upper_arm_dx.mesh.rotation.y  <= this._upper_arm_dx-Math.PI/6) {
-                    this._stateSlap+=1;
-                } else {
-                    this._targetDict.Upper_arm_dx.mesh.rotation.y -= vel;
-                }
-                break;
-            case 1:
-                if (this._targetDict.Shoulder_dx.mesh.rotation.z >= this._shoulder_dx_z + Math.PI/3) {
-                    this._stateSlap+=1;
-                } else {
-                    this._targetDict.Shoulder_dx.mesh.rotation.z += vel;
-                }
-                break;
-            case 2:
-                if (this._targetDict.Shoulder_dx.mesh.rotation.x >= this._shoulder_dx_x + Math.PI/2) {
-                    this._stateSlap+=1;
-                } else {
-                    this._targetDict.Shoulder_dx.mesh.rotation.x += vel;
-                }   
-                break;
-          }
-        }
+        this._learping=false;
+        Slap(this);
         this._lerpStep = this._lerpStepVal;
         this._learping = true;
-      }   
+      }    */
+      Slap(this);
       if (this._learping){
         if(this._lerpStep <= 1){
             for(var i in this._targetDict){
@@ -111,9 +133,10 @@ var vel = 0.01;
         else {
             this._learping = false;
         }
-      }          
+      }
+      this._parent.SetState('walk');          
     }
-};*/
+};
 
 
 class WalkState extends State {
@@ -141,7 +164,7 @@ class WalkState extends State {
   }
 
   Update(input) {
-    //if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
+    // if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right || input._keys.space) {
       if(this._stateLegs==0) {
         if (this._targetDict.Upper_leg_sx.mesh.rotation.x >= this._upper_leg_sx + PI_12) {
             this._stateLegs = 1;
@@ -249,10 +272,10 @@ class WalkState extends State {
             this._targetDict.Hips.mesh.rotation.y -= vel;
         }
       }              
-    /*} 
-    else {
+    // } 
+    /* else {
       this._parent.SetState('idle');
       return;
-    }*/
+    } */
   }
 }

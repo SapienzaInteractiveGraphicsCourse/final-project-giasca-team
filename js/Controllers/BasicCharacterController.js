@@ -10,22 +10,20 @@ export class BasicCharacterController { //represents a single animated character
 
     _Init(params) {
         this._target = params.target;
-        //this._body = params.body;
-        /*this._path = params.path;
-        this._scaleValue = params.scaleValue;
-        this._pos_x = params.pos_x;
-        this._pos_y = params.pos_y;
-        this._pos_z = params.pos_z;*/
-
+        this._entity = params.entity;
         this._body = params.body;
 
         this._decceleration = new THREE.Vector3(-0.5, -0.005, -0.3);
         this._acceleration = new THREE.Vector3(0.1, 0.001, 0.02);
         this._velocity = new THREE.Vector3(0, 0, 0);
     
-        this._stateMachine = new CharacterFSM(this._target);
+        this._stateMachine = new CharacterFSM(this._target, this._entity);
         this._stateMachine.SetState('idle');
         this._input = new BasicCharacterControllerInput();
+    }
+
+    _getPunchBody(){
+        return this._stateMachine._GetPunchBody();
     }
 
     update(){
@@ -49,7 +47,6 @@ export class BasicCharacterController { //represents a single animated character
         if (this._input._keys.forward) {
             if (this._input._keys.shift) {
                 velocity.z += acc.z * 2;
-                //this._body.position.z += 0.01;
             }
             else {
                 velocity.z += acc.z*1.2 ;
@@ -69,29 +66,18 @@ export class BasicCharacterController { //represents a single animated character
             velocity.y += acc.y;
             _Q.setFromAxisAngle(_A, velocity.y);
             _R.multiply(_Q);
-            //velocity.x += acc.x;
         }
         if (this._input._keys.right) {
             _A.set(0, 1, 0);
             velocity.y += acc.y;
             _Q.setFromAxisAngle(_A, -velocity.y);
             _R.multiply(_Q);
-            //velocity.x -= acc.x;
         }
         if( !(this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) ){
             this._body.velocity.x *= 0.92;
             this._body.velocity.y *= 0.92;
             this._body.velocity.z *= 0.92;
         }
-        /*else {
-            velocity.z = 0;
-            velocity.x = 0;
-            velocity.y = 0;
-
-            this._acceleration.x = 0.1;
-            this._acceleration.y = 0.25;
-            this._acceleration.z = 0.02;
-        }*/
       
         controlObject.quaternion.copy(_R);
       

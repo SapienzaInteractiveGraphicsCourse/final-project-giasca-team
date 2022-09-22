@@ -39,6 +39,9 @@ export class FiniteStateMachine{
         }
     }
     
+    _GetState(){
+        return this._currentState;
+    }
     _AddState(name, type) {
         this._states[name] = type;
     }
