@@ -9,6 +9,7 @@ import { BasicCharacterController } from './js/Controllers/BasicCharacterControl
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
 var meshes_character,meshes_mostro, Character
 var Monster = {}
+var difficulty=2;
 //loading
 var loadingScreen = {
     scene : new THREE.Scene(),
@@ -70,9 +71,9 @@ var day_night = {
 		    'pz.png',
 		    'nz.png'
 	    ] );
-    
-scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
-
+if(difficulty == 0) scene.fog= new THREE.FogExp2(0xDFE9F3,0.05) //prima era 0.1
+else if(difficulty == 1) scene.fog= new THREE.FogExp2(0xDFE9F3,0.07) //prima era 0.1
+else scene.fog= new THREE.FogExp2(0xDFE9F3,0.1) //prima era 0.1
 //CANNON WORLD e Debuger
 const world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.82, 0)
@@ -524,8 +525,8 @@ var character_body, punch_body;
 const character_bodyMaterial= new CANNON.Material();
 const monster_bodyMaterial= new CANNON.Material();
 character_body = new CANNON.Body({ 
-    mass: 5, 
-    shape: new CANNON.Sphere(0.9),
+    mass: 50, 
+    shape: new CANNON.Sphere(0.7),
     material:character_bodyMaterial,
     linearDamping : 0.9
 });
@@ -577,7 +578,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
             objects.push(meshes_mostro);
             
             const monster_body = new CANNON.Body({ 
-                mass: 80,
+                mass: 40, //prima era 80
                 shape : new CANNON.Sphere(1), //new CANNON.Vec3(2.45,2.45,2.45)),
                 material: monster_bodyMaterial,
                 linearDamping :0.9
@@ -671,7 +672,7 @@ directionallight.visible=false;
 directionallight.target.position.set(10,-5,10)
 scene.add(directionallight)
 scene.add(directionallight.target)
-const directionallight2= new THREE.DirectionalLight(0x123456, 5.5 )
+const directionallight2= new THREE.DirectionalLight(0x444411, 5.5 )
 directionallight2.position.set(0,1,-500)
 directionallight2.visible=false;
 directionallight2.target.position.set(10,-5,10)
@@ -797,8 +798,8 @@ async function spawn_point_dx(){
     if(cnt_spwand==0){
     for( var i = 0; i<3; i++){
      //   if(i==0) await sleep(10000) //wait 10s before the first spawn
-        await sleep(3000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,20+5*i,1,i);
+        await sleep(8000)
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,35,1,i);
     }
     }
     else{}
@@ -809,8 +810,8 @@ async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 3; i<6; i++){
       //  if(i==0) await sleep(10000) //wait 10s before first spawn
-        await sleep(2000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-20+5*(i-3),1,i);
+        await sleep(8000)
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,1,i);
         
     }
 } else{}    
@@ -829,9 +830,9 @@ character_body.addEventListener("collide",function(e){
            // console.log(conta_collisioni)
            //world.step(1/60);
            //world.removeBody(objects_body[i])
-           removeBody = e.body;
+          // removeBody = e.body;
            
-           scene.remove(objects[i])
+          // scene.remove(objects[i])
            
         }
     }
@@ -904,7 +905,7 @@ const character_monster_contact = new CANNON.ContactMaterial(
     character_bodyMaterial,
     monster_bodyMaterial,
     {
-        friction:0,
+        friction:1,
         contactEquationStiffness:attraverso
     }
 );
@@ -915,10 +916,20 @@ world.addContactMaterial(character_monster_contact)
 
  function insegui_meglio(stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
+    stalker.lookAt(target.position.x,target.position.y,target.position.z)
     if(stalker_body.position.y<1){
-        stalker.lookAt(target.position.x,1,target.position.z)
-        stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
-        stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
+        if(difficulty == 0){
+            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
+            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
+        }
+        else if(difficulty == 1){
+            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)//*.5;
+            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)//*.5;
+        }
+        else{
+            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*1.5;
+            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*1.5;
+        }
     }
 }
 
@@ -939,11 +950,11 @@ function animate(){
 		renderer.render(loadingScreen.scene, loadingScreen.camera);
 		return;
 	}
-    if(removeBody) world.removeBody(removeBody);
+   // if(removeBody) world.removeBody(removeBody);
 
     world.step(timestep)
     cannonDebug.update()
-    //from CANNON to Threejs
+    
     Character.update();
 
     if(Monster!=null){
@@ -977,12 +988,11 @@ function animate(){
         cnt_spwand++
     }
     else{}
+    meshes_character.position.y=-0.4
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
-        //objects[i].quaternion.copy(objects_body[i].quaternion)
+        objects[i].position.y=-0.5
         insegui_meglio(objects[i],objects_body[i],meshes_character,character_body)
-        //console.log(objects_body[i].position.y)
-       // stalker.lookAt(target.position)
     }
     
 
