@@ -7,8 +7,8 @@ import CannonDebugger from './cannon-es-debugger.js'
 
 import { BasicCharacterController } from './js/Controllers/BasicCharacterController.js';
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
-var meshes_character,meshes_mostro, Character
-var Monster = {}
+var meshes_character,meshes_mostro, Character,mostro
+var Monster = []
 var difficulty=0;
 //loading
 var loadingScreen = {
@@ -71,9 +71,9 @@ var day_night = {
 		    'pz.png',
 		    'nz.png'
 	    ] );
-if(difficulty == 0) scene.fog= new THREE.FogExp2(0xDFE9F3,0.05) //prima era 0.1
-else if(difficulty == 1) scene.fog= new THREE.FogExp2(0xDFE9F3,0.07) //prima era 0.1
-else scene.fog= new THREE.FogExp2(0xDFE9F3,0.1) //prima era 0.1
+if(difficulty == 0) scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
+else if(difficulty == 1) scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
+else scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
 //CANNON WORLD e Debuger
 const world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.82, 0)
@@ -519,7 +519,6 @@ var is_female_officer = true;
     }
 
 
-//_LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,1);
 
 var character_body, punch_body;
 const character_bodyMaterial= new CANNON.Material();
@@ -554,7 +553,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
             //const bodyMaterial= new CANNON.Material();
             
             world.addBody(character_body);
-            /*const pugnoMaterial= new CANNON.Material();
+            /* const pugnoMaterial= new CANNON.Material();
             const pugnoBody = new CANNON.Body({
                 mass: 80,
                 shape : new CANNON.Box(new CANNON.Vec3(1.5,1.5,.0001)),
@@ -571,7 +570,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
                     contactEquationStiffness:0.1
                 }
             );
-            world.addContactMaterial(pugno_body_contact)*/
+            world.addContactMaterial(pugno_body_contact) */
             Character = new BasicCharacterController({target:meshes_character , body:character_body, entity:entity});
         }
         else{
@@ -596,7 +595,8 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
             world.addBody(monster_body)
             objects_body.push(monster_body)
             //console.log(objects_body.length)
-            Monster[index] = new BasicMonsterController(meshes_mostro);
+            mostro =  new BasicMonsterController(meshes_mostro);
+            Monster.push(mostro)
         }
         
     });
@@ -811,7 +811,7 @@ async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 3; i<6; i++){
       //  if(i==0) await sleep(10000) //wait 10s before first spawn
-        await sleep(8000)
+        await sleep(6000)
         _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,2,i);
         
     }
@@ -913,15 +913,24 @@ const character_monster_contact = new CANNON.ContactMaterial(
 world.addContactMaterial(character_monster_contact)
 
 
-
-
- function insegui_meglio(stalker,stalker_body,target,target_body){
+ function insegui_meglio(monster,stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
+
     stalker.lookAt(target.position.x,target.position.y,target.position.z)
+    var distance_x=Math.abs(target_body.position.x-stalker_body.position.x)
+    var distance_z=Math.abs(target_body.position.z-stalker_body.position.z)
     if(stalker_body.position.y<1){
+       // console.log(stalker_body.position.y)
         if(difficulty == 0){
-            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
-            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
+            if(stalker_body.position.distanceTo(target_body.position)<10){
+                stalker_body.velocity.x=0
+                stalker_body.velocity.z=0
+            }
+            else{
+                stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
+                stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
+               // console.log(stalker_body.velocity.z)
+            }
         }
         else if(difficulty == 1){
             stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)//*.5;
@@ -957,11 +966,25 @@ function animate(){
     cannonDebug.update()
     
     Character.update();
+    //punch_body= Character._getPunchBody();
+   // world.addBody(punch_body);
+   // console.log(punch_body.position);
 
     if(Monster!=null){
 
-        for(var i in Monster)
-	    Monster[i].update();
+        for(var i =0; i< Monster.length ;i++){
+            
+            if(Math.abs(objects_body[i].velocity.z)<0.1 && Math.abs(objects_body[i].velocity.x)<0.1 && objects_body[i].position.y<0.7) {
+               // Monster[i]._setState("walk");
+                Monster[i].update();
+            }
+            else {
+                Monster[i].update();
+            }
+            
+             //console.log(Monster[i]._acceleration);
+        }
+	    
     }
     
 // 3rd person camera
@@ -993,8 +1016,9 @@ function animate(){
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
         objects[i].position.y=-0.5
-        insegui_meglio(objects[i],objects_body[i],meshes_character,character_body)
+        insegui_meglio(Monster[i],objects[i],objects_body[i],meshes_character,character_body)
     }
+    console.log(character_body.velocity)
     
 
   //fino a qua

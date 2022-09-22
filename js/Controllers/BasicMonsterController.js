@@ -15,13 +15,30 @@ export class BasicMonsterController { //represents a single animated monster in 
         
         this._stateMachine = new MonsterFSM(this._target);
         this._stateMachine.SetState('walk');
-        this._input = new BasicMonsterControllerInput();
+        // this._input = new BasicMonsterControllerInput();
+    }
+
+    _distance(p1, p2){
+        return Math.sqrt( Math.pow(p1.x-p2.x, 2) + Math.pow(p1.z-p2.z, 2))
+    }
+
+    _getStateMachine(){
+        return this._stateMachine;
+    }
+
+    _getCurrentState(){
+        return this._stateMachine._GetState();
+    }
+    
+    _setState(name){
+        this._stateMachine.SetState(name);
     }
 
     update(){
-        this._stateMachine.Update(this._input);
+        this._stateMachine.Update();
 
-        const velocity = this._velocity;
+
+        /*const velocity = this._velocity;
         const frameDecceleration = new THREE.Vector3(
             velocity.x * this._decceleration.x,
             velocity.y * this._decceleration.y,
@@ -113,12 +130,12 @@ export class BasicMonsterController { //represents a single animated monster in 
         forward.multiplyScalar(velocity.z);
       
         controlObject.position.add(forward);
-        controlObject.position.add(sideways);
+        controlObject.position.add(sideways);*/
     }
 
 };
 
-class BasicMonsterControllerInput { //resposible for keyboard and other controller input
+/*class BasicMonsterControllerInput { //resposible for keyboard and other controller input
     constructor() {
         this._Init();
     }
@@ -174,4 +191,4 @@ class BasicMonsterControllerInput { //resposible for keyboard and other controll
                 break;
         }
     }
-};
+};*/
