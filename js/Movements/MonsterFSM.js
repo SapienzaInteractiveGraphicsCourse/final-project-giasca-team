@@ -14,48 +14,38 @@ export class MonsterFSM extends FiniteStateMachine {
         super(target);
 
         this._targetDict = {
-            Upper_leg_sx: { name: "LeftUpLeg_055", mesh: null, initValue: null },
-            Lower_leg_sx: { name: "LeftLeg_056", mesh: null, initValue: null },
-            Foot_sx: { name: "LeftFoot_057", mesh: null, initValue: null },
-            Upper_leg_dx: { name: "RightUpLeg_060", mesh: null, initValue: null },
-            Lower_leg_dx: { name: "RightLeg_061", mesh: null, initValue: null },
-            Foot_dx: { name: "RightFoot_062", mesh: null, initValue: null },
-
             Hips: { name: "Hips_01", mesh: null, initValue: null },
             Neck: { name: "Neck_05", mesh: null, initValue: null },
             Head: { name: "Head_06", mesh: null, initValue: null },
-            
 
             Shoulder_sx: { name: "LeftShoulder_08", mesh: null, initValue: null}, //{ x:0, y:-PI_3, z:0 }
             Upper_arm_sx: { name: "LeftArm_09", mesh: null, initValue: { x:PI_3, y:0, z:0 } },
             Lower_arm_sx: { name: "LeftForeArm_010", mesh: null, initValue:  null},
-            /*Hand_sx: { name: "LeftHand_011", mesh: null, initValue: null },
-            Thumb_sx: { name: "LeftHandThumb1_012", mesh: null, initValue: null },
-            Index_sx: { name: "LeftHandIndex1_016", mesh: null, initValue: null },
-            Middle_sx: { name: "LeftHandMiddle1_020", mesh: null, initValue: null },
-            Ring_sx: { name: "LeftHandRing1_024", mesh: null, initValue: null },
-            Pinky_sx: { name: "LeftHandPinky1_028", mesh: null, initValue: null },*/
+            Hand_sx: { name: "LeftHand_011", mesh: null, initValue: null },
 
             Shoulder_dx: { name: "RightShoulder_032", mesh: null, initValue: null }, //{ x:0, y:PI_3, z:0 }
             Upper_arm_dx: { name: "RightArm_033", mesh: null, initValue:  { x:PI_3, y:0, z:0 } },
             Lower_arm_dx: { name: "RightForeArm_034", mesh: null, initValue:null   },
-            /*Hand_dx: { name: "RightHand_035", mesh: null, initValue: null },
-            Thumb_dx: { name: "RightHandThumb1_036", mesh: null, initValue: null },
-            Index_dx: { name: "RightHandIndex1_040", mesh: null, initValue: null },
-            Middle_dx: { name: "RightHandMiddle1_044", mesh: null, initValue: null },
-            Ring_dx: { name: "RightHandRing1_048", mesh: null, initValue: null },
-            Pinky_dx: { name: "RightHandPinky1_052", mesh: null, initValue: null },*/
+            Hand_dx: { name: "RightHand_035", mesh: null, initValue: null },
+
+            Upper_leg_sx: { name: "LeftUpLeg_055", mesh: null, initValue: null },
+            Lower_leg_sx: { name: "LeftLeg_056", mesh: null, initValue: null },
+            Foot_sx: { name: "LeftFoot_057", mesh: null, initValue: null },
+
+            Upper_leg_dx: { name: "RightUpLeg_060", mesh: null, initValue: null },
+            Lower_leg_dx: { name: "RightLeg_061", mesh: null, initValue: null },
+            Foot_dx: { name: "RightFoot_062", mesh: null, initValue: null },
         };
         this._prepareDict();
 
-        this._AddState('idle', IdleState);
+        //this._AddState('idle', IdleState);
         this._AddState('walk', WalkState);
     }
 };
 
 var vel = 0.01;
 
-class IdleState extends State {
+/*class IdleState extends State {
     constructor(parent) {
       super(parent);
       this._learping = false;
@@ -123,7 +113,7 @@ class IdleState extends State {
         }
       }          
     }
-};
+};*/
 
 
 class WalkState extends State {

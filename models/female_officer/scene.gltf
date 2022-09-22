@@ -1627,7 +1627,7 @@
         77,
         82
       ],
-      "name": "Hips_01",
+      "name": "Hips",
       "translation": [
         0.01061248779296875,
         99.6021728515625,
@@ -1638,7 +1638,7 @@
       "children": [
         24
       ],
-      "name": "Spine_02",
+      "name": "Spine",
       "rotation": [
         -0.06191645935177803,
         -0.0,
@@ -1655,7 +1655,7 @@
       "children": [
         25
       ],
-      "name": "Spine1_03",
+      "name": "Spine1",
       "rotation": [
         -4.803085928983819e-08,
         -0.0,
@@ -1674,7 +1674,7 @@
         29,
         53
       ],
-      "name": "Spine2_04",
+      "name": "Spine2",
       "translation": [
         0.0,
         12.887601852416992,
@@ -1685,7 +1685,7 @@
       "children": [
         27
       ],
-      "name": "Neck_05",
+      "name": "Neck",
       "rotation": [
         0.06191650778055191,
         0.0,
@@ -1702,7 +1702,7 @@
       "children": [
         28
       ],
-      "name": "Head_06",
+      "name": "Head",
       "translation": [
         0.0,
         6.386993408203125,
@@ -1710,7 +1710,7 @@
       ]
     },
     {
-      "name": "HeadTop_End_07",
+      "name": "HeadTop_End",
       "translation": [
         0.0,
         21.029144287109375,
@@ -1721,7 +1721,7 @@
       "children": [
         30
       ],
-      "name": "LeftShoulder_08",
+      "name": "LeftShoulder",
       "rotation": [
         -0.5628394484519958,
         -0.42187511920928955,
@@ -1738,7 +1738,7 @@
       "children": [
         31
       ],
-      "name": "LeftArm_09",
+      "name": "LeftArm",
       "rotation": [
         -0.13674186170101166,
         0.004656263627111912,
@@ -1755,7 +1755,7 @@
       "children": [
         32
       ],
-      "name": "LeftForeArm_010",
+      "name": "LeftForeArm",
       "rotation": [
         -0.01973487064242363,
         -0.0014382979134097695,
@@ -1776,7 +1776,7 @@
         45,
         49
       ],
-      "name": "LeftHand_011",
+      "name": "LeftHand",
       "rotation": [
         0.0523281991481781,
         -0.01637587696313858,
@@ -1793,7 +1793,7 @@
       "children": [
         34
       ],
-      "name": "LeftHandThumb1_012",
+      "name": "LeftHandThumb1",
       "rotation": [
         0.12254194915294647,
         0.030257118865847588,
@@ -1810,7 +1810,7 @@
       "children": [
         35
       ],
-      "name": "LeftHandThumb2_013",
+      "name": "LeftHandThumb2",
       "rotation": [
         0.09069248288869858,
         5.108583917885631e-18,
@@ -1827,7 +1827,7 @@
       "children": [
         36
       ],
-      "name": "LeftHandThumb3_014",
+      "name": "LeftHandThumb3",
       "rotation": [
         0.006253485102206469,
         6.93875824628677e-18,
@@ -1841,7 +1841,7 @@
       ]
     },
     {
-      "name": "LeftHandThumb4_015",
+      "name": "LeftHandThumb4",
       "rotation": [
         -4.747823023620867e-09,
         -2.0816681711721685e-17,
@@ -1858,7 +1858,7 @@
       "children": [
         38
       ],
-      "name": "LeftHandIndex1_016",
+      "name": "LeftHandIndex1",
       "rotation": [
         0.07469180226325989,
         0.004299594555050135,
@@ -1875,7 +1875,7 @@
       "children": [
         39
       ],
-      "name": "LeftHandIndex2_017",
+      "name": "LeftHandIndex2",
       "rotation": [
         0.022899333387613297,
         1.4191941078294746e-17,
@@ -1892,7 +1892,7 @@
       "children": [
         40
       ],
-      "name": "LeftHandIndex3_018",
+      "name": "LeftHandIndex3",
       "rotation": [
         -0.045324988663196564,
         1.449253685853529e-17,
@@ -1906,7 +1906,7 @@
       ]
     },
     {
-      "name": "LeftHandIndex4_019",
+      "name": "LeftHandIndex4",
       "rotation": [
         8.428160946927221e-10,
         1.1696422923156454e-26,
@@ -1923,7 +1923,7 @@
       "children": [
         42
       ],
-      "name": "LeftHandMiddle1_020",
+      "name": "LeftHandMiddle1",
       "rotation": [
         0.03942827135324478,
         -0.00020698104344774038,
@@ -1940,7 +1940,7 @@
       "children": [
         43
       ],
-      "name": "LeftHandMiddle2_021",
+      "name": "LeftHandMiddle2",
       "rotation": [
         0.013318240642547607,
         -4.620692940267154e-20,
@@ -1957,7 +1957,7 @@
       "children": [
         44
       ],
-      "name": "LeftHandMiddle3_022",
+      "name": "LeftHandMiddle3",
       "rotation": [
         -0.018310027197003365,
         1.3780174705268912e-17,
@@ -1971,7 +1971,7 @@
       ]
     },
     {
-      "name": "LeftHandMiddle4_023",
+      "name": "LeftHandMiddle4",
       "rotation": [
         3.981731389046672e-09,
         -2.7755575615628914e-17,
@@ -1988,7 +1988,7 @@
       "children": [
         46
       ],
-      "name": "LeftHandRing1_024",
+      "name": "LeftHandRing1",
       "rotation": [
         -0.011818306520581245,
         0.0005139157292433083,
@@ -2005,7 +2005,7 @@
       "children": [
         47
       ],
-      "name": "LeftHandRing2_025",
+      "name": "LeftHandRing2",
       "rotation": [
         0.06315367668867111,
         8.76433324368696e-19,
@@ -2022,7 +2022,7 @@
       "children": [
         48
       ],
-      "name": "LeftHandRing3_026",
+      "name": "LeftHandRing3",
       "rotation": [
         0.034346915781497955,
         1.3631269787300178e-17,
@@ -2036,7 +2036,7 @@
       ]
     },
     {
-      "name": "LeftHandRing4_027",
+      "name": "LeftHandRing4",
       "rotation": [
         4.593287084020403e-09,
         4.163336342344337e-17,
@@ -2053,7 +2053,7 @@
       "children": [
         50
       ],
-      "name": "LeftHandPinky1_028",
+      "name": "LeftHandPinky1",
       "rotation": [
         0.010393436998128891,
         -0.0009692994062788785,
@@ -2070,7 +2070,7 @@
       "children": [
         51
       ],
-      "name": "LeftHandPinky2_029",
+      "name": "LeftHandPinky2",
       "rotation": [
         -0.0008748837863095105,
         1.3865640660519116e-17,
@@ -2087,7 +2087,7 @@
       "children": [
         52
       ],
-      "name": "LeftHandPinky3_030",
+      "name": "LeftHandPinky3",
       "rotation": [
         0.042498234659433365,
         2.7140720685789672e-17,
@@ -2101,7 +2101,7 @@
       ]
     },
     {
-      "name": "LeftHandPinky4_031",
+      "name": "LeftHandPinky4",
       "rotation": [
         7.103672650110582e-10,
         -4.163336342344337e-17,
@@ -2118,7 +2118,7 @@
       "children": [
         54
       ],
-      "name": "RightShoulder_032",
+      "name": "RightShoulder",
       "rotation": [
         0.5584723353385925,
         -0.42512112855911255,
@@ -2135,7 +2135,7 @@
       "children": [
         55
       ],
-      "name": "RightArm_033",
+      "name": "RightArm",
       "rotation": [
         -0.13499990105628967,
         -0.0022914372384548187,
@@ -2152,7 +2152,7 @@
       "children": [
         56
       ],
-      "name": "RightForeArm_034",
+      "name": "RightForeArm",
       "rotation": [
         -0.0203752089291811,
         0.0012528522638604045,
@@ -2173,7 +2173,7 @@
         69,
         73
       ],
-      "name": "RightHand_035",
+      "name": "RightHand",
       "rotation": [
         0.08248269557952881,
         0.01321615930646658,
@@ -2190,7 +2190,7 @@
       "children": [
         58
       ],
-      "name": "RightHandThumb1_036",
+      "name": "RightHandThumb1",
       "rotation": [
         0.1318175047636032,
         -0.031859684735536575,
@@ -2207,7 +2207,7 @@
       "children": [
         59
       ],
-      "name": "RightHandThumb2_037",
+      "name": "RightHandThumb2",
       "rotation": [
         0.06376354396343231,
         4.3279834999866895e-18,
@@ -2224,7 +2224,7 @@
       "children": [
         60
       ],
-      "name": "RightHandThumb3_038",
+      "name": "RightHandThumb3",
       "rotation": [
         0.030688878148794174,
         -1.5574826589444573e-17,
@@ -2238,7 +2238,7 @@
       ]
     },
     {
-      "name": "RightHandThumb4_039",
+      "name": "RightHandThumb4",
       "rotation": [
         -3.5912634643864294e-08,
         6.938893903907228e-17,
@@ -2255,7 +2255,7 @@
       "children": [
         62
       ],
-      "name": "RightHandIndex1_040",
+      "name": "RightHandIndex1",
       "rotation": [
         0.033268243074417114,
         -0.0012167139211669564,
@@ -2272,7 +2272,7 @@
       "children": [
         63
       ],
-      "name": "RightHandIndex2_041",
+      "name": "RightHandIndex2",
       "rotation": [
         0.032066162675619125,
         -6.675111279840473e-19,
@@ -2289,7 +2289,7 @@
       "children": [
         64
       ],
-      "name": "RightHandIndex3_042",
+      "name": "RightHandIndex3",
       "rotation": [
         -0.005047018639743328,
         -4.15277754726122e-17,
@@ -2303,7 +2303,7 @@
       ]
     },
     {
-      "name": "RightHandIndex4_043",
+      "name": "RightHandIndex4",
       "rotation": [
         5.969755939583266e-13,
         -1.3877787807814457e-17,
@@ -2320,7 +2320,7 @@
       "children": [
         66
       ],
-      "name": "RightHandMiddle1_044",
+      "name": "RightHandMiddle1",
       "rotation": [
         0.010659563355147839,
         -6.584107904927805e-05,
@@ -2337,7 +2337,7 @@
       "children": [
         67
       ],
-      "name": "RightHandMiddle2_045",
+      "name": "RightHandMiddle2",
       "rotation": [
         0.013256157748401165,
         2.2995768047403354e-20,
@@ -2354,7 +2354,7 @@
       "children": [
         68
       ],
-      "name": "RightHandMiddle3_046",
+      "name": "RightHandMiddle3",
       "rotation": [
         0.03881913051009178,
         1.3597965841477568e-17,
@@ -2368,7 +2368,7 @@
       ]
     },
     {
-      "name": "RightHandMiddle4_047",
+      "name": "RightHandMiddle4",
       "rotation": [
         3.6545078074823323e-09,
         -1.5265566588595902e-16,
@@ -2385,7 +2385,7 @@
       "children": [
         70
       ],
-      "name": "RightHandRing1_048",
+      "name": "RightHandRing1",
       "rotation": [
         -0.007686524651944637,
         -0.00022068516409490258,
@@ -2402,7 +2402,7 @@
       "children": [
         71
       ],
-      "name": "RightHandRing2_049",
+      "name": "RightHandRing2",
       "rotation": [
         0.012562823481857777,
         1.3876692620683437e-17,
@@ -2419,7 +2419,7 @@
       "children": [
         72
       ],
-      "name": "RightHandRing3_050",
+      "name": "RightHandRing3",
       "rotation": [
         0.03956048935651779,
         1.3725301921576405e-19,
@@ -2433,7 +2433,7 @@
       ]
     },
     {
-      "name": "RightHandRing4_051",
+      "name": "RightHandRing4",
       "rotation": [
         2.4230599748875647e-09,
         -5.551115123125783e-17,
@@ -2450,7 +2450,7 @@
       "children": [
         74
       ],
-      "name": "RightHandPinky1_052",
+      "name": "RightHandPinky1",
       "rotation": [
         -0.029388338327407837,
         -0.003312906250357628,
@@ -2467,7 +2467,7 @@
       "children": [
         75
       ],
-      "name": "RightHandPinky2_053",
+      "name": "RightHandPinky2",
       "rotation": [
         0.01541813462972641,
         2.1396960078365904e-19,
@@ -2484,7 +2484,7 @@
       "children": [
         76
       ],
-      "name": "RightHandPinky3_00",
+      "name": "RightHandPinky3",
       "rotation": [
         0.028289316222071648,
         1.4264827270789244e-17,
@@ -2498,7 +2498,7 @@
       ]
     },
     {
-      "name": "RightHandPinky4_054",
+      "name": "RightHandPinky4",
       "rotation": [
         1.7443046118614802e-08,
         -1.3877789462175682e-17,
@@ -2515,7 +2515,7 @@
       "children": [
         78
       ],
-      "name": "LeftUpLeg_055",
+      "name": "LeftUpLeg",
       "rotation": [
         -0.0021428591571748257,
         -0.06120206415653229,
@@ -2532,7 +2532,7 @@
       "children": [
         79
       ],
-      "name": "LeftLeg_056",
+      "name": "LeftLeg",
       "rotation": [
         0.06754112243652344,
         -0.0015747142024338245,
@@ -2549,7 +2549,7 @@
       "children": [
         80
       ],
-      "name": "LeftFoot_057",
+      "name": "LeftFoot",
       "rotation": [
         0.4477533996105194,
         -0.13991279900074005,
@@ -2566,7 +2566,7 @@
       "children": [
         81
       ],
-      "name": "LeftToeBase_058",
+      "name": "LeftToeBase",
       "rotation": [
         0.33890652656555176,
         0.08565115928649902,
@@ -2580,7 +2580,7 @@
       ]
     },
     {
-      "name": "LeftToe_End_059",
+      "name": "LeftToe_End",
       "rotation": [
         1.471983979151048e-09,
         -8.760353553682876e-17,
@@ -2597,7 +2597,7 @@
       "children": [
         83
       ],
-      "name": "RightUpLeg_060",
+      "name": "RightUpLeg",
       "rotation": [
         0.0016826221253722906,
         -0.04791746661067009,
@@ -2614,7 +2614,7 @@
       "children": [
         84
       ],
-      "name": "RightLeg_061",
+      "name": "RightLeg",
       "rotation": [
         0.012433887459337711,
         0.0002927749592345208,
@@ -2631,7 +2631,7 @@
       "children": [
         85
       ],
-      "name": "RightFoot_062",
+      "name": "RightFoot",
       "rotation": [
         0.5317707657814026,
         0.09927061945199966,
@@ -2648,7 +2648,7 @@
       "children": [
         86
       ],
-      "name": "RightToeBase_063",
+      "name": "RightToeBase",
       "rotation": [
         0.2860603928565979,
         -0.028831860050559044,
@@ -2662,7 +2662,7 @@
       ]
     },
     {
-      "name": "RightToe_End_064",
+      "name": "RightToe_End",
       "rotation": [
         -3.6076208687063627e-10,
         -5.984795992119984e-17,

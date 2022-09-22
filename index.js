@@ -509,7 +509,14 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 })
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
-_LoadModels('./models/female_officer/scene.gltf',1.5,0.5,20,0.5, 0);
+var is_female_officer = false;
+    if(is_female_officer){
+        _LoadModels('./models/female_officer/scene.gltf', 1.5, 0.5, 20, 0.5, 0);
+    }
+    else{
+        _LoadModels('./models/eleven/scene.gltf', 1.5, 0.5, 20, 0.5, 0);
+    }
+
 
 //_LoadModels('./models/vecna_from_stranger_things/scene.gltf',0.8,1,0.1,-1,1);
 
@@ -798,7 +805,7 @@ async function spawn_point_dx(){
 
     
 }
-async function spawn_point_sx(){
+/*async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 3; i<6; i++){
       //  if(i==0) await sleep(10000) //wait 10s before first spawn
@@ -809,7 +816,7 @@ async function spawn_point_sx(){
 } else{}
     
     
-}
+}*/
 
 //collisions
 var conta_collisioni=0
@@ -931,7 +938,11 @@ function animate(){
     cannonDebug.update()
     //from CANNON to Threejs
     Character.update();
+<<<<<<< HEAD
 	if(Monster!=null){
+=======
+    if(Monster!=null){
+>>>>>>> 18b03681c2aca1d663ef903aab0b0c5a99e9849c
         for(var i in Monster)
 	    Monster[i].update();
     }
@@ -957,7 +968,7 @@ function animate(){
 
     if(cnt_spwand==0){
         spawn_point_dx();
-        spawn_point_sx()
+        //spawn_point_sx()
         cnt_spwand++
     }
     else{}
