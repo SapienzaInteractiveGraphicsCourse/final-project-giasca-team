@@ -9,7 +9,7 @@ import { BasicCharacterController } from './js/Controllers/BasicCharacterControl
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
 var meshes_character,meshes_mostro, Character
 var Monster = {}
-var difficulty=2;
+var difficulty=0;
 //loading
 var loadingScreen = {
     scene : new THREE.Scene(),
@@ -512,7 +512,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
 var is_female_officer = true;
     if(is_female_officer){
-        _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 0);
+        _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
     }
     else{
         _LoadModels('./models/eleven/scene.gltf', 2.5, 0.5, 20, 0.5, 0);
@@ -530,13 +530,21 @@ character_body = new CANNON.Body({
     material:character_bodyMaterial,
     linearDamping : 0.9
 });
+const cbody = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Box( new CANNON.Vec3(2.5,5,7)),
+})
+cbody.position.set(-33,0,32)
+cbody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*30)
+world.addBody(cbody)
+
 
 function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, index) {
     var loaderGLTF = new GLTFLoader(loadingManager);
     loaderGLTF.load(path, function(gltf){
         
         
-        if(entity==0){
+        if(entity==0||entity==1){
             meshes_character = gltf.scene;
 
             meshes_character.position.set(position_x,position_y,position_z);
@@ -564,7 +572,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
                 }
             );
             world.addContactMaterial(pugno_body_contact)*/
-            Character = new BasicCharacterController({target:meshes_character , body:character_body});
+            Character = new BasicCharacterController({target:meshes_character , body:character_body, entity:entity});
         }
         else{
             meshes_mostro = gltf.scene;
@@ -596,13 +604,6 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity, i
 
 //END.
 
-const cbody = new CANNON.Body({ 
-    mass: 0,
-    shape : new CANNON.Box( new CANNON.Vec3(2.5,5,7)),
-})
-cbody.position.set(-33,0,32)
-cbody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*30)
-world.addBody(cbody)
 
 
 //lights
@@ -799,7 +800,7 @@ async function spawn_point_dx(){
     for( var i = 0; i<3; i++){
      //   if(i==0) await sleep(10000) //wait 10s before the first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,35,1,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,35,2,i);
     }
     }
     else{}
@@ -811,7 +812,7 @@ async function spawn_point_sx(){
     for( var i = 3; i<6; i++){
       //  if(i==0) await sleep(10000) //wait 10s before first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,1,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,2,i);
         
     }
 } else{}    
