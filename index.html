@@ -27,25 +27,52 @@
         <div class="popup-box">
           <button class="fas fa-times close-btn" onclick="close_button();"></button>
           <h2 style="color: white;">Choose Level of Difficulty</h2>
-          <button class="btn">EASY</button>
-          <button class="btn">NORMAL</button>
-          <button class="btn">HARD</button>
+          <button class="btn" onclick="localStorage.setItem('difficulty', 'easy');">EASY</button>
+          <button class="btn" onclick="localStorage.setItem('difficulty', 'normal');">NORMAL</button>
+          <button class="btn" onclick="localStorage.setItem('difficulty', 'hard');">HARD</button>
         </div>
       </div>
       <div id="options-popup" class="popup-screen">
         <div class="popup-box">
           <button class="fas fa-times close-btn" onclick="close_button();"></button>
-          <h2 style="color: white;">Options</h2>
+          <h2 style="color: white;">Choose your character</h2>
           <div class="card-container">
             <div class="card">
               <div class="card-image">
                   <img src="./eleven.jpg" alt="Character">
+                  <div class="selector">
+                      <button onclick="localStorage.setItem('character_type', false);">go with eleven</button>
+                  </div>
               </div>
-              <div class="selector">
-                  <button>go with this!</button>
+            </div>
+            <div class="card">
+              <div class="card-image">
+                  <img src="./policewoman.jpeg" alt="Character">
+                  <div class="selector">
+                      <button onclick="localStorage.setItem('character_type', true);">go with trinity</button>
+                  </div>
               </div>
             </div>
           </div>
+          <h2 style="color: white;">Choose time of the day</h2>
+            <div class="card-container">
+              <div class="card">
+                <div class="card-image">
+                    <img src="./stranger-things-3-location-casa-Byers.jpg" alt="Character">
+                    <div class="selector">
+                        <button onclick="localStorage.setItem('day_type', false);">day</button>
+                    </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-image">
+                    <img src="./night.webp" alt="Character">
+                    <div class="selector">
+                        <button onclick="localStorage.setItem('day_type', true);">night</button>
+                    </div>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
 
@@ -92,10 +119,8 @@
         <span>OPTIONS</span>
       </button>
   </div>
-    <button class="button" id="5" style="display: none; visibility: hidden;" width="100" height="100" onclick="location.href='gioco.html'">PLAY</button>
+    <button class="button" id="5" style="display: none; visibility: hidden;" width="100" height="100" onclick="window.location.href='gioco.html'">PLAY</button>
 </div>
-
-
-
     </body>
+
 </html>
