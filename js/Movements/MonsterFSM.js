@@ -119,6 +119,12 @@ class IdleState extends State {
         this._lerpStep = this._lerpStepVal;
         this._learping = true;
       }    */
+      
+      /* setTimeout(() => {  
+    
+        Slap(this);
+    
+      }, 5000); */
       Slap(this);
       if (this._learping){
         if(this._lerpStep <= 1){

@@ -12,7 +12,7 @@ export class BasicCharacterController { //represents a single animated character
         this._target = params.target;
         this._entity = params.entity;
         this._body = params.body;
-
+        this._punch_body = params.punch_body;
         this._decceleration = new THREE.Vector3(-0.5, -0.005, -0.3);
         this._acceleration = new THREE.Vector3(0.1, 0.001, 0.02);
         this._velocity = new THREE.Vector3(0, 0, 0);
@@ -22,9 +22,9 @@ export class BasicCharacterController { //represents a single animated character
         this._input = new BasicCharacterControllerInput();
     }
 
-    _getPunchBody(){
-        return this._stateMachine._GetPunchBody();
-    }
+    // _getPunchBody(){
+    //     return this._stateMachine._GetPunchBody();
+    // }
 
     update(){
         this._stateMachine.Update(this._input);
@@ -78,9 +78,20 @@ export class BasicCharacterController { //represents a single animated character
             this._body.velocity.y *= 0.92;
             this._body.velocity.z *= 0.92;
         }
-      
+
         controlObject.quaternion.copy(_R);
-      
+        this._punch_body.quaternion.copy(controlObject.quaternion);
+
+        if(this._input._keys.space){
+            // if(Math.sign(this._body.position.x))
+            this._punch_body.velocity.x=this._body.velocity.x-100;
+            // this._punch_body.velocity.z-= this._body.position10;
+        }
+        else{
+            this._punch_body.velocity.x=this._body.velocity.x;
+            // this._punch_body.velocity.z=0;
+        }
+
         const forward = new THREE.Vector3(0, 0, 1);
         forward.applyQuaternion(controlObject.quaternion);
         forward.normalize();
@@ -103,6 +114,8 @@ export class BasicCharacterController { //represents a single animated character
         this._body.velocity.x += sideways.x+forward.x;
         this._body.velocity.z += sideways.z+forward.z;
 
+        // this._punch_body.velocity.x += sideways.x+forward.x;
+        // this._punch_body.velocity.z += sideways.z+forward.z;
         /*var norm = Math.sqrt(Math.pow(this._body.velocity.x, 2) + Math.pow(this._body.velocity.z, 2));
         if (this._input._keys.forward && this._input._keys.shift) {
             if(norm > 120){

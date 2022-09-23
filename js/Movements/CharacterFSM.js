@@ -91,23 +91,23 @@ export class CharacterFSM extends FiniteStateMachine {
           this._targetDict.Neck.setValue.x = PI_12;
         }
 
-        this._punch_body = new CANNON.Body({
-          mass: 80,
-          shape : new CANNON.Sphere(0.2),
-          linearDamping :0.9,  //è l'attrito con l'aria
-          // material: pugnoMaterial,
-          // fixedRotation: true
-        });
-        this._punch_body.position.copy(this._targetDict.Hand_dx.mesh.position);
+        // this._punch_body = new CANNON.Body({
+        //   mass: 80,
+        //   shape : new CANNON.Sphere(0.2),
+        //   linearDamping :0.9,  //è l'attrito con l'aria
+        //   // material: pugnoMaterial,
+        //   // fixedRotation: true
+        // });
+        // this._punch_body.position.copy(this._targetDict.Hand_dx.mesh.position);
         this._AddState('idle', IdleState);
         this._AddState('walk', WalkState);
         this._AddState('run', RunState);
         //this._AddState('punch', PunchState);
     }
 
-    _GetPunchBody(){
-      return this._punch_body;
-    }
+    // _GetPunchBody(){
+    //   return this._punch_body;
+    // }
 };
 
 
