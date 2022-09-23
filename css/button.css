@@ -182,13 +182,13 @@ content: '';
   position: relative;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  max-width: 350px;
+  max-width: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 20px;
-  padding: 50px 40px;
+  /* margin: 20px;
+  padding: 50px 40px; */
   border-radius: 20px;
   box-shadow: 0 5px 25px rgb(255 255 255 / 50%);
   transform: scale(0);
@@ -201,9 +201,10 @@ content: '';
 }
 
 .popup-box h2{
-  font-size: 2.1em;
+  font-size: 1.8em;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin: 0px;
+  margin-top: 5px;
 }
 
 .popup-box p{

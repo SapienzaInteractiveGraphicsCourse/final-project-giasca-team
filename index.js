@@ -7,9 +7,10 @@ import CannonDebugger from './cannon-es-debugger.js'
 
 import { BasicCharacterController } from './js/Controllers/BasicCharacterController.js';
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
-var meshes_character,meshes_mostro, Character
+var meshes_character,meshes_mostro, Character;
 var Monster = {}
-var difficulty=0;
+var difficulty= localStorage.getItem("difficulty");
+console.log(difficulty);
 //loading
 var loadingScreen = {
     scene : new THREE.Scene(),
@@ -71,8 +72,8 @@ var day_night = {
 		    'pz.png',
 		    'nz.png'
 	    ] );
-if(difficulty == 0) scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
-else if(difficulty == 1) scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
+if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
+else if(difficulty == "hard") scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
 else scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
 //CANNON WORLD e Debuger
 const world = new CANNON.World({
@@ -510,7 +511,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 })
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
-var is_female_officer = true;
+var is_female_officer=localStorage.getItem("character_type");
     if(is_female_officer){
         _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
     }
@@ -916,17 +917,17 @@ world.addContactMaterial(character_monster_contact)
     //stalker.quaternion.copy(target.quaternion)
     stalker.lookAt(target.position.x,target.position.y,target.position.z)
     if(stalker_body.position.y<1){
-        if(difficulty == 0){
+        if(difficulty == "easy"){
             stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
             stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
         }
-        else if(difficulty == 1){
-            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)//*.5;
-            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)//*.5;
-        }
-        else{
+        else if(difficulty == "hard"){
             stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*1.5;
             stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*1.5;
+        }
+        else{
+            stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x);
+            stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z);
         }
     }
 }
@@ -954,6 +955,9 @@ function animate(){
     cannonDebug.update()
     
     Character.update();
+
+    console.log(is_female_officer);
+
     punch_body= Character._getPunchBody();
     world.addBody(punch_body);
     console.log(punch_body.position);
