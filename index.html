@@ -7,6 +7,7 @@
         <link rel="icon" type="image/jpg" href="stranger_kills_icon.jpg" />
         <link rel="stylesheet" type="text/css" href="css/button.css" />
         <link rel="stylesheet" type="text/css" href="css/logo.css" />
+        <link rel="stylesheet" type="text/css" href="css/card.css" />
         <script src="js/buttons.js"></script>
         <script src="js/cannon.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -35,41 +36,19 @@
         <div class="popup-box">
           <button class="fas fa-times close-btn" onclick="close_button();"></button>
           <h2 style="color: white;">Options</h2>
-          <p style="color: white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="card-container">
+            <div class="card">
+              <div class="card-image">
+                  <img src="./eleven.jpg" alt="Character">
+              </div>
+              <div class="selector">
+                  <button>go with this!</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-        <script type="module">
-            import * as THREE from './three.js/build/three.module.js';
-            let scene, camera, render;
-    
-            scene = new THREE.Scene();
-            //scene.background = new THREE.Color(0xffffff);
-            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-            var renderer = new THREE.WebGLRenderer({antialias:true});
-            renderer.setSize(window.innerWidth,window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-    
-            /*const listener = new THREE.AudioListener();
-            camera.add( listener );
-    
-            // create a global audio source
-            const sound = new THREE.Audio( listener );
-            
-            function startSound(){
-              // load a sound and set it as the Audio object's buffer
-              const audioLoader = new THREE.AudioLoader();
-              audioLoader.load( 'Stranger_Things.ogg', function( buffer ) {
-                  sound.setBuffer( buffer );
-                  sound.setLoop( true );
-                  sound.setVolume( 0.5 );
-                  sound.play();
-              });
-            }*/
-            //var start_audio= new Audio('./Stranger_Things.mp3');
-            //start_audio.loop=true;
-            //document.body.appendChild(start_audio);
-        </script>
         g<div class="st">
 
   <div class="st-top">

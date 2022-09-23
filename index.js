@@ -811,7 +811,11 @@ async function spawn_point_sx(){
     if(cnt_spwand==0){
     for( var i = 3; i<6; i++){
       //  if(i==0) await sleep(10000) //wait 10s before first spawn
+<<<<<<< HEAD
         await sleep(6000)
+=======
+        await sleep(8000)
+>>>>>>> 78c70fb07847acd6621eb1643cd393616f03227b
         _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,2,i);
         
     }
@@ -913,7 +917,11 @@ const character_monster_contact = new CANNON.ContactMaterial(
 world.addContactMaterial(character_monster_contact)
 
 
+<<<<<<< HEAD
  function insegui_meglio(monster,stalker,stalker_body,target,target_body){
+=======
+ function insegui_meglio(stalker,stalker_body,target,target_body){
+>>>>>>> 78c70fb07847acd6621eb1643cd393616f03227b
     //stalker.quaternion.copy(target.quaternion)
 
     stalker.lookAt(target.position.x,target.position.y,target.position.z)

@@ -10,23 +10,21 @@ export class BasicCharacterController { //represents a single animated character
 
     _Init(params) {
         this._target = params.target;
-        //this._body = params.body;
-        /*this._path = params.path;
-        this._scaleValue = params.scaleValue;
-        this._pos_x = params.pos_x;
-        this._pos_y = params.pos_y;
-        this._pos_z = params.pos_z;*/
-
+        this._entity = params.entity;
         this._body = params.body;
-
+        this._punch_body = params.punch_body;
         this._decceleration = new THREE.Vector3(-0.5, -0.005, -0.3);
         this._acceleration = new THREE.Vector3(0.1, 0.001, 0.02);
         this._velocity = new THREE.Vector3(0, 0, 0);
     
-        this._stateMachine = new CharacterFSM(this._target);
+        this._stateMachine = new CharacterFSM(this._target, this._entity);
         this._stateMachine.SetState('idle');
         this._input = new BasicCharacterControllerInput();
     }
+
+    // _getPunchBody(){
+    //     return this._stateMachine._GetPunchBody();
+    // }
 
     update(){
         this._stateMachine.Update(this._input);
@@ -49,7 +47,6 @@ export class BasicCharacterController { //represents a single animated character
         if (this._input._keys.forward) {
             if (this._input._keys.shift) {
                 velocity.z += acc.z * 2;
-                //this._body.position.z += 0.01;
             }
             else {
                 velocity.z += acc.z*1.2 ;
@@ -69,32 +66,44 @@ export class BasicCharacterController { //represents a single animated character
             velocity.y += acc.y;
             _Q.setFromAxisAngle(_A, velocity.y);
             _R.multiply(_Q);
-            //velocity.x += acc.x;
         }
         if (this._input._keys.right) {
             _A.set(0, 1, 0);
             velocity.y += acc.y;
             _Q.setFromAxisAngle(_A, -velocity.y);
             _R.multiply(_Q);
-            //velocity.x -= acc.x;
         }
         if( !(this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) ){
             this._body.velocity.x *= 0.92;
             this._body.velocity.y *= 0.92;
             this._body.velocity.z *= 0.92;
         }
-        /*else {
-            velocity.z = 0;
-            velocity.x = 0;
-            velocity.y = 0;
 
-            this._acceleration.x = 0.1;
-            this._acceleration.y = 0.25;
-            this._acceleration.z = 0.02;
-        }*/
-      
         controlObject.quaternion.copy(_R);
-      
+        this._punch_body.quaternion.copy(controlObject.quaternion);
+
+        if(this._input._keys.space){
+            // if(Math.sign(this._body.position.x))
+            if(this._punch_body.position.distanceTo(this._body.position)<2){
+                let relativeVector = new CANNON.Vec3(0,0,1 );
+                this._punch_body.quaternion.vmult(relativeVector, relativeVector);
+                this._punch_body.position.vadd(relativeVector, this._punch_body.position);
+                this._punch_body.position.y=2 
+            }
+            else{
+                
+            this._punch_body.position.copy(this._body.position);
+            this._punch_body.position.y=2 
+            }
+            
+            // this._punch_body.velocity.z-= this._body.position10;
+        }
+        else{
+            this._punch_body.position.copy(this._body.position);
+            this._punch_body.position.y=2 
+            // this._punch_body.velocity.z=0;
+        }
+
         const forward = new THREE.Vector3(0, 0, 1);
         forward.applyQuaternion(controlObject.quaternion);
         forward.normalize();
@@ -117,6 +126,8 @@ export class BasicCharacterController { //represents a single animated character
         this._body.velocity.x += sideways.x+forward.x;
         this._body.velocity.z += sideways.z+forward.z;
 
+        // this._punch_body.velocity.x += sideways.x+forward.x;
+        // this._punch_body.velocity.z += sideways.z+forward.z;
         /*var norm = Math.sqrt(Math.pow(this._body.velocity.x, 2) + Math.pow(this._body.velocity.z, 2));
         if (this._input._keys.forward && this._input._keys.shift) {
             if(norm > 120){

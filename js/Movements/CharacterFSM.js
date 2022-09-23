@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJBZqM/build/three.module.js';
-
+import * as CANNON from '../../cannon-es.js'
+import CannonDebugger from '../../cannon-es-debugger.js'
 import { FiniteStateMachine , State } from './FiniteStateMachine.js';
 
 const PI_2 = Math.PI / 2;
@@ -29,7 +30,7 @@ const arm_angle_run = PI_8;
 //var prevState;
 
 export class CharacterFSM extends FiniteStateMachine {
-    constructor(target) {
+    constructor(target,entity) {
       super(target);
 
         this._targetDict = {
@@ -84,54 +85,97 @@ export class CharacterFSM extends FiniteStateMachine {
         };
         this._prepareDict();
 
+        this._entity = entity;
+
+        if ( this._entity == 0 ) {
+          this._targetDict.Neck.setValue.x = PI_12;
+        }
+
+        this._punch_body = new CANNON.Body({
+          mass: 80,
+          shape : new CANNON.Sphere(0.2),
+          linearDamping :0.9,  //è l'attrito con l'aria
+          // material: pugnoMaterial,
+          // fixedRotation: true
+        });
+        this._punch_body.position.copy(this._targetDict.Hand_dx.mesh.position);
         this._AddState('idle', IdleState);
         this._AddState('walk', WalkState);
         this._AddState('run', RunState);
         //this._AddState('punch', PunchState);
     }
+
+    _GetPunchBody(){
+      return this._punch_body;
+    }
 };
 
 
+
 function Punch(state) {
+
+  if ( state._entity == 1 ) {
   
-  while ( state._targetDict.Shoulder_dx.mesh.rotation.x <= state._targetDict.Shoulder_dx.initValue.x + PI_16) {
-    state._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;
-    state._targetDict.Lower_arm_dx.mesh.rotation.z -= 0.05;
+    while ( state._targetDict.Shoulder_dx.mesh.rotation.x <= state._targetDict.Shoulder_dx.initValue.x + PI_16) {
+      state._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;
+      state._targetDict.Lower_arm_dx.mesh.rotation.z -= 0.05;
 
-  }
-
-  for(var i in state._targetDict){
-    if ( state._targetDict[i].index < 20 ) {
-      state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].setValue, state._lerpStep));
     }
-  }
-
-  setTimeout(() => {  
 
     for(var i in state._targetDict){
-
-      if (state._targetDict[i].index == 36 || state._targetDict[i].index == 40 || state._targetDict[i].index == 25 || state._targetDict[i].index == 26  ) {
+      if ( state._targetDict[i].index < 20 ) {
         state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].setValue, state._lerpStep));
       }
-      else if ( state._targetDict[i].index == 38 ) {
+    }
+
+    setTimeout(() => {  
+
+      for(var i in state._targetDict){
+
+        if (state._targetDict[i].index == 36 || state._targetDict[i].index == 40 || state._targetDict[i].index == 25 || state._targetDict[i].index == 26  ) {
+          state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].setValue, state._lerpStep));
+        }
+        else if ( state._targetDict[i].index == 38 ) {
+          state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].initValue, state._lerpStep));
+        }
+      }
+
+      var snd = new Audio('../../female_officer_punch_sound.mp3');
+      snd.play();
+
+
+    }, 150);
+
+
+    setTimeout(() => {  
+      
+      for(var i in state._targetDict){
         state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].initValue, state._lerpStep));
+      }
+
+    }, 500);
+  }
+  else {
+    while ( state._targetDict.Shoulder_dx.mesh.rotation.x >= state._targetDict.Shoulder_dx.initValue.x - PI_2) {
+      state._targetDict.Shoulder_dx.mesh.rotation.x -= 0.02;
+      state._targetDict.Hand_dx.mesh.rotation.z -= 0.02;
+      state._targetDict.Hand_dx.mesh.rotation.x -= 0.005;
+    }
+
+    for(var i in state._targetDict){
+      if ( state._targetDict[i].index == 26 ) {
+        state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].setValue, state._lerpStep));
       }
     }
 
-    var snd = new Audio('../../female_officer_punch_sound.mp3');
-    snd.play();
+    setTimeout(() => {  
+      
+      for(var i in state._targetDict){
+        state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].initValue, state._lerpStep));
+      }
 
-
-   }, 150);
-
-
-   setTimeout(() => {  
-    
-    for(var i in state._targetDict){
-      state._targetDict[i].mesh.rotation.set( ...state.lerp(state._targetDict[i].mesh.rotation, state._targetDict[i].initValue, state._lerpStep));
-    }
-
-  }, 500);
+    }, 500);
+  }
 }
 
 class IdleState extends State {

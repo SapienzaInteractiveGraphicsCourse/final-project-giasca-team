@@ -1,0 +1,89 @@
+.card-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    position: relative;
+    width: 270px;
+    margin: 2em;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 180px 1fr auto;
+}
+
+.card-image {
+    position: relative;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url(../eleven.jpg);
+    background-size: cover;
+}
+
+.card-image img {
+    max-width: 95%;
+    max-height: 95%;
+    transition: max-width 0.4s, max-height 0.4s;
+}
+
+.card:hover .card-image img {
+    max-width: 120%;
+    max-height: 120%;
+}
+
+
+.card {
+    box-shadow: 0 15px 30px -10px #000;
+    cursor: pointer;
+}
+
+.card:hover {
+    box-shadow: 4px 4px 25px rgba(0, 0, 0, 0.2);
+}
+
+.selector {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 18px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.card:hover .selector {
+    opacity: 1;
+}
+
+.selector button {
+    background-color: #4891ba;
+    color: #fff;
+    outline: none;
+    border: 2px solid currentColor;
+    cursor: pointer;
+    padding: 12px 20px;
+    transform: translateY(60px);
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.1em;
+    font-weight: bolder;
+    transition: opacity 0.3s;
+}
+
+.selector button:hover {
+    opacity: 0.8;
+}
