@@ -59,9 +59,7 @@ const sunTexture = textureLoader.load('./textures/sun1.JPG')
 //SCENE
 const scene = new THREE.Scene();
 
-var day_night = {
-    is_day:false,
-}
+var is_day = localStorage.getItem('day_type');
 
 //if (day_night.is_day==true){
     scene.background = new THREE.CubeTextureLoader()
