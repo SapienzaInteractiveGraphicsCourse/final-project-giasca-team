@@ -759,46 +759,43 @@ function sun_animation(){
     sun.rotateY(0.02)
 }
 
-var day_or_night = { add:function(){
-    day_night.is_day=!day_night.is_day;
-    if(day_night.is_day==false){
-        scene.background = new THREE.CubeTextureLoader()
-	        .setPath( 'textures/day_night/cubemap/' )
-	        .load( [
-		        'px.png',
-		        'nx.png',
-		        'py.png',
-		        'ny.png',
-		        'pz.png',
-		        'nz.png'
-	        ] );
-       
-        item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
-        scene.remove(sun);
-        scene.remove(hemilight)
-        scene.add(moon)
-        spotlight.visible=true
-        }
-    else{
-        scene.background = new THREE.CubeTextureLoader()
-	        .setPath( 'textures/day_night/cubemap_day/' )
-	        .load( [
-		        'px.png',
-		        'nx.png',
-		        'py.png',
-		        'ny.png',
-		        'pz.png',
-		        'nz.png'
-	        ] );
-        LightsF.remove(item_moonlight)
+if(is_day){
+    scene.background = new THREE.CubeTextureLoader()
+    .setPath( 'textures/day_night/cubemap_day/' )
+	.load( [
+		    'px.png',
+		    'nx.png',
+	        'py.png',
+	        'ny.png',
+		    'pz.png',
+		    'nz.png'
+	    ] );
+    LightsF.remove(item_moonlight)
         
-        scene.remove(moon)
-        scene.add(sun)
-        scene.add(hemilight)
-        spotlight.visible=false;
-    }
-    }};
-gui.add(day_or_night,'add').name('change day/night')
+    scene.remove(moon)
+    scene.add(sun)
+    scene.add(hemilight)
+    spotlight.visible=false;            
+}
+else{
+    scene.background = new THREE.CubeTextureLoader()
+    .setPath( 'textures/day_night/cubemap/' )
+    .load( [
+        'px.png',
+        'nx.png',
+        'py.png',
+        'ny.png',
+        'pz.png',
+        'nz.png'
+    ] );
+   
+    item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
+    scene.remove(sun);
+    scene.remove(hemilight)
+    scene.add(moon)
+    spotlight.visible=true
+}
+// gui.add(day_or_night,'add').name('change day/night')
 
 
 var caduto=0
