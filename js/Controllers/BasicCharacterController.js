@@ -84,11 +84,23 @@ export class BasicCharacterController { //represents a single animated character
 
         if(this._input._keys.space){
             // if(Math.sign(this._body.position.x))
-            this._punch_body.velocity.x=this._body.velocity.x-100;
+            if(this._punch_body.position.distanceTo(this._body.position)<2){
+                let relativeVector = new CANNON.Vec3(0,0,1 );
+                this._punch_body.quaternion.vmult(relativeVector, relativeVector);
+                this._punch_body.position.vadd(relativeVector, this._punch_body.position);
+                this._punch_body.position.y=2 
+            }
+            else{
+                
+            this._punch_body.position.copy(this._body.position);
+            this._punch_body.position.y=2 
+            }
+            
             // this._punch_body.velocity.z-= this._body.position10;
         }
         else{
-            this._punch_body.velocity.x=this._body.velocity.x;
+            this._punch_body.position.copy(this._body.position);
+            this._punch_body.position.y=2 
             // this._punch_body.velocity.z=0;
         }
 

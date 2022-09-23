@@ -12,11 +12,21 @@ var Monster = []
 var difficulty= localStorage.getItem("difficulty");
 console.log(difficulty);
 
+// var vittoria_gioco
+// if(difficulty=='easy') vi = 15
+// else if(difficulty=='hard') fine_gioco=7
+// else fine_gioco = 10
+
+var fine_gioco
+if(difficulty=='easy') fine_gioco = 15
+else if(difficulty=='hard') fine_gioco=7
+else fine_gioco = 10
+
 //Scoreboard
 var scoreboard = document.getElementById('scoreBoard')
 function updateScoreBoard(){
    //'colpi dati : '+conta_colpidati+
-    scoreboard.innerHTML = ' , colpi ricevuti : '+conta_collisioni+check_borders()//+cnt_col  //+ check_borders()
+    scoreboard.innerHTML = 'monster killed : '+ conta_kill+' , colpi ricevuti : '+conta_collisioni//+check_borders()//+cnt_col  //+ check_borders()
 }
 
 //loading
@@ -130,6 +140,8 @@ controls.mouseButtons = {
 //OBJECTS 
 var objects =[];
 var objects_body = []
+var objects_for_punch = []
+var objects_fuori =[];
 //stage
 const geometry = new THREE.BoxGeometry(80,0.001,80);
 //geometry.attributes.position.setZ(1,0.9)
@@ -199,6 +211,7 @@ const loaderbench2 = new GLTFLoader();
 const loaderbench3 = new GLTFLoader();
 const loadercar = new GLTFLoader();
 const loaderlogo = new GLTFLoader();
+const loaderlightbulb = new GLTFLoader();
 var house;
 var fence1, fence2, fence3, fence4, fence5;
 var forest1, forest2, forest3, forest4;
@@ -207,6 +220,7 @@ var lamp1, lamp2, lamp3, lamp4;
 var bench1, bench2, bench3;
 var car;
 var logo;
+var lightbulb;
 
 loaderlogo.load('./models/avengers_logo/scene.gltf', function(gltf){
     logo= gltf.scene;
@@ -224,6 +238,22 @@ const logobody = new CANNON.Body({
 logobody.position.set(10,0,-10)
 logobody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180 * -60)
 world.addBody(logobody)
+
+loaderlightbulb.load('./models/light_bulb/scene.gltf', function(gltf){
+    lightbulb= gltf.scene;
+    lightbulb.scale.set(10,10,10)
+    stage.attach(lightbulb);
+    lightbulb.position.set(-35,5,-10)
+    lightbulb.rotation.y=Math.PI/180 * -60;
+    scene.add(lightbulb);
+
+})
+const lightbulbbody = new CANNON.Body({ 
+    mass: 0,
+    shape : new CANNON.Cylinder( 2,2,8,20),
+})
+lightbulbbody.position.set(-35,4,-10)
+world.addBody(lightbulbbody)
 
 loader1.load('./models/wood house/scene.gltf', function(gltf){
     
@@ -260,14 +290,6 @@ loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
     fence1.rotation.y = Math.PI/180 
     scene.add(fence1);
 })
-// const f1g= new THREE.BoxGeometry(4,10,15)
-// const f1m =new THREE.MeshStandardMaterial({ wireframe:true})
-// const f1 = new THREE.Mesh(f1g,f1m)
-// f1.position.set(-33.5,0,-30)
-// f1.rotation.y= Math.PI/180
-// scene.add(f1)
-// //objects.push(f1)
-// f1.visible=false
 
 const f1body = new CANNON.Body({ 
     mass: 0,
@@ -527,13 +549,13 @@ const monster_bodyMaterial= new CANNON.Material();
 const punch_bodyMaterial= new CANNON.Material();
 character_body = new CANNON.Body({ 
     mass: 50, 
-    shape: new CANNON.Sphere(0.7),
+    shape: new CANNON.Sphere(0.6),
     material:character_bodyMaterial,
-    linearDamping : 0.9
+    linearDamping : 0.7
 });
 punch_body = new CANNON.Body({
        mass: 80,
-       shape : new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.2)),
+       shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.1)),
        linearDamping :0.9,  //è l'attrito con l'aria
        material: punch_bodyMaterial,
        fixedRotation: true
@@ -580,16 +602,26 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             objects.push(meshes_mostro);
             
             const monster_body = new CANNON.Body({ 
-                mass: 40, //prima era 80
-                shape : new CANNON.Sphere(1), //new CANNON.Vec3(2.45,2.45,2.45)),
+                mass: 20, //prima era 80
+                shape : new CANNON.Sphere(.4), //new CANNON.Vec3(2.45,2.45,2.45)),
                 material: monster_bodyMaterial,
-                linearDamping :0.9
+                linearDamping :0.9,
+                
             })
             monster_body.position.set(position_x,position_y,position_z)
-            //monster_body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180)
             world.addBody(monster_body)
+            const shoulders_body = new CANNON.Body({ 
+                mass: 40, //prima era 80
+                shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.1)), //new CANNON.Vec3(2.45,2.45,2.45)),
+                material: monster_bodyMaterial,
+                linearDamping :0.9,
+                fixedRotation: true
+            })
+           shoulders_body.position.set(position_x,42.5,position_z)
+           world.addBody(shoulders_body)
             objects_body.push(monster_body)
-            //console.log(objects_body.length)
+           objects_for_punch.push(shoulders_body)
+
             mostro =  new BasicMonsterController(meshes_mostro);
             Monster.push(mostro)
         }
@@ -769,33 +801,33 @@ var day_or_night = { add:function(){
 gui.add(day_or_night,'add').name('change day/night')
 
 
-
+var caduto=0
 function check_borders(){
-    var str= ''
-    if(character_body.position.x>39 || character_body.position.x<-39 || character_body.position.z<-39 || character_body.position.z>39)
-        str = 'sei caduto ritardato'
     
-    return(str)
+    if(character_body.position.x>39 || character_body.position.x<-39 || character_body.position.z<-39 || character_body.position.z>39)
+        caduto=1
+        
+    
+    return(caduto)
 
 }
-/*const g= new THREE.BoxGeometry(5,5,5)
-const m =new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5, wireframe : false})
-const f = new THREE.Mesh(g,m)
-//f.visible=false
-f.position.set(0,0,7)
-objects.push(f)
-scene.add(f)*/
+
 var cnt_spwand=0
+var tot_mostri_da_spawnare
+if(difficulty=='easy') tot_mostri_da_spawnare=4
+else if(difficulty=='hard') tot_mostri_da_spawnare=8
+else tot_mostri_da_spawnare=5
 //var cnt_spwans=0;
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 async function spawn_point_dx(){
     if(cnt_spwand==0){
-    for( var i = 0; i<3; i++){
-     //   if(i==0) await sleep(10000) //wait 10s before the first spawn
+    
+    for( var i = 0; i<tot_mostri_da_spawnare; i++){
+        if(i==0) await sleep(10000) //wait +10s before the first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,35,2,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,0,5,35,2,i);
     }
     }
     else{}
@@ -804,10 +836,10 @@ async function spawn_point_dx(){
 }
 async function spawn_point_sx(){
     if(cnt_spwand==0){
-    for( var i = 3; i<6; i++){
-      //  if(i==0) await sleep(10000) //wait 10s before first spawn
+    for( var i = 0; i<tot_mostri_da_spawnare; i++){
+        if(i==0) await sleep(10000) //wait +10s before first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',1.5,0,5,-35,2,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,0,5,-35,2,i);
         
     }
 } else{}    
@@ -815,20 +847,38 @@ async function spawn_point_sx(){
 
 //collisions
 var conta_collisioni=0
-var removeBody
 character_body.addEventListener("collide",function(e){
 
     for(var i = 0; i<objects_body.length; i++){
         if (e.body==objects_body[i]){
             conta_collisioni++
-            // objects_body.splice(i)
-            // objects.splice(i)
-           // console.log(conta_collisioni)
-           //world.step(1/60);
-           //world.removeBody(objects_body[i])
-          // removeBody = e.body;
+            
+        //     objects_body.splice(i)
+        //     objects.splice(i)
+          
+        //    world.step(1/60);
+        //    //world.removeBody(objects_body[i])
+          
            
-          // scene.remove(objects[i])
+        //   scene.remove(objects[i])
+        //   removeBody = e.body;
+            if (conta_collisioni==fine_gioco) console.log('suca hai perso')
+           
+        }
+    }
+});
+var conta_kill=0;
+var removeBody, removeShoulders
+punch_body.addEventListener("collide",function(e){
+
+    for(var i = 0; i<objects_for_punch.length; i++){
+        if (e.body==objects_for_punch[i]){
+
+            objects_body[i].position.x=-300
+            e.body.position.x=-300
+            objects_fuori.push(e.body)
+            conta_kill=(objects_fuori.length)/4
+            
            
         }
     }
@@ -836,7 +886,7 @@ character_body.addEventListener("collide",function(e){
 
 var conta_aiuti = 0;
 logobody.addEventListener("collide",function(e){
-    if (e.body==character_body){
+    if (e.body==punch_body){
         if(conta_aiuti<1) scene.fog = new THREE.FogExp2(0xDFE9F3,0.0) //prima era 0.05
         
         else{
@@ -901,46 +951,44 @@ const character_monster_contact = new CANNON.ContactMaterial(
     character_bodyMaterial,
     monster_bodyMaterial,
     {
-        friction:1,
+        friction:0.1,
         contactEquationStiffness:attraverso
     }
 );
 world.addContactMaterial(character_monster_contact)
 
-
- function insegui_meglio(stalker,stalker_body,target,target_body){
+var slap=false
+ function insegui_meglio(monster,stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
     stalker.lookAt(target.position.x,target.position.y,target.position.z)
     if(stalker_body.position.y<1){
         if(difficulty == "easy"){
-            if(stalker_body.position.distanceTo(target_body.position)<3){
-                stalker_body.velocity.x=0
-                stalker_body.velocity.z=0
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
+                //le velocita stalker_body.x e .z=0 e qua sotto metti else
             }
-            else{
+            
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
-            }
+            
         }
         else if(difficulty == "hard"){
-            if(stalker_body.position.distanceTo(target_body.position)<3){
-                stalker_body.velocity.x=0
-                stalker_body.velocity.z=0
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
             }
-            else{
+            
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*1.5;
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*1.5;
-            }
+        
         }
         else{
-            if(stalker_body.position.distanceTo(target_body.position)<3){
-                stalker_body.velocity.x=0
-                stalker_body.velocity.z=0
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
             }
-            else{
+            
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x);
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z);
-            }
+            
         }
     }
 }
@@ -962,14 +1010,15 @@ function animate(){
 		renderer.render(loadingScreen.scene, loadingScreen.camera);
 		return;
 	}
-   // if(removeBody) world.removeBody(removeBody);
+    if(removeBody) world.removeBody(removeBody);
+    //if(removeShoulders) world.removeBody(removeShoulders);
 
     world.step(timestep)
     cannonDebug.update()
     
     Character.update();
 
-    console.log(is_female_officer);
+   // console.log(is_female_officer);
 
     // punch_body= Character._getPunchBody();
     // world.addBody(punch_body);
@@ -979,16 +1028,18 @@ function animate(){
 
         for(var i =0; i< Monster.length ;i++){
             
-            if(Math.abs(objects_body[i].velocity.z)<0.1 && Math.abs(objects_body[i].velocity.x)<0.1 && objects_body[i].position.y<0.7) {
-                Monster[i]._setState("idle");
+        //     if(Math.abs(objects_body[i].velocity.z)<0.1 && Math.abs(objects_body[i].velocity.x)<0.1 && objects_body[i].position.y<0.7) {
+        //         Monster[i]._setState("idle");
                
-            }
-            else {
-                // Monster[i]._setState("walk");
-            }
+        //     }
+        //     else {
+        //         // Monster[i]._setState("walk");
+        //     }
             Monster[i].update();
              //console.log(Monster[i]._acceleration);
         }
+       
+        
 	    
     }
     
@@ -1004,7 +1055,7 @@ function animate(){
     //camera.position.lerp(temp, 0.2);
     camera.lookAt( Character._target.position );
     //check if you fell
-    //check_borders();
+    check_borders();
     //collision_avoidance();
     moon_animation();
     sun_animation();
@@ -1017,18 +1068,27 @@ function animate(){
         cnt_spwand++
     }
     else{}
-    meshes_character.position.y=-0.4
+    if(Math.abs(character_body.position.x)>39.5 || Math.abs(character_body.position.z)>39.5) meshes_character.position.y=character_body.position.y
+    else meshes_character.position.y=-0.4
 
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
         objects[i].position.y=-0.5
-        insegui_meglio(objects[i],objects_body[i],meshes_character,character_body)
+        if(objects_body[i].position.y<2){
+            objects_for_punch[i].position.x=objects_body[i].position.x
+            objects_for_punch[i].position.z=objects_body[i].position.z
+            objects_for_punch[i].position.y=2.5
+        }
+
+       // objects
+        insegui_meglio(Monster[i],objects[i],objects_body[i],meshes_character,character_body)
     }
+    console.log(objects_fuori.length)
     
-    punch_body.position.copy(character_body.position);
+   // punch_body.position.copy(character_body.position);
     // punch_body.quaternion.copy(character_body.quaternion);
 
-    punch_body.position.y =2
+   // punch_body.position.y =2
   //fino a qua
     //requestAnimationFrame(animate)
     
