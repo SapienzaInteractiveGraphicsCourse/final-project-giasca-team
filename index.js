@@ -959,14 +959,15 @@ const character_monster_contact = new CANNON.ContactMaterial(
 );
 world.addContactMaterial(character_monster_contact)
 
-
- function insegui_meglio(stalker,stalker_body,target,target_body){
+var slap=false
+ function insegui_meglio(monster,stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
     stalker.lookAt(target.position.x,target.position.y,target.position.z)
     if(stalker_body.position.y<1){
         if(difficulty == "easy"){
-            if(stalker_body.position.distanceTo(target_body.position)==3){
-                Monster[i]._setState("idle");
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
+                //le velocita stalker_body.x e .z=0 e qua sotto metti else
             }
             
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
@@ -974,8 +975,8 @@ world.addContactMaterial(character_monster_contact)
             
         }
         else if(difficulty == "hard"){
-            if(stalker_body.position.distanceTo(target_body.position)==3){
-                Monster[i]._setState("idle");
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
             }
             
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*1.5;
@@ -983,9 +984,8 @@ world.addContactMaterial(character_monster_contact)
         
         }
         else{
-            if(stalker_body.position.distanceTo(target_body.position)==3){
-                Monster[i]._setState("idle");
-                
+            if(stalker_body.position.distanceTo(target_body.position)<=3){
+                monster._setState("idle");
             }
             
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x);
@@ -1083,7 +1083,7 @@ function animate(){
         }
 
        // objects
-        insegui_meglio(objects[i],objects_body[i],meshes_character,character_body)
+        insegui_meglio(Monster[i],objects[i],objects_body[i],meshes_character,character_body)
     }
     console.log(objects_fuori.length)
     
