@@ -532,7 +532,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
 var is_female_officer=localStorage.getItem("character_type");
-    if(is_female_officer){
+    if(is_female_officer=='true'){
         _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
     }
     else{
