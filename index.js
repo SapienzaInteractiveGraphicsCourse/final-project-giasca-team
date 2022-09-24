@@ -73,6 +73,7 @@ const sunTexture = textureLoader.load('./textures/sun1.JPG')
 //SCENE
 const scene = new THREE.Scene();
 
+var is_day = localStorage.getItem('day_type');
 
 
 
