@@ -849,7 +849,11 @@ character_body.addEventListener("collide",function(e){
     for(var i = 0; i<objects_body.length; i++){
         if (e.body==objects_body[i]){
             conta_collisioni++
-            
+            // if(Monster!=null){
+            //     setTimeout(()=>{
+                    Monster[i]._setState('idle');
+            //     }, 1500)
+            // }
         //     objects_body.splice(i)
         //     objects.splice(i)
           
@@ -954,38 +958,44 @@ const character_monster_contact = new CANNON.ContactMaterial(
 );
 world.addContactMaterial(character_monster_contact)
 
-var slap=false
+var slap=false;
  function insegui_meglio(monster,stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
     stalker.lookAt(target.position.x,target.position.y,target.position.z)
     if(stalker_body.position.y<1){
         if(difficulty == "easy"){
-            if(stalker_body.position.distanceTo(target_body.position)<=3){
-                monster._setState("idle");
+            if(stalker_body.position.distanceTo(target_body.position)<=0.3){
+                // monster._setState("idle");
                 //le velocita stalker_body.x e .z=0 e qua sotto metti else
+                stalker_body.velocity.x = 0;
+                stalker_body.velocity.z = 0;
             }
-            
+            else{
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*.5;
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*.5;
-            
+            }
         }
         else if(difficulty == "hard"){
-            if(stalker_body.position.distanceTo(target_body.position)<=3){
-                monster._setState("idle");
+            if(stalker_body.position.distanceTo(target_body.position)<=0.3){
+                // monster._setState("idle");
+                stalker_body.velocity.x = 0;
+                stalker_body.velocity.z = 0;
             }
-            
+            else{
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x)*1.5;
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z)*1.5;
-        
+            }
         }
         else{
-            if(stalker_body.position.distanceTo(target_body.position)<=3){
-                monster._setState("idle");
+            if(stalker_body.position.distanceTo(target_body.position)<=0.3){
+                // monster._setState("idle");
+                stalker_body.velocity.x = 0;
+                stalker_body.velocity.z = 0;
             }
-            
+            else{
                 stalker_body.velocity.x = Math.sign(target_body.position.x-stalker_body.position.x);
                 stalker_body.velocity.z = Math.sign(target_body.position.z-stalker_body.position.z);
-            
+            }
         }
     }
 }
