@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vecna's Clock (read description)
+* source:	https://sketchfab.com/3d-models/vecnas-clock-read-description-093339833c8341628bb34fbd70225a5f
+* author:	Pedro Confusoes (https://sketchfab.com/PedroEdits)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vecna's Clock (read description)" (https://sketchfab.com/3d-models/vecnas-clock-read-description-093339833c8341628bb34fbd70225a5f) by Pedro Confusoes (https://sketchfab.com/PedroEdits) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

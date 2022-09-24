@@ -10,23 +10,27 @@ import { BasicMonsterController } from './js/Controllers/BasicMonsterController.
 var meshes_character,meshes_mostro, Character,mostro
 var Monster = []
 var difficulty= localStorage.getItem("difficulty");
-console.log(difficulty);
 
-// var vittoria_gioco
-// if(difficulty=='easy') vi = 15
-// else if(difficulty=='hard') fine_gioco=7
-// else fine_gioco = 10
+
+var is_day= localStorage.getItem("day_type");
+//var is_day=!is_day
 
 var fine_gioco
-if(difficulty=='easy') fine_gioco = 15
-else if(difficulty=='hard') fine_gioco=7
-else fine_gioco = 10
+if(difficulty=='easy') fine_gioco = 17
+else if(difficulty=='hard') fine_gioco=10
+else fine_gioco = 13
+
+var vittoria
+if(difficulty=='easy') vittoria = 8
+else if(difficulty=='hard') vittoria=16
+else vittoria = 10
 
 //Scoreboard
+
 var scoreboard = document.getElementById('scoreBoard')
 function updateScoreBoard(){
    //'colpi dati : '+conta_colpidati+
-    scoreboard.innerHTML = 'monster killed : '+ conta_kill+' , colpi ricevuti : '+conta_collisioni//+check_borders()//+cnt_col  //+ check_borders()
+    scoreboard.innerHTML = 'monsters killed : '+ quanti_fuori+' , colpi ricevuti : '+conta_collisioni//+check_borders()//+cnt_col  //+ check_borders()
 }
 
 //loading
@@ -50,10 +54,10 @@ loadingManager.onLoad = function(){
 }; //onLoad is when all resources are loaded
 
 //GUI
-const gui = new dat.GUI({
-    width:400,
-});
-gui.close()
+// const gui = new dat.GUI({
+//     width:400,
+// });
+// gui.close()
 //TEXTURES
 const textureLoader = new THREE.TextureLoader()
 //for the stage
@@ -71,26 +75,18 @@ const scene = new THREE.Scene();
 
 var is_day = localStorage.getItem('day_type');
 
-//if (day_night.is_day==true){
-    scene.background = new THREE.CubeTextureLoader()
-	    .setPath( 'textures/day_night/cubemap/' )
-	    .load( [
-		    'px.png',
-		    'nx.png',
-		    'py.png',
-		    'ny.png',
-		    'pz.png',
-		    'nz.png'
-	    ] );
-if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.03
-else if(difficulty == "hard") scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.1
-else scene.fog= new THREE.FogExp2(0xDFE9F3,0) //prima era 0.06
+
+
+if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0.03) //prima era 0.03
+else if(difficulty == "hard") scene.fog= new THREE.FogExp2(0xDFE9F3,0.1) //prima era 0.1
+else scene.fog= new THREE.FogExp2(0xDFE9F3,0.06) //prima era 0.06
 //CANNON WORLD e Debuger
 const world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.82, 0)
 })
 
 const timestep = 1/60
+//for debug purpose
 const cannonDebug = new CannonDebugger(scene,world, {
     color: 0xffffff,
     scale: 1.0,
@@ -141,7 +137,6 @@ controls.mouseButtons = {
 var objects =[];
 var objects_body = []
 var objects_for_punch = []
-var objects_fuori =[];
 //stage
 const geometry = new THREE.BoxGeometry(80,0.001,80);
 //geometry.attributes.position.setZ(1,0.9)
@@ -175,20 +170,23 @@ world.addBody(stageBody)
 
 //stage.attach(vediamo)//toglilo poi
 //moon
-const mgeometry = new THREE.SphereGeometry(5,20,20)
-const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
-const moon = new THREE.Mesh(mgeometry, mesh)
-moon.position.set(-25,40,25)
-scene.add(moon)
+
+    const mgeometry = new THREE.SphereGeometry(5,20,20)
+    const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
+    const moon = new THREE.Mesh(mgeometry, mesh)
+    moon.position.set(-25,40,25)
+    if(is_day=='true')    scene.add(moon)
+
 
 //sun
-const scolor= new THREE.Color('#FDB813')
-const sgeometry = new THREE.IcosahedronGeometry(15,15);
-const smaterial = new THREE.MeshBasicMaterial({ map : sunTexture ,color : scolor })
-const sun = new THREE.Mesh(sgeometry,smaterial)
-sun.position.set(0,80,0)
-//sun.layers.set(1)
-//scene.add(sun)
+
+    const scolor= new THREE.Color('#FDB813')
+    const sgeometry = new THREE.IcosahedronGeometry(15,15);
+    const smaterial = new THREE.MeshBasicMaterial({ map : sunTexture ,color : scolor })
+    const sun = new THREE.Mesh(sgeometry,smaterial)
+    sun.position.set(0,80,0)
+    if(is_day=='false') scene.add(sun)
+
 
 //MODELS
 const loader1 = new GLTFLoader();
@@ -222,18 +220,18 @@ var car;
 var logo;
 var lightbulb;
 
-loaderlogo.load('./models/avengers_logo/scene.gltf', function(gltf){
+loaderlogo.load('./models/vecna_clock/scene.gltf', function(gltf){
     logo= gltf.scene;
-    logo.scale.set(1,1,1)
+    logo.scale.set(0.7,0.4,0.7)
     stage.attach(logo);
     logo.position.set(10,1,-10)
-    logo.rotation.y=Math.PI/180 * -60;
+    logo.rotation.y=Math.PI/180 * 210;
     scene.add(logo);
 
 })
 const logobody = new CANNON.Body({ 
     mass: 0,
-    shape : new CANNON.Box( new CANNON.Vec3(1.5,3,.5)),
+    shape : new CANNON.Box( new CANNON.Vec3(1,5,1)),
 })
 logobody.position.set(10,0,-10)
 logobody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180 * -60)
@@ -534,7 +532,7 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
 var is_female_officer=localStorage.getItem("character_type");
-    if(is_female_officer){
+    if(is_female_officer=='true'){
         _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
     }
     else{
@@ -551,11 +549,11 @@ character_body = new CANNON.Body({
     mass: 50, 
     shape: new CANNON.Sphere(0.6),
     material:character_bodyMaterial,
-    linearDamping : 0.7
+    linearDamping : 0.99
 });
 punch_body = new CANNON.Body({
        mass: 80,
-       shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.1)),
+       shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.03)),
        linearDamping :0.9,  //è l'attrito con l'aria
        material: punch_bodyMaterial,
        fixedRotation: true
@@ -598,7 +596,7 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             meshes_mostro.rotation.set(0, Math.PI, 0);
             scene.add(meshes_mostro);
 
-            scene.add(meshes_mostro);
+            
             objects.push(meshes_mostro);
             
             const monster_body = new CANNON.Body({ 
@@ -612,15 +610,17 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             world.addBody(monster_body)
             const shoulders_body = new CANNON.Body({ 
                 mass: 40, //prima era 80
-                shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.1)), //new CANNON.Vec3(2.45,2.45,2.45)),
+                shape : new CANNON.Box(new CANNON.Vec3(.5, 0.5, .5)), //new CANNON.Vec3(2.45,2.45,2.45)),
                 material: monster_bodyMaterial,
                 linearDamping :0.9,
                 fixedRotation: true
             })
-           shoulders_body.position.set(position_x,42.5,position_z)
-           world.addBody(shoulders_body)
+            shoulders_body.position.set(position_x,42.5,position_z)
+            world.addBody(shoulders_body)
             objects_body.push(monster_body)
-           objects_for_punch.push(shoulders_body)
+            objects_for_punch.push(shoulders_body)
+
+            scene.add(meshes_mostro);
 
             mostro =  new BasicMonsterController(meshes_mostro);
             Monster.push(mostro)
@@ -670,12 +670,13 @@ var pos = {
     y_1:40,
     z_1:0,
 }
-const spotlight= new THREE.SpotLight(0xff2222,3.5,0,0.3) //il secondo param è intensita
+const spotlight= new THREE.SpotLight(0xff2222,3.5,0,0.3)
 spotlight.shadowMapVisible = true;
 spotlight.position.x=pos.x_1
 spotlight.position.y=pos.y_1
 spotlight.position.z=pos.z_1
 spotlight.target.position.set(pos.x_1,-0.5,pos.z_1)
+//spotlight.visible=false
 
 /*spotlight.shadow.mapSize.width = 1024;
 spotlight.shadow.mapSize.height = 1024;
@@ -684,15 +685,9 @@ spotlight.shadow.camera.near = 500;
 spotlight.shadow.camera.far = 4000;
 spotlight.shadow.camera.fov = 30;*/
 
-scene.add(stage,spotlight)
-scene.add(spotlight.target)
-let palette = {
-    color: [255,0,0]
-}
-//per capire dove sta la luce
-//const spotLightHelper= new THREE.SpotLightHelper(spotlight,.5)
-//scene.add(spotLightHelper)
-//directionallight
+
+
+
 
 const directionallight= new THREE.DirectionalLight(0x404040, 5.5 )
 directionallight.position.set(0,1,500)
@@ -710,38 +705,17 @@ scene.add(directionallight2.target)
 //hemisphere
 const hemilight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
 hemilight.position.set(0,80,0)
+//hemilight.visible=false
+
+
 // const hemihelper = new THREE.HemisphereLightHelper(hemilight,10)
 // scene.add(hemihelper)
 
 
 //gui folders
-//light folder
-const LightsF = gui.addFolder('Lights')
-var item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
-//const lightFolder = LightsF.addFolder('Spot Light')
-
-/*lightFolder.addColor(palette,'color').onChange(function(value){
-    spotlight.color.r =value[0]/255;
-    spotlight.color.g =value[1]/255;
-    spotlight.color.b =value[2]/255;
-})
-
-lightFolder.add(pos,"x_1",-30,30,0.05).onChange(function(value){
-    spotlight.position.x=value;
-    spotlight.target.position.x=value;
-    moon.position.x=value
-}).name('x')
-lightFolder.add(pos,'y_1',10,60,0.05).onChange(function(value){
-    spotlight.position.y=value;
-    moon.position.y=value
-}).name('y')
-lightFolder.add(pos,'z_1',-30,30,0.05).onChange(function(value){
-    spotlight.position.z=value;
-    spotlight.target.position.z=value;
-    moon.position.z=value
-}).name('z')
-lightFolder.add(spotlight,'intensity').min(0).max(15).step(0.01)
-*/
+// //light folder
+// const LightsF = gui.addFolder('Lights')
+// var item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
 
 var moon_velocity=0.5
 function moon_animation(){
@@ -759,43 +733,38 @@ function sun_animation(){
     sun.rotateY(0.02)
 }
 
-if(is_day){
-    scene.background = new THREE.CubeTextureLoader()
-    .setPath( 'textures/day_night/cubemap_day/' )
-	.load( [
-		    'px.png',
-		    'nx.png',
-	        'py.png',
-	        'ny.png',
-		    'pz.png',
-		    'nz.png'
-	    ] );
-    LightsF.remove(item_moonlight)
-        
-    scene.remove(moon)
-    scene.add(sun)
-    scene.add(hemilight)
-    spotlight.visible=false;            
+if(is_day=='true'){
+        scene.background = new THREE.CubeTextureLoader()
+	        .setPath( 'textures/day_night/cubemap/' )
+	        .load( [
+		        'px.png',
+		        'nx.png',
+		        'py.png',
+		        'ny.png',
+		        'pz.png',
+		        'nz.png'
+	        ] );
+        scene.add(moon)
+        scene.add(stage,spotlight)
+        scene.add(spotlight.target)
+       // spotlight.visible=true
 }
-else{
-    scene.background = new THREE.CubeTextureLoader()
-    .setPath( 'textures/day_night/cubemap/' )
-    .load( [
-        'px.png',
-        'nx.png',
-        'py.png',
-        'ny.png',
-        'pz.png',
-        'nz.png'
-    ] );
-   
-    item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
-    scene.remove(sun);
-    scene.remove(hemilight)
-    scene.add(moon)
-    spotlight.visible=true
+else if(is_day=='false'){
+        scene.background = new THREE.CubeTextureLoader()
+	        .setPath( 'textures/day_night/cubemap_day/' )
+	        .load( [
+		        'px.png',
+		        'nx.png',
+		        'py.png',
+		        'ny.png',
+		        'pz.png',
+		        'nz.png'
+	        ] );
+        scene.add(sun)
+        scene.add(hemilight)
+        //hemilight.visible=true
 }
-// gui.add(day_or_night,'add').name('change day/night')
+    
 
 
 var caduto=0
@@ -824,7 +793,7 @@ async function spawn_point_dx(){
     for( var i = 0; i<tot_mostri_da_spawnare; i++){
         if(i==0) await sleep(10000) //wait +10s before the first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,0,5,35,2,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,5,5,35,2,i);
     }
     }
     else{}
@@ -836,7 +805,7 @@ async function spawn_point_sx(){
     for( var i = 0; i<tot_mostri_da_spawnare; i++){
         if(i==0) await sleep(10000) //wait +10s before first spawn
         await sleep(8000)
-        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,0,5,-35,2,i);
+        _LoadModels('./models/vecna_from_stranger_things/scene.gltf',2,-10,5,-35,2,i);
         
     }
 } else{}    
@@ -849,20 +818,6 @@ character_body.addEventListener("collide",function(e){
     for(var i = 0; i<objects_body.length; i++){
         if (e.body==objects_body[i]){
             conta_collisioni++
-            // if(Monster!=null){
-            //     setTimeout(()=>{
-                    Monster[i]._setState('idle');
-            //     }, 1500)
-            // }
-        //     objects_body.splice(i)
-        //     objects.splice(i)
-          
-        //    world.step(1/60);
-        //    //world.removeBody(objects_body[i])
-          
-           
-        //   scene.remove(objects[i])
-        //   removeBody = e.body;
             if (conta_collisioni==fine_gioco) console.log('suca hai perso')
            
         }
@@ -875,58 +830,31 @@ punch_body.addEventListener("collide",function(e){
     for(var i = 0; i<objects_for_punch.length; i++){
         if (e.body==objects_for_punch[i]){
 
-            objects_body[i].position.x=-300
-            e.body.position.x=-300
-            objects_fuori.push(e.body)
-            conta_kill=(objects_fuori.length)/4
-            
-           
+            objects_body[i].position.x=-400
+            e.body.position.x=-400
         }
     }
 });
 
-var conta_aiuti = 0;
+
 logobody.addEventListener("collide",function(e){
     if (e.body==punch_body){
-        if(conta_aiuti<1) scene.fog = new THREE.FogExp2(0xDFE9F3,0.0) //prima era 0.05
+        scene.fog = new THREE.FogExp2(0xDFE9F3,0.0) 
         
-        else{
-            if(conta_aiuti<2 ){
-                lamplight1.visible=true;
-                lamplight2.visible=true
-                lamplight3.visible=true
-                lamplight4.visible=true
-            }
-            else{
-                directionallight.visible=true;
-                directionallight2.visible=true;
-            }
-        }
-        conta_aiuti++
     }
 });
-// var conta_colpidati=0
-// pugnoBody.addEventListener("collide",function(e){
 
-//     for(var i = 0; i<objects_body.length; i++){
-//         if (e.body==objects_body[i]){
-//             conta_colpidati++
-           
-//         }
-//     }
-// });
+lightbulbbody.addEventListener("collide",function(e){
+    if (e.body==punch_body){
+            lamplight1.visible=true;
+            lamplight2.visible=true
+            lamplight3.visible=true
+            lamplight4.visible=true
+            directionallight.visible=true;
+            directionallight2.visible=true;     
+    }
+});
 
-
-// //console.log(attraverso)
-// const pugno_vediamo_contact = new CANNON.ContactMaterial(
-//     pugnoMaterial,
-//     vediamoMaterial,
-//     {
-//         //friction:0.5,
-//         contactEquationStiffness:0.1
-//     }
-// );
-// world.addContactMaterial(pugno_vediamo_contact)
 
 const stage_character_contact = new CANNON.ContactMaterial(
      stageMaterial,
@@ -961,8 +889,10 @@ world.addContactMaterial(character_monster_contact)
 var slap=false;
  function insegui_meglio(monster,stalker,stalker_body,target,target_body){
     //stalker.quaternion.copy(target.quaternion)
-    stalker.lookAt(target.position.x,target.position.y,target.position.z)
-    if(stalker_body.position.y<1){
+    if(Math.abs(stalker_body.position.x)<110) stalker.lookAt(target.position.x,target.position.y,target.position.z)
+    stalker.visible=false
+    if(stalker_body.position.y<0.5){
+        stalker.visible=true
         if(difficulty == "easy"){
             if(stalker_body.position.distanceTo(target_body.position)<=0.3){
                 // monster._setState("idle");
@@ -999,7 +929,15 @@ var slap=false;
         }
     }
 }
-
+var quanti_fuori=0
+function aggiorna_kill(){
+    var temp=0
+    for (var i = 0; i<objects_body.length; i++){
+        if(objects_body[i].position.y<-2) temp++
+    }
+    quanti_fuori=temp
+    if(quanti_fuori==vittoria) console.log('hai vinto daje')
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -1018,18 +956,11 @@ function animate(){
 		return;
 	}
     if(removeBody) world.removeBody(removeBody);
-    //if(removeShoulders) world.removeBody(removeShoulders);
 
     world.step(timestep)
-    cannonDebug.update()
+    //cannonDebug.update() //for debug purpose
     
     Character.update();
-
-   // console.log(is_female_officer);
-
-    // punch_body= Character._getPunchBody();
-    // world.addBody(punch_body);
-    // console.log(punch_body.position);
 
     if(Monster!=null){
 
@@ -1049,7 +980,11 @@ function animate(){
         
 	    
     }
+    updateScoreBoard();
+    check_borders();
+    if(is_day=='true') moon_animation();
     
+    else sun_animation();
 // 3rd person camera
     camera.copy(fake_camera)
     a.lerp(Character._target.position, 0.4);
@@ -1059,15 +994,9 @@ function animate(){
     const dis = a.distanceTo( b ) - distancefrom;
     goal.position.addScaledVector( dir, dis );
   
-    //camera.position.lerp(temp, 0.2);
     camera.lookAt( Character._target.position );
-    //check if you fell
-    check_borders();
-    //collision_avoidance();
-    moon_animation();
-    sun_animation();
-    updateScoreBoard();
-    //follow_me();
+
+    
 
     if(cnt_spwand==0){
         spawn_point_dx();
@@ -1077,27 +1006,29 @@ function animate(){
     else{}
     if(Math.abs(character_body.position.x)>39.5 || Math.abs(character_body.position.z)>39.5) meshes_character.position.y=character_body.position.y
     else meshes_character.position.y=-0.4
-
+    //quanti_fuori=0
+    
+    aggiorna_kill()
+    updateScoreBoard()
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
-        objects[i].position.y=-0.5
+        if(Math.abs(objects_body[i].position.x)<100) objects[i].position.y=-0.5
         if(objects_body[i].position.y<2){
             objects_for_punch[i].position.x=objects_body[i].position.x
             objects_for_punch[i].position.z=objects_body[i].position.z
-            objects_for_punch[i].position.y=2.5
+            if(objects_body[i].position.y>-10)objects_for_punch[i].position.y=2.5
+           // objects_for_punch[i].quaternion.x=objects_body[i].quaternion.y
         }
 
        // objects
         insegui_meglio(Monster[i],objects[i],objects_body[i],meshes_character,character_body)
+       // if(objects_body[i].position.y<-10) quanti_fuori++
     }
-    console.log(objects_fuori.length)
     
-   // punch_body.position.copy(character_body.position);
-    // punch_body.quaternion.copy(character_body.quaternion);
+    
+   console.log(is_day)
+    
 
-   // punch_body.position.y =2
-  //fino a qua
-    //requestAnimationFrame(animate)
     
     renderer.render(scene,camera)
 }
