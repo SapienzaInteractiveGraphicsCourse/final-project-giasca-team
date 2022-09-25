@@ -4,23 +4,26 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>STRANGER KILLS</title>
-        <link rel="icon" type="image/jpg" href="stranger_kills_icon.jpg" />
+        <link rel="icon" type="image/jpg" href="resources/images/stranger_kills_icon.jpg" />
         <link rel="stylesheet" type="text/css" href="css/button.css" />
         <link rel="stylesheet" type="text/css" href="css/logo.css" />
         <link rel="stylesheet" type="text/css" href="css/card.css" />
         <script src="js/buttons.js"></script>
-        <script src="js/cannon.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.0/css/all.css">
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     </head>
     <body>
       <div id="instruction-popup" class="popup-screen">
         <div class="popup-box">
           <button class="fas fa-times close-btn" onclick="close_button();"></button>
           <h2 style="color: white;">Instructions</h2>
-          <p style="color: white;">The goal of this game is to kill as many monsters as you can. 
-            To move, use WASD commands. To change point of view use your mouse by clicking and scrolling in the opposite direction of what you want to see.
-            You can choose the environment conditions, music , lights, camera parameters by clicking the Options button. </p>
+          <p style="color: white;">The goal of this game is to kill all the monsters in the map. <br>
+            To move, use WASD commands (W=forward, A=turn left, S=backward, D=turn right). To use the punch, press SPACE. <br>
+            To change the difficulty, click the DIFFICULTY button (difficulty parameters are: number of monsters, velocity of the monsters and number of lives). <br>
+            By clicking the OPTIONS button, you can choose the character and the time of the day in the environment. <br>
+            You can also mute/unmute music by clicking the button on the top-right, while for turning on the lights and removing the fog you have to find the 'easter eggs' in the map (some 'strange' elements that have to be punched). <br>
+            To change point of view use your mouse by clicking and scrolling in the opposite direction of what you want to see. <br> </p>
         </div>
       </div>
       <div id="difficulty-popup" class="popup-screen">
@@ -33,51 +36,56 @@
         </div>
       </div>
       <div id="options-popup" class="popup-screen">
-        <div class="popup-box">
+        <div class="popup-box" id="options">
           <button class="fas fa-times close-btn" onclick="close_button();"></button>
           <h2 style="color: white;">Choose your character</h2>
           <div class="card-container">
             <div class="card">
               <div class="card-image">
-                  <img src="./eleven.jpg" alt="Character">
+                  <img src="./resources/images/eleven.jpg" alt="Character">
                   <div class="selector">
-                      <button onclick="localStorage.setItem('character_type', false);">go with eleven</button>
+                      <button onclick="localStorage.setItem('character_type', true);">go with eleven</button>
                   </div>
               </div>
             </div>
             <div class="card">
               <div class="card-image">
-                  <img src="./policewoman.jpeg" alt="Character">
+                  <img src="./resources/images/policewoman.jpeg" alt="Character">
                   <div class="selector">
-                      <button onclick="localStorage.setItem('character_type', true);">go with trinity</button>
+                      <button onclick="localStorage.setItem('character_type', false);">go with trinity</button>
                   </div>
               </div>
             </div>
           </div>
           <h2 style="color: white;">Choose time of the day</h2>
-            <div class="card-container">
-              <div class="card">
-                <div class="card-image">
-                    <img src="./stranger-things-3-location-casa-Byers.jpg" alt="Character">
-                    <div class="selector">
-                        <button onclick="localStorage.setItem('day_type', false);">day</button>
-                    </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-image">
-                    <img src="./night.webp" alt="Character">
-                    <div class="selector">
-                        <button onclick="localStorage.setItem('day_type', true);">night</button>
-                    </div>
-                </div>
+          <div class="card-container">
+            <div class="card" id="day">
+              <div class="card-image">
+                  <img src="./resources/images/stranger-things-3-location-casa-Byers.jpg" alt="Character">
+                  <div class="selector">
+                      <button onclick="localStorage.setItem('day_type', true);">day</button>
+                  </div>
               </div>
             </div>
+            <div class="card" id="night">
+              <div class="card-image">
+                  <img src="./resources/images/night.webp" alt="Character">
+                  <div class="selector">
+                      <button onclick="localStorage.setItem('day_type', false);">night</button>
+                  </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
         g<div class="st">
-
+  <script>
+    localStorage.clear();
+  </script>
+  <button class="audioBtn" onclick="set_audio();"><i class="fa-volume-mute"></i></button>
+  <button class="audioBtn" style="display: none" onclick="set_audio();"><i class="fa-sharp fa-solid fa-volume-xmark"></i></button>
+  
   <div class="st-top">
     <div class="st-bound st-bound-full"></div>
     <p><span class="st-drop st-stranger-s">S</span><span class="st-stranger-t">t</span><span class="st-stranger-r">r</span><span class="st-stranger-a">a</span><span class="st-stranger-n">n</span><span class="st-stranger-g">g</span><span class="st-stranger-e">e</span><span class="st-drop st-stranger-r-2">r</span>
@@ -92,29 +100,30 @@
   <div class="container">
       <button class="btn" id="1" onclick="start_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="bg-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="hl-line" />
         </svg>
         <span>START</span>
       </button>
+
       <button class="btn" id="2" style="display: none; visibility: hidden;" onclick="instruction_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="bg-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="hl-line" />
         </svg>
         <span>INSTRUCTIONS</span>
       </button>
       <button class="btn" id="3" style="display: none; visibility: hidden;" onclick="difficulty_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="bg-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="hl-line" />
         </svg>
         <span>DIFFICULTY</span>
       </button>
       <button class="btn" id="4" style="display: none; visibility: hidden;" onclick="options_button();">
         <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
-          <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="bg-line" />
+          <polyline points="176,2 176,57 1,57 1,2 176,2" class="hl-line" />
         </svg>
         <span>OPTIONS</span>
       </button>

@@ -1,19 +1,17 @@
 import * as THREE from "https://threejsfundamentals.org/threejs/resources/threejs/r132/build/three.module.js";
-import * as dat from './gui/dat.gui.module.js';
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js'; //chissa perche non andava caricando il path locale dalla cartella controls
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
-import * as CANNON from './cannon-es.js'
-import CannonDebugger from './cannon-es-debugger.js'
+import * as CANNON from './resources/cannon-es.js'
+import CannonDebugger from './resources/cannon-es-debugger.js'
 
 import { BasicCharacterController } from './js/Controllers/BasicCharacterController.js';
 import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
 var meshes_character,meshes_mostro, Character,mostro
 var Monster = []
 var difficulty= localStorage.getItem("difficulty");
-
+// if(difficulty==null) difficulty='normal';
 
 var is_day= localStorage.getItem("day_type");
-//var is_day=!is_day
 
 var fine_gioco
 if(difficulty=='easy') fine_gioco = 17
@@ -29,8 +27,7 @@ else vittoria = 10
 
 var scoreboard = document.getElementById('scoreBoard')
 function updateScoreBoard(){
-   //'colpi dati : '+conta_colpidati+
-    scoreboard.innerHTML = 'monsters killed : '+ quanti_fuori+' , colpi ricevuti : '+conta_collisioni//+check_borders()//+cnt_col  //+ check_borders()
+    scoreboard.innerHTML = 'monsters killed : '+ quanti_fuori+' , hits received : '+conta_collisioni
 }
 
 //loading
@@ -41,7 +38,8 @@ var loadingScreen = {
 
 var loadingManager = null;
 var RESOURCES_LOADED = false;
-
+var game_audio;
+var is_game_started=false;
 const loading_screen = document.querySelector(".loading_container");
 loadingManager = new THREE.LoadingManager();
 loadingManager.onProgress = function(item, loaded, total){
@@ -51,13 +49,14 @@ loadingManager.onLoad = function(){
     console.log("loaded all resources");
     RESOURCES_LOADED = true;
     loading_screen.style.display = "none";
+    if(!is_game_started){
+        game_audio= new Audio('./resources/sounds/Soldiers_Stranger Things OST.m4a');
+        game_audio.loop=true;
+        game_audio.play();
+        is_game_started=true;
+    }
 }; //onLoad is when all resources are loaded
 
-//GUI
-// const gui = new dat.GUI({
-//     width:400,
-// });
-// gui.close()
 //TEXTURES
 const textureLoader = new THREE.TextureLoader()
 //for the stage
@@ -73,8 +72,8 @@ const sunTexture = textureLoader.load('./textures/sun1.JPG')
 //SCENE
 const scene = new THREE.Scene();
 
-var is_day = localStorage.getItem('day_type');
-
+// var is_day = localStorage.getItem('day_type');
+// if(is_day==null) is_day='false';
 
 
 if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0.03) //prima era 0.03
@@ -175,7 +174,7 @@ world.addBody(stageBody)
     const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
     const moon = new THREE.Mesh(mgeometry, mesh)
     moon.position.set(-25,40,25)
-    if(is_day=='true')    scene.add(moon)
+    
 
 
 //sun
@@ -185,7 +184,13 @@ world.addBody(stageBody)
     const smaterial = new THREE.MeshBasicMaterial({ map : sunTexture ,color : scolor })
     const sun = new THREE.Mesh(sgeometry,smaterial)
     sun.position.set(0,80,0)
-    if(is_day=='false') scene.add(sun)
+   
+    if(is_day=='true'){
+        scene.add(sun)
+    }    
+    else{
+        scene.add(moon)
+    }
 
 
 //MODELS
@@ -531,12 +536,13 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 })
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
-var is_female_officer=localStorage.getItem("character_type");
-    if(is_female_officer=='true'){
-        _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
+var is_eleven=localStorage.getItem("character_type");
+// if(is_eleven==null) is_eleven='false';
+    if(is_eleven=='true'){
+        _LoadModels('./models/eleven/scene.gltf', 2.5, 0.5, 20, 0.5, 0);
     }
     else{
-        _LoadModels('./models/eleven/scene.gltf', 2.5, 0.5, 20, 0.5, 0);
+        _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
     }
 
 
@@ -664,6 +670,7 @@ lamplight4.target.position.set(-36,-1,35)
 lamplight4.visible=false
 scene.add(lamplight4)
 scene.add(lamplight4.target)
+
 //spotlight
 var pos = {
     x_1:0,
@@ -676,18 +683,6 @@ spotlight.position.x=pos.x_1
 spotlight.position.y=pos.y_1
 spotlight.position.z=pos.z_1
 spotlight.target.position.set(pos.x_1,-0.5,pos.z_1)
-//spotlight.visible=false
-
-/*spotlight.shadow.mapSize.width = 1024;
-spotlight.shadow.mapSize.height = 1024;
-
-spotlight.shadow.camera.near = 500;
-spotlight.shadow.camera.far = 4000;
-spotlight.shadow.camera.fov = 30;*/
-
-
-
-
 
 const directionallight= new THREE.DirectionalLight(0x404040, 5.5 )
 directionallight.position.set(0,1,500)
@@ -705,24 +700,12 @@ scene.add(directionallight2.target)
 //hemisphere
 const hemilight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
 hemilight.position.set(0,80,0)
-//hemilight.visible=false
-
-
-// const hemihelper = new THREE.HemisphereLightHelper(hemilight,10)
-// scene.add(hemihelper)
-
-
-//gui folders
-// //light folder
-// const LightsF = gui.addFolder('Lights')
-// var item_moonlight = LightsF.add(spotlight,'visible').onChange().name('turn on/off moon light')
 
 var moon_velocity=0.5
 function moon_animation(){
     moon.rotateY(0.02)
     moon.translateZ(moon_velocity)
     moon.translateX(moon_velocity)
-    //moon_velocity+=0.001
     spotlight.position.copy(moon.position)
     spotlight.target.position.x=moon.position.x
     
@@ -734,6 +717,20 @@ function sun_animation(){
 }
 
 if(is_day=='true'){
+    scene.background = new THREE.CubeTextureLoader()
+    .setPath( 'textures/day_night/cubemap_day/' )
+    .load( [
+        'px.png',
+        'nx.png',
+        'py.png',
+        'ny.png',
+        'pz.png',
+        'nz.png'
+    ] );
+    scene.add(sun)
+    scene.add(hemilight)
+}
+else{
         scene.background = new THREE.CubeTextureLoader()
 	        .setPath( 'textures/day_night/cubemap/' )
 	        .load( [
@@ -747,33 +744,17 @@ if(is_day=='true'){
         scene.add(moon)
         scene.add(stage,spotlight)
         scene.add(spotlight.target)
-       // spotlight.visible=true
-}
-else if(is_day=='false'){
-        scene.background = new THREE.CubeTextureLoader()
-	        .setPath( 'textures/day_night/cubemap_day/' )
-	        .load( [
-		        'px.png',
-		        'nx.png',
-		        'py.png',
-		        'ny.png',
-		        'pz.png',
-		        'nz.png'
-	        ] );
-        scene.add(sun)
-        scene.add(hemilight)
-        //hemilight.visible=true
 }
     
 
 
-var caduto=0
+var caduto=false;
+
 function check_borders(){
     
     if(character_body.position.x>39 || character_body.position.x<-39 || character_body.position.z<-39 || character_body.position.z>39)
-        caduto=1
+        caduto=true;
         
-    
     return(caduto)
 
 }
@@ -812,13 +793,17 @@ async function spawn_point_sx(){
 }
 
 //collisions
-var conta_collisioni=0
+var conta_collisioni=0;
+var vite_finite=false;
+
 character_body.addEventListener("collide",function(e){
 
     for(var i = 0; i<objects_body.length; i++){
         if (e.body==objects_body[i]){
             conta_collisioni++
-            if (conta_collisioni==fine_gioco) console.log('suca hai perso')
+            if (conta_collisioni>=fine_gioco){
+                vite_finite=true;
+            }
            
         }
     }
@@ -936,7 +921,7 @@ function aggiorna_kill(){
         if(objects_body[i].position.y<-2) temp++
     }
     quanti_fuori=temp
-    if(quanti_fuori==vittoria) console.log('hai vinto daje')
+    if(quanti_fuori==vittoria) is_game_win=true;
 }
 
 function onWindowResize() {
@@ -946,7 +931,43 @@ function onWindowResize() {
 }
 window.addEventListener('resize',onWindowResize)
 
-//var tween1 = new TWEEN.Tween()
+
+var is_game_ended=false;
+
+var is_game_over=false;
+var game_over_audio;
+
+function check_gameover(){
+    if(caduto || vite_finite){
+        const gameover= document.querySelector(".game-over");
+        gameover.style.display="block";
+        is_game_over=true;
+        if(!is_game_ended){
+            game_audio.muted=true;
+            game_over_audio= new Audio('./resources/sounds/Running Up That Hill_epic orchestra version.opus');
+            game_over_audio.loop=true;
+            game_over_audio.play();
+            is_game_ended=true;
+        }
+    }
+}
+
+var is_game_win=false;
+var game_win_audio;
+
+function check_gamewin(){
+    if(is_game_win){
+        const gamewin= document.querySelector(".game-win");
+        gamewin.style.display="block";
+        if(!is_game_ended){
+            game_audio.muted=true;
+            game_win_audio= new Audio('./resources/sounds/The Clash - Should I Stay or Should I Go.m4a');
+            game_win_audio.loop=true;
+            game_win_audio.play();
+            is_game_ended=true;
+        }
+    }
+}
 
 function animate(){
     if( RESOURCES_LOADED == false ){
@@ -956,6 +977,15 @@ function animate(){
 		return;
 	}
     if(removeBody) world.removeBody(removeBody);
+
+    aggiorna_kill();
+    updateScoreBoard();
+    check_borders();
+    check_gameover();
+    if(is_game_over) return;
+
+    check_gamewin();
+    if(is_game_win) return;
 
     world.step(timestep)
     //cannonDebug.update() //for debug purpose
@@ -980,11 +1010,11 @@ function animate(){
         
 	    
     }
-    updateScoreBoard();
-    check_borders();
-    if(is_day=='true') moon_animation();
     
-    else sun_animation();
+
+    if(is_day=='true') sun_animation();
+    else moon_animation();
+
 // 3rd person camera
     camera.copy(fake_camera)
     a.lerp(Character._target.position, 0.4);
@@ -996,8 +1026,6 @@ function animate(){
   
     camera.lookAt( Character._target.position );
 
-    
-
     if(cnt_spwand==0){
         spawn_point_dx();
         spawn_point_sx()
@@ -1008,7 +1036,7 @@ function animate(){
     else meshes_character.position.y=-0.4
     //quanti_fuori=0
     
-    aggiorna_kill()
+    
     updateScoreBoard()
     for (var i = 0; i<objects_body.length; i++){
         objects[i].position.copy(objects_body[i].position)
@@ -1026,7 +1054,9 @@ function animate(){
     }
     
     
-   console.log(is_day)
+    console.log(difficulty)
+    console.log(is_eleven)
+    console.log(is_day)
     
 
     

@@ -1,6 +1,3 @@
-import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJBZqM/build/three.module.js';
-import * as CANNON from '../../cannon-es.js'
-import CannonDebugger from '../../cannon-es-debugger.js'
 import { FiniteStateMachine , State } from './FiniteStateMachine.js';
 
 const PI_2 = Math.PI / 2;
@@ -16,18 +13,6 @@ const PI_50 = Math.PI / 50;
 
 const arm_angle_walk = PI_12;
 const arm_angle_run = PI_8;
-
-
-/*var time = {
-  clock: new THREE.Clock(),
-  frame: 0,
-  maxFrame: 90,
-  fps: 30,
-  per: 0
-};*/
-
-
-//var prevState;
 
 export class CharacterFSM extends FiniteStateMachine {
     constructor(target,entity) {
@@ -114,7 +99,7 @@ export class CharacterFSM extends FiniteStateMachine {
 
 function Punch(state) {
 
-  if ( state._entity == 1 ) {
+  if ( state._parent._entity == 1 ) {
   
     while ( state._targetDict.Shoulder_dx.mesh.rotation.x <= state._targetDict.Shoulder_dx.initValue.x + PI_16) {
       state._targetDict.Shoulder_dx.mesh.rotation.x += 0.02;

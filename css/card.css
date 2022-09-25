@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url(../eleven.jpg);
+    background: url(../resources/images/eleven.jpg);
     background-size: cover;
 }
 
@@ -51,8 +51,17 @@
 }
 
 .card:nth-child(2) .card-image {
-    background: url(../policewoman.jpeg);
+    background: url(../resources/images/policewoman.jpeg);
 }
+
+.card#day .card-image {
+    background: url(../resources/images/stranger-things-3-location-casa-Byers.jpg);
+}
+
+.card#night .card-image {
+    background: url(../resources/images/night.webp);
+}
+
 .selector {
     position: absolute;
     top: 0;
@@ -93,7 +102,3 @@
     background-color: rgb(161, 6, 6, 1);
     /* opacity: 1; */
 }
-
-/* .card:nth-child(2) .selector button {
-    background-color: #f6b10f;
-} */

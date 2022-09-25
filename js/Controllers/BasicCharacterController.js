@@ -1,7 +1,6 @@
 import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJBZqM/build/three.module.js';
 import { CharacterFSM } from '../Movements/CharacterFSM.js';
-import * as CANNON from '../../cannon-es.js'
-//import CannonDebugger from '../cannon-es-debugger.js'
+import * as CANNON from '../../resources/cannon-es.js'
 
 export class BasicCharacterController { //represents a single animated character in the world
     constructor(params) {

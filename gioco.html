@@ -4,14 +4,18 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>STRANGER KILLS</title>
-      <!--  <script type="module" src="index.js"></script> -->  
         <script type="module" src="index.js"></script>
-        <link rel="icon" type="image/jpg" href="stranger_kills_icon.jpg" />
+        <link rel="icon" type="image/jpg" href="resources/images/stranger_kills_icon.jpg" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <link rel="stylesheet" type="text/css" href="css/loading.css" />        
+        <link rel="stylesheet" type="text/css" href="css/loading.css" /> 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,900&display=swap" rel="stylesheet">       
     </head>
-<body>
+  <body>
     <h3 id="scoreBoard"></h3>
+
+    <!-- LOADING WINDOW -->
     <div aria-busy="true" aria-label="Loading" role="progressbar" class="loading_container">
       <div class="swing">
         <div class="swing-l"></div>
@@ -31,12 +35,53 @@
         <div></div>
         <div class="shadow-r"></div>
       </div>
-  </div>    
-  <!-- <video id="sun" src = "./textures/sun_1.gif" style="display: none"></video>
--->  
+    </div> 
+    
+    <!-- GAME OVER -->
+    <section class="game-win" style="display: none;">
+      <h2 class="game-title">You Win!</h2>
+      <button class="btn" onclick="restart();">
+       <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+         <polyline points="171,1 171,50 1,50 1,1 171,1" class="bg-line" />
+         <polyline points="171,1 171,50 1,50 1,1 171,1" class="hl-line" />
+       </svg>
+       <span>GO TO HOME</span>
+     </button>
 
-</body>
-<!--
-<script src="cannon.js"></script>
--->
+     <button class="btn" onclick="window.location.reload();">
+       <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+         <polyline points="171,1 171,50 1,50 1,1 171,1" class="bg-line" />
+         <polyline points="171,1 171,50 1,50 1,1 171,1" class="hl-line" />
+       </svg>
+       <span>PLAY AGAIN</span>
+     </button>
+    </section>    
+    <!-- GAME OVER -->
+    <section class="game-over" style="display: none;">
+           <h2 class="game-title">Game Over...</h2>
+           <button class="btn" onclick="window.location.href='index.html';">
+            <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+              <polyline points="171,1 171,50 1,50 1,1 171,1" class="bg-line" />
+              <polyline points="171,1 171,50 1,50 1,1 171,1" class="hl-line" />
+            </svg>
+            <span>GO TO HOME</span>
+          </button>
+    
+          <button class="btn" onclick="window.location.reload();">
+            <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+              <polyline points="171,1 171,50 1,50 1,1 171,1" class="bg-line" />
+              <polyline points="171,1 171,50 1,50 1,1 171,1" class="hl-line" />
+            </svg>
+            <span>PLAY AGAIN</span>
+          </button>
+    </section>
+    <!-- <script>
+      function restart(){
+        localStorage.setItem('difficulty', 'normal');
+        localStorage.setItem('character_type', 'false');
+        localStorage.setItem('day_type', 'false');
+        window.location.href='index.html'; 
+      }
+    </script> -->
+  </body>
 </html>

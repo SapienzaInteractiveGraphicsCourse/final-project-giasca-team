@@ -11,6 +11,19 @@ body, html {
 }
 
 .container {
+  /* width: 50%;
+  max-height: 150px;
+  position: absolute;
+  left: 25%;
+  top: 63%;
+  transform: translate(-50%, -50%); */
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  display: grid;  
+  grid-gap: 5px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));  
+  grid-template-rows: repeat(2, 50px);   */
   width: 625px;
   height: 400px;
   position: absolute;
@@ -187,8 +200,8 @@ content: '';
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* margin: 20px;
-  padding: 50px 40px; */
+  margin: 20px;
+  padding: 50px 40px;
   border-radius: 20px;
   box-shadow: 0 5px 25px rgb(255 255 255 / 50%);
   transform: scale(0);
@@ -196,11 +209,15 @@ content: '';
   transition-property: transform;
 }
 
+.popup-box#options{
+  margin: 0px;
+  padding: 0px 0px;
+}
 .popup-screen.active .popup-box{
   transform: scale(1);
 }
 
-.popup-box h2{
+.popup-box#options h2{
   font-size: 1.8em;
   font-weight: 800;
   margin: 0px;
@@ -226,4 +243,16 @@ content: '';
 
 .close-btn:hover{
   opacity: 1;
+}
+
+.audioBtn, .audioBtn i{
+  position: absolute;
+  /* background-color:#630100; */
+  /* color: white; */
+  width:70px;
+  height:70px;
+  right: 0px;
+  top: 0px;
+  margin-right: 4px;
+  margin-top: 4px;
 }

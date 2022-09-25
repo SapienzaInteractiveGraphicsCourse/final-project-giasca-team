@@ -1,7 +1,6 @@
-//var home_flag = false;
-
+var start_audio;
+var is_muted = false;
 function start_button(){
-    //home_flag=true;
     document.getElementById(1).style.display=' none';
     document.getElementById(1).style.visibility="hidden";
     document.getElementById(2).style.display=' inline';
@@ -13,16 +12,22 @@ function start_button(){
     document.getElementById(5).style.display=' inline';
     document.getElementById(5).style.visibility="visible";
 
-    var start_audio= new Audio('../Stranger_Things.mp3');
+    start_audio= new Audio('../resources/sounds/Stranger_Things.mp3');
     start_audio.loop=true;
     start_audio.play();
 }
 
-/*window.addEventListener('onload', () => {
-    if(home_flag==true){
-        start_button();
+function set_audio(){
+    const audioBtn = document.querySelector(".audioBtn");
+    if(is_muted==false){
+        start_audio.muted = true;
+        is_muted=true;
     }
-});*/
+    else{
+        start_audio.muted = false;
+        is_muted=false;
+    }
+}
 
 const popupBox = document.querySelector(".popup-box");
 const closeBtn = document.querySelector(".close-btn");

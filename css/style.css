@@ -10,3 +10,63 @@ canvas{
 h3{
   color:antiquewhite;
 }
+
+.game-over, .game-win{
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Kanit', sans-serif;
+  font-size: 60px;
+  color:#630100;
+  position:fixed; z-index:20;
+  left:0; right:0; top:30;
+  background-color: rgba(255, 255, 255, 0.6);
+  animation: curtain 2s ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes curtain {
+  from{height:0; opacity:0;}
+  to {height:100%; opacity:1;}
+}
+
+.btn {
+  position: relative;
+  width: 180px;
+  height: 60px;
+  cursor: pointer;
+  background: transparent;
+  border: 4px solid #ed2b12;
+  outline: none;
+  transition: 1s ease-in-out;
+}
+
+svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 150 480;
+  stroke-dashoffset: 150;
+  transition: 1s ease-in-out;
+}
+
+.btn:hover {
+  transition: 1s ease-in-out;
+  background: #630100;
+}
+
+.btn:hover svg {
+  stroke-dashoffset: -480;
+}
+
+.btn span {
+  color: black;
+  font-size: 18px;
+}
+
+.btn:hover span {
+  color: white;
+}
