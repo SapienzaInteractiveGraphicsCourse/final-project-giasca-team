@@ -4,21 +4,19 @@ import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/thre
 import * as CANNON from './resources/cannon-es.js'
 import CannonDebugger from './resources/cannon-es-debugger.js'
 
-import { BasicCharacterController } from './js/Controllers/BasicCharacterController.js';
-import { BasicMonsterController } from './js/Controllers/BasicMonsterController.js';
+import { CharacterController } from './js/Controllers/CharacterController.js';
+import { MonsterController } from './js/Controllers/MonsterController.js';
 var meshes_character,meshes_mostro, Character,mostro
 var Monster = []
 var difficulty= localStorage.getItem("difficulty");
-// if(difficulty==null) difficulty='normal';
-
 var is_day= localStorage.getItem("day_type");
 
-var fine_gioco
+var fine_gioco;
 if(difficulty=='easy') fine_gioco = 17
 else if(difficulty=='hard') fine_gioco=10
 else fine_gioco = 13
 
-var vittoria
+var vittoria;
 if(difficulty=='easy') vittoria = 8
 else if(difficulty=='hard') vittoria=16
 else vittoria = 10
@@ -72,13 +70,9 @@ const sunTexture = textureLoader.load('./textures/sun1.JPG')
 //SCENE
 const scene = new THREE.Scene();
 
-// var is_day = localStorage.getItem('day_type');
-// if(is_day==null) is_day='false';
-
-
-if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0.03) //prima era 0.03
-else if(difficulty == "hard") scene.fog= new THREE.FogExp2(0xDFE9F3,0.1) //prima era 0.1
-else scene.fog= new THREE.FogExp2(0xDFE9F3,0.06) //prima era 0.06
+if(difficulty == "easy") scene.fog= new THREE.FogExp2(0xDFE9F3,0.03)
+else if(difficulty == "hard") scene.fog= new THREE.FogExp2(0xDFE9F3,0.1)
+else scene.fog= new THREE.FogExp2(0xDFE9F3,0.06)
 //CANNON WORLD e Debuger
 const world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.82, 0)
@@ -102,7 +96,7 @@ var distancefrom = 1;
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight,
  0.1, 1000 );
 
-camera.position.set(-10,10,0)//prima -5,5,0
+camera.position.set(-10,10,0)
 camera.lookAt(scene.position)
 
 
@@ -110,7 +104,6 @@ goal = new THREE.Object3D;
 follow = new THREE.Object3D;
 goal.position.z = -distancefrom;
 goal.add( camera );
-//scene.add(vediamo)
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -138,7 +131,6 @@ var objects_body = []
 var objects_for_punch = []
 //stage
 const geometry = new THREE.BoxGeometry(80,0.001,80);
-//geometry.attributes.position.setZ(1,0.9)
 const material = new THREE.MeshStandardMaterial({
         //BUMP MAPPING
         map: tilesBaseColor,
@@ -152,7 +144,6 @@ const material = new THREE.MeshStandardMaterial({
 const stage = new THREE.Mesh(geometry, material)
 stage.position.y=-1
 
-//stage.geometry.attributes.uv2=stage.geometry.attributes.uv
 scene.add(stage)
 ///stage cannon
 const stageMaterial =new CANNON.Material()
@@ -160,22 +151,16 @@ const stageBody = new CANNON.Body({
     mass: 0,
     shape : new CANNON.Box( new CANNON.Vec3(40,0.001,40)),
     position : new CANNON.Vec3(0,-0.4,0),
-    //type: CANNON.Body.Static
     material: stageMaterial
 })
-
-
 world.addBody(stageBody)
 
-//stage.attach(vediamo)//toglilo poi
 //moon
 
     const mgeometry = new THREE.SphereGeometry(5,20,20)
     const mesh = new THREE.MeshStandardMaterial({map : moonTexture, roughness:0.5})
     const moon = new THREE.Mesh(mgeometry, mesh)
     moon.position.set(-25,40,25)
-    
-
 
 //sun
 
@@ -273,9 +258,7 @@ const hm =new THREE.MeshStandardMaterial({ wireframe:true})
 const h = new THREE.Mesh(hg,hm)
 h.position.set(29,0,27)
 h.rotation.y=-45
-//scene.add(house);
 scene.add(h)
-//objects.push(h)
 h.visible=false
 
 const hshape= new CANNON.Box( new CANNON.Vec3(6,5,5))
@@ -289,7 +272,7 @@ loaderf1.load('./models/wood fence/scene.gltf', function(gltf){
     fence1= gltf.scene;
     fence1.scale.set(0.002,0.002,0.008)
     stage.attach(fence1);
-    fence1.position.set(-35,-0.7,-30) //prima y era -1.2
+    fence1.position.set(-35,-0.7,-30)
     fence1.rotation.y = Math.PI/180 
     scene.add(fence1);
 })
@@ -429,7 +412,6 @@ const ttbody = new CANNON.Body({
     shape : new CANNON.Box( new CANNON.Vec3(1.2,1.2,3)),
 })
 ttbody.position.set(16,0,2.7)
-//ttbody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
 world.addBody(ttbody)
 
 loaderlamp1.load('./models/street lamp/scene.gltf', function(gltf){
@@ -460,7 +442,6 @@ const l2body = new CANNON.Body({
     shape : new CANNON.Box( new CANNON.Vec3(0.5,10,0.5)),
 })
 l2body.position.set(-28.7,1,-31)
-//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
 world.addBody(l2body)
 
 loaderlamp3.load('./models/street lamp/scene.gltf', function(gltf){
@@ -490,7 +471,6 @@ const b1body = new CANNON.Body({
     shape : new CANNON.Box( new CANNON.Vec3(0.5,1,1.5)),
 })
 b1body.position.set(-32.5,1,-30)
-//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
 world.addBody(b1body)
 
 loaderbench2.load('./models/benches/bench 2/scene.gltf', function(gltf){
@@ -513,7 +493,6 @@ loaderbench3.load('./models/benches/bench 3/scene.gltf', function(gltf){
     bench3= gltf.scene;
     bench3.scale.set(2,2,2);
     bench3.position.set(-29,-1,-35)
-   // bench.rotation.y=Math.PI/180*-90;
     stage.attach(bench3);
     scene.add(bench3);
 })
@@ -522,7 +501,6 @@ const b3body = new CANNON.Body({
     shape : new CANNON.Box( new CANNON.Vec3(0.5,1,1.5)),
 })
 b3body.position.set(-24,1,-30)
-//b1body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI/180*90)
 world.addBody(b3body)
 
 loadercar.load('./models/car/scene.gltf', function(gltf){
@@ -537,13 +515,12 @@ loadercar.load('./models/car/scene.gltf', function(gltf){
 
 //!!!LOAD OF THE CHARACTER/MONSTERS!!!
 var is_eleven=localStorage.getItem("character_type");
-// if(is_eleven==null) is_eleven='false';
-    if(is_eleven=='true'){
-        _LoadModels('./models/eleven/scene.gltf', 2.5, 0.5, 20, 0.5, 0);
-    }
-    else{
-        _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
-    }
+if(is_eleven=='true'){
+    _LoadModels('./models/eleven/scene.gltf', 2.5, 0.5, 20, 0.5, 0);
+}
+else{
+    _LoadModels('./models/female_officer/scene.gltf', 2, 0.5, 20, 0.5, 1);
+}
 
 
 
@@ -560,7 +537,7 @@ character_body = new CANNON.Body({
 punch_body = new CANNON.Body({
        mass: 80,
        shape : new CANNON.Box(new CANNON.Vec3(0.3, 0.5, 0.03)),
-       linearDamping :0.9,  //è l'attrito con l'aria
+       linearDamping :0.9,
        material: punch_bodyMaterial,
        fixedRotation: true
 });
@@ -569,7 +546,6 @@ const pugno_character_contact = new CANNON.ContactMaterial(
     punch_bodyMaterial,
     character_bodyMaterial,
     {
-        //friction:0.5,
         contactEquationStiffness:0.1
     }
 );
@@ -587,12 +563,11 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             meshes_character.scale.setScalar(scaleValue);
             meshes_character.rotation.set(0, Math.PI, 0);
             scene.add(meshes_character);
-            //const bodyMaterial= new CANNON.Material();
             
             world.addBody(character_body);
             world.addBody(punch_body);
 
-            Character = new BasicCharacterController({target:meshes_character , body:character_body, punch_body: punch_body, entity:entity});
+            Character = new CharacterController({target:meshes_character , body:character_body, punch_body: punch_body, entity:entity});
         }
         else{
             meshes_mostro = gltf.scene;
@@ -606,8 +581,8 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             objects.push(meshes_mostro);
             
             const monster_body = new CANNON.Body({ 
-                mass: 20, //prima era 80
-                shape : new CANNON.Sphere(.4), //new CANNON.Vec3(2.45,2.45,2.45)),
+                mass: 20,
+                shape : new CANNON.Sphere(.4),
                 material: monster_bodyMaterial,
                 linearDamping :0.9,
                 
@@ -615,8 +590,8 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
             monster_body.position.set(position_x,position_y,position_z)
             world.addBody(monster_body)
             const shoulders_body = new CANNON.Body({ 
-                mass: 40, //prima era 80
-                shape : new CANNON.Box(new CANNON.Vec3(.5, 0.5, .5)), //new CANNON.Vec3(2.45,2.45,2.45)),
+                mass: 40,
+                shape : new CANNON.Box(new CANNON.Vec3(.5, 0.5, .5)),
                 material: monster_bodyMaterial,
                 linearDamping :0.9,
                 fixedRotation: true
@@ -628,16 +603,12 @@ function _LoadModels(path,scaleValue,position_x,position_y,position_z, entity) {
 
             scene.add(meshes_mostro);
 
-            mostro =  new BasicMonsterController(meshes_mostro);
+            mostro =  new MonsterController(meshes_mostro);
             Monster.push(mostro)
         }
         
     });
 }
-
-//END.
-
-
 
 //lights
 var ambientlight = new THREE.AmbientLight(0x404040);
@@ -764,7 +735,6 @@ var tot_mostri_da_spawnare
 if(difficulty=='easy') tot_mostri_da_spawnare=4
 else if(difficulty=='hard') tot_mostri_da_spawnare=8
 else tot_mostri_da_spawnare=5
-//var cnt_spwans=0;
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -808,8 +778,8 @@ character_body.addEventListener("collide",function(e){
         }
     }
 });
-var conta_kill=0;
-var removeBody, removeShoulders
+
+var removeBody;
 punch_body.addEventListener("collide",function(e){
 
     for(var i = 0; i<objects_for_punch.length; i++){
@@ -873,15 +843,13 @@ world.addContactMaterial(character_monster_contact)
 
 var slap=false;
  function insegui_meglio(monster,stalker,stalker_body,target,target_body){
-    //stalker.quaternion.copy(target.quaternion)
     if(Math.abs(stalker_body.position.x)<110) stalker.lookAt(target.position.x,target.position.y,target.position.z)
     stalker.visible=false
     if(stalker_body.position.y<0.5){
         stalker.visible=true
         if(difficulty == "easy"){
             if(stalker_body.position.distanceTo(target_body.position)<=0.3){
-                // monster._setState("idle");
-                //le velocita stalker_body.x e .z=0 e qua sotto metti else
+                // monster._setState("idle"); THIS WAS FOR THE TRIGGER OF THE SLAP, but it doesn't work well
                 stalker_body.velocity.x = 0;
                 stalker_body.velocity.z = 0;
             }
@@ -892,7 +860,7 @@ var slap=false;
         }
         else if(difficulty == "hard"){
             if(stalker_body.position.distanceTo(target_body.position)<=0.3){
-                // monster._setState("idle");
+                // monster._setState("idle"); THIS WAS FOR THE TRIGGER OF THE SLAP, but it doesn't work well
                 stalker_body.velocity.x = 0;
                 stalker_body.velocity.z = 0;
             }
@@ -903,7 +871,7 @@ var slap=false;
         }
         else{
             if(stalker_body.position.distanceTo(target_body.position)<=0.3){
-                // monster._setState("idle");
+                // monster._setState("idle"); THIS WAS FOR THE TRIGGER OF THE SLAP, but it doesn't work well
                 stalker_body.velocity.x = 0;
                 stalker_body.velocity.z = 0;
             }
@@ -988,30 +956,15 @@ function animate(){
     if(is_game_win) return;
 
     world.step(timestep)
-    //cannonDebug.update() //for debug purpose
     
     Character.update();
 
     if(Monster!=null){
-
         for(var i =0; i< Monster.length ;i++){
-            
-        //     if(Math.abs(objects_body[i].velocity.z)<0.1 && Math.abs(objects_body[i].velocity.x)<0.1 && objects_body[i].position.y<0.7) {
-        //         Monster[i]._setState("idle");
-               
-        //     }
-        //     else {
-        //         // Monster[i]._setState("walk");
-        //     }
             Monster[i].update();
-             //console.log(Monster[i]._acceleration);
         }
-       
-        
-	    
     }
     
-
     if(is_day=='true') sun_animation();
     else moon_animation();
 
@@ -1034,7 +987,6 @@ function animate(){
     else{}
     if(Math.abs(character_body.position.x)>39.5 || Math.abs(character_body.position.z)>39.5) meshes_character.position.y=character_body.position.y
     else meshes_character.position.y=-0.4
-    //quanti_fuori=0
     
     
     updateScoreBoard()
@@ -1045,20 +997,11 @@ function animate(){
             objects_for_punch[i].position.x=objects_body[i].position.x
             objects_for_punch[i].position.z=objects_body[i].position.z
             if(objects_body[i].position.y>-10)objects_for_punch[i].position.y=2.5
-           // objects_for_punch[i].quaternion.x=objects_body[i].quaternion.y
         }
 
        // objects
         insegui_meglio(Monster[i],objects[i],objects_body[i],meshes_character,character_body)
-       // if(objects_body[i].position.y<-10) quanti_fuori++
     }
-    
-    
-    console.log(difficulty)
-    console.log(is_eleven)
-    console.log(is_day)
-    
-
     
     renderer.render(scene,camera)
 }

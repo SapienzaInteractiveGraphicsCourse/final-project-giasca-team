@@ -928,7 +928,7 @@ class Vec3 {
    */
 
 
-  lerp(vector, t, target) {
+  comeback(vector, t, target) {
     const x = this.x;
     const y = this.y;
     const z = this.z;
@@ -1865,7 +1865,7 @@ class Quaternion {
    */
 
 
-  slerp(toQuat, t, target) {
+  scomeback(toQuat, t, target) {
     if (target === void 0) {
       target = new Quaternion();
     }
@@ -1896,7 +1896,7 @@ class Quaternion {
 
 
     if (1.0 - cosom > 0.000001) {
-      // standard case (slerp)
+      // standard case (scomeback)
       omega = Math.acos(cosom);
       sinom = Math.sin(omega);
       scale0 = Math.sin((1.0 - t) * omega) / sinom;
@@ -2737,14 +2737,14 @@ class ConvexPolyhedron extends Shape {
         } else {
           // Start < 0, end >= 0, so output intersection
           const newv = new Vec3();
-          firstVertex.lerp(lastVertex, n_dot_first / (n_dot_first - n_dot_last), newv);
+          firstVertex.comeback(lastVertex, n_dot_first / (n_dot_first - n_dot_last), newv);
           outVertices.push(newv);
         }
       } else {
         if (n_dot_last < 0) {
           // Start >= 0, end < 0 so output intersection and end
           const newv = new Vec3();
-          firstVertex.lerp(lastVertex, n_dot_first / (n_dot_first - n_dot_last), newv);
+          firstVertex.comeback(lastVertex, n_dot_first / (n_dot_first - n_dot_last), newv);
           outVertices.push(newv);
           outVertices.push(lastVertex);
         }
@@ -5000,7 +5000,7 @@ class Ray {
       return;
     } else if (delta === 0) {
       // single intersection point
-      from.lerp(to, delta, intersectionPoint);
+      from.comeback(to, delta, intersectionPoint);
       intersectionPoint.vsub(position, normal);
       normal.normalize();
       this.reportIntersection(normal, intersectionPoint, reportedShape, body, -1);
@@ -5009,7 +5009,7 @@ class Ray {
       const d2 = (-b + Math.sqrt(delta)) / (2 * a);
 
       if (d1 >= 0 && d1 <= 1) {
-        from.lerp(to, d1, intersectionPoint);
+        from.comeback(to, d1, intersectionPoint);
         intersectionPoint.vsub(position, normal);
         normal.normalize();
         this.reportIntersection(normal, intersectionPoint, reportedShape, body, -1);
@@ -5020,7 +5020,7 @@ class Ray {
       }
 
       if (d2 >= 0 && d2 <= 1) {
-        from.lerp(to, d2, intersectionPoint);
+        from.comeback(to, d2, intersectionPoint);
         intersectionPoint.vsub(position, normal);
         normal.normalize();
         this.reportIntersection(normal, intersectionPoint, reportedShape, body, -1);
@@ -12541,8 +12541,8 @@ class World extends EventTarget {
 
       for (let j = 0; j !== this.bodies.length; j++) {
         const b = this.bodies[j];
-        b.previousPosition.lerp(b.position, t, b.interpolatedPosition);
-        b.previousQuaternion.slerp(b.quaternion, t, b.interpolatedQuaternion);
+        b.previousPosition.comeback(b.position, t, b.interpolatedPosition);
+        b.previousQuaternion.scomeback(b.quaternion, t, b.interpolatedQuaternion);
         b.previousQuaternion.normalize();
       }
 

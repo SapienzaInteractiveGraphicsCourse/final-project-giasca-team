@@ -37,10 +37,10 @@
       </div>
     </div> 
     
-    <!-- GAME OVER -->
+    <!-- GAME WIN -->
     <section class="game-win" style="display: none;">
       <h2 class="game-title">You Win!</h2>
-      <button class="btn" onclick="restart();">
+      <button class="btn" onclick="window.location.href='index.html';">
        <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
          <polyline points="171,1 171,50 1,50 1,1 171,1" class="bg-line" />
          <polyline points="171,1 171,50 1,50 1,1 171,1" class="hl-line" />
@@ -75,13 +75,5 @@
             <span>PLAY AGAIN</span>
           </button>
     </section>
-    <!-- <script>
-      function restart(){
-        localStorage.setItem('difficulty', 'normal');
-        localStorage.setItem('character_type', 'false');
-        localStorage.setItem('day_type', 'false');
-        window.location.href='index.html'; 
-      }
-    </script> -->
   </body>
 </html>

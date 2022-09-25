@@ -2,7 +2,7 @@ import * as THREE from 'https://cdn.skypack.dev/three@v0.129.0-oVPEZFilCYUpzWgJB
 import { CharacterFSM } from '../Movements/CharacterFSM.js';
 import * as CANNON from '../../resources/cannon-es.js'
 
-export class BasicCharacterController { //represents a single animated character in the world
+export class CharacterController {
     constructor(params) {
         this._Init(params);
     }
@@ -18,12 +18,8 @@ export class BasicCharacterController { //represents a single animated character
     
         this._stateMachine = new CharacterFSM(this._target, this._entity);
         this._stateMachine.SetState('idle');
-        this._input = new BasicCharacterControllerInput();
+        this._input = new CharacterControllerInput();
     }
-
-    // _getPunchBody(){
-    //     return this._stateMachine._GetPunchBody();
-    // }
 
     update(){
         this._stateMachine.Update(this._input);
@@ -82,7 +78,6 @@ export class BasicCharacterController { //represents a single animated character
         this._punch_body.quaternion.copy(controlObject.quaternion);
 
         if(this._input._keys.space){
-            // if(Math.sign(this._body.position.x))
             if(this._punch_body.position.distanceTo(this._body.position)<2){
                 let relativeVector = new CANNON.Vec3(0,0,1 );
                 this._punch_body.quaternion.vmult(relativeVector, relativeVector);
@@ -94,13 +89,10 @@ export class BasicCharacterController { //represents a single animated character
             this._punch_body.position.copy(this._body.position);
             this._punch_body.position.y=2 
             }
-            
-            // this._punch_body.velocity.z-= this._body.position10;
         }
         else{
             this._punch_body.position.copy(this._body.position);
             this._punch_body.position.y=2 
-            // this._punch_body.velocity.z=0;
         }
 
         const forward = new THREE.Vector3(0, 0, 1);
@@ -113,30 +105,9 @@ export class BasicCharacterController { //represents a single animated character
       
         sideways.multiplyScalar(velocity.x);
         forward.multiplyScalar(velocity.z);
-      
-        /*controlObject.position.add(forward);
-        controlObject.position.add(sideways);
-
-        this._target.position.copy(this._body.position);
-        this._target.position.subVectors(temp,(0,-1,0));
-        this._target.quaternion.copy(this._body.quaternion);
-        this._target.position.y -= 2;*/
 
         this._body.velocity.x += sideways.x+forward.x;
         this._body.velocity.z += sideways.z+forward.z;
-
-        // this._punch_body.velocity.x += sideways.x+forward.x;
-        // this._punch_body.velocity.z += sideways.z+forward.z;
-        /*var norm = Math.sqrt(Math.pow(this._body.velocity.x, 2) + Math.pow(this._body.velocity.z, 2));
-        if (this._input._keys.forward && this._input._keys.shift) {
-            if(norm > 120){
-                this._body.velocity.x = this._body.velocity.x/norm*120;
-                this._body.velocity.z = this._body.velocity.z/norm*120;
-            }
-        } else if(norm > 60){
-            this._body.velocity.x = this._body.velocity.x/norm*60;
-            this._body.velocity.z = this._body.velocity.z/norm*60;
-        }*/
 
         controlObject.position.copy(this._body.position);
         controlObject.position.y -= 0.8;
@@ -144,7 +115,7 @@ export class BasicCharacterController { //represents a single animated character
   
 };
 
-class BasicCharacterControllerInput { //resposible for keyboard and other controller input
+class CharacterControllerInput { //resposible for keyboard and other controller input
     constructor() {
         this._Init();
     }
@@ -158,7 +129,6 @@ class BasicCharacterControllerInput { //resposible for keyboard and other contro
             space: false,
             shift: false,
         };
-        //document.addEventListener( 'mousemove', (e) => this._onMouseMove(e), false );
         document.addEventListener('keydown', (e)=>this._onKeyDown(e), false);
         document.addEventListener('keyup', (e)=>this._onKeyUp(e), false); 
     }

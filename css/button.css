@@ -11,19 +11,6 @@ body, html {
 }
 
 .container {
-  /* width: 50%;
-  max-height: 150px;
-  position: absolute;
-  left: 25%;
-  top: 63%;
-  transform: translate(-50%, -50%); */
-  /* display: flex;
-  justify-content: center;
-  align-items: center;
-  display: grid;  
-  grid-gap: 5px;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));  
-  grid-template-rows: repeat(2, 50px);   */
   width: 625px;
   height: 400px;
   position: absolute;
@@ -106,7 +93,7 @@ svg {
   font-weight: 700;
   color: #313133;
   background: #ed2b12;
-background: linear-gradient(90deg, #ed2b12 0%, #630100 100%);
+  background: linear-gradient(90deg, #ed2b12 0%, #630100 100%);
   border: none;
   border-radius: 1000px;
   box-shadow: 12px 12px 24px #630100;
@@ -243,16 +230,4 @@ content: '';
 
 .close-btn:hover{
   opacity: 1;
-}
-
-.audioBtn, .audioBtn i{
-  position: absolute;
-  /* background-color:#630100; */
-  /* color: white; */
-  width:70px;
-  height:70px;
-  right: 0px;
-  top: 0px;
-  margin-right: 4px;
-  margin-top: 4px;
 }
